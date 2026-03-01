@@ -3,49 +3,1003 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rylia | Bientôt disponible</title>
+    <title>Rylia - Solution Digitale</title>
     <style>
+        /* --- VARIABLES DE COULEUR --- */
+        :root {
+            --primary-orange: #FF6B00; 
+            --dark-orange: #E56000;
+            --text-dark: #1a1a1a;
+            --text-light: #444;
+            --bg-light: #f9f9f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            background-color: #fff;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        .nav-section { flex: 1; display: flex; align-items: center; }
+        .left { justify-content: flex-start; gap: 12px; } 
+        .center { justify-content: center; flex-direction: column; text-align: center; }
+        .right { justify-content: flex-end; gap: 15px; }
+
+        .brand-name {
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--primary-orange);
+            letter-spacing: -1px;
+            cursor: pointer;
+        }
+
+        .brand-slogan {
+            font-size: 0.85rem;
+            color: #777;
+            font-weight: 400;
+        }
+
+        /* BOUTON MENU */
+        .btn-menu {
+            height: 40px;
+            min-width: 100px;
+            padding: 0 18px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
+            border: 1.5px solid #ddd;
+            background: white;
+            color: var(--text-dark);
+            font-weight: 400;
+        }
+
+        .btn-menu:hover { background-color: #f5f5f5; }
+
+        /* BOUTON RETOUR - Caché par défaut */
+        .back-btn-header {
+            display: none; 
+            height: 28px;
+            min-width: 80px;
+            padding: 0 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid var(--primary-orange);
+            background: white;
+            color: var(--primary-orange);
+            font-weight: 600;
+        }
+
+        .back-btn-header:hover {
+            background-color: var(--primary-orange);
+            color: white;
+        }
+
+        .contact-btn {
+            text-decoration: none;
+            color: #fff;
+            background-color: var(--primary-orange);
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: 0.3s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .contact-btn:hover { background-color: var(--dark-orange); }
+
+        /* --- GESTION DES VUES --- */
+        .view { display: none; }
+        .active { display: block; }
+
+        /* --- SECTION CONCEPT --- */
+        .concept-section {
+            margin-top: 80px;
+            padding: 30px 40px 15px 40px;
+            background-color: #ffffff;
             text-align: center;
         }
-        h1 { font-size: 3rem; margin-bottom: 0.5rem; letter-spacing: 2px; }
-        p { font-size: 1.2rem; color: #a2a8d3; margin-bottom: 2rem; }
-        .links { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        .btn {
-            padding: 10px 20px;
-            border: 1px solid #4ecca3;
-            color: #4ecca3;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s;
+
+        .concept-container {
+            max-width: 800px;
+            margin: 0 auto;
         }
-        .btn:hover { background: #4ecca3; color: #1a1a2e; }
-        .footer { position: absolute; bottom: 20px; font-size: 0.8rem; opacity: 0.5; }
+
+        .concept-title {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .concept-title::after {
+            content: "";
+            display: block;
+            width: 40px;
+            height: 3px;
+            background: var(--primary-orange);
+            margin: 5px auto 0;
+        }
+
+        .concept-text {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .highlight-text {
+            font-weight: 700;
+            color: inherit; 
+        }
+
+        /* --- SECTION SOLUTIONS --- */
+        .container {
+            padding: 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-orange);
+            padding-left: 15px;
+        }
+
+        .placeholder-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-bottom: 3px solid var(--primary-orange);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: default;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: justify;
+        }
+
+        .btn-more {
+            margin-top: 15px;
+            padding: 8px;
+            border: 1.5px solid var(--primary-orange);
+            background: transparent;
+            color: var(--primary-orange);
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-more:hover {
+            background: var(--primary-orange);
+            color: white;
+        }
+
+        /* --- PAGES DE DÉTAILS --- */
+        .detail-page {
+            margin-top: 80px;
+            padding: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .detail-section {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .detail-section h2 {
+            font-size: 1.2rem;
+            color: var(--primary-orange);
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* --- NOUVEAU STYLE ANALYTIQUE (BARRES À GAUCHE) --- */
+        .rating-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+            gap: 12px;
+        }
+
+        .rating-item:last-child { border-bottom: none; }
+
+        .impact-bar-container {
+            width: 80px; /* Taille compacte fixe pour l'alignement */
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .impact-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-orange), var(--dark-orange));
+            border-radius: 4px;
+        }
+
+        .rating-sep {
+            color: #ccc;
+            font-weight: 300;
+        }
+
+        .rating-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* --- STYLE DÉMO DOUBLE MOCKUP --- */
+        .demo-grid {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 40px; 
+            margin-top: 25px; 
+            margin-bottom: 10px;
+        }
+
+        .phone-mockup {
+            width: 260px; 
+            height: 540px; 
+            border: 12px solid #1a1a1a; 
+            border-radius: 35px; 
+            overflow: hidden; 
+            position: relative;
+            background-color: #000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+            flex-shrink: 0;
+        }
+
+        .phone-mockup video, .phone-mockup img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 25px;
+            background-color: #1a1a1a;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 2;
+        }
+
+        .mockup-caption {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--text-light); 
+            font-weight: 600;
+        }
+
+        /* --- STYLE FORMULAIRE CONTACT --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.95rem;
+            user-select: none;
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: var(--primary-orange);
+        }
+
+        .btn-submit {
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--dark-orange);
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .icon-contact-img {
+            width: 28px;         
+            height: 28px;
+            margin-right: 15px;  
+            vertical-align: middle;
+            object-fit: contain; 
+        }
+
+        #my-form-status {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background-color: #f0fdf4;
+            border: 2px solid #22c55e;
+            border-radius: 8px;
+            color: #15803d;
+            font-weight: 600;
+            font-size: 1.1rem;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
-    <h1>RYLIA</h1>
-    <p>Le site officiel est en cours de préparation.</p>
+    <header>
+        <div class="nav-section left">
+            <button class="btn-menu">Menu</button>
+            <button id="header-back-btn" class="back-btn-header" onclick="showView('main-home')">↩ Retour</button>
+        </div>
+        
+        <div class="nav-section center">
+            <div class="brand-name" onclick="showView('main-home')">Rylia</div>
+            <div class="brand-slogan">Le digital au service de votre dynamisme</div>
+        </div>
+        
+        <div class="nav-section right">
+            <button class="contact-btn" onclick="showView('contact-view')">Nous contacter</button>
+        </div>
+    </header>
 
-    <div class="links">
-        <a href="/roue" class="btn">Projet Roue</a>
-        <a href="/carte" class="btn">Projet Carte</a>
-        <a href="/fidelite" class="btn">Projet Fidélité</a>
+    <div id="main-home" class="view active">
+        <section class="concept-section">
+            <div class="concept-container">
+                <h2 class="concept-title">C'est quoi Rylia ?</h2>
+                <p class="concept-text">
+                    Rylia accompagne les restaurateurs dans leur <span class="highlight-text">transformation numérique</span> en créant des ponts entre votre <br>savoir-faire et les outils de demain.<br>
+                </p>
+                <p class="concept-text">
+                    Notre approche permet d'offrir une <span class="highlight-text">expérience client inédite</span>, fluide et mémorable, plaçant la <span class="highlight-text">fidélisation</span> au cœur de votre stratégie digitale pour transformer chaque interaction en une relation durable.
+                </p>
+            </div>
+        </section>
+
+        <div class="container">
+            <h3 class="section-title">Nos Solutions</h3>
+            <div class="placeholder-grid">
+                <div class="card">
+                    <div>
+                        <h4 style="color: var(--primary-orange);">Carte digitale</h4>
+                        <p class="card-description">Une carte digitale complètement <strong>personnalisable</strong> à votre image. Elle fluidifie les <strong>expériences clients</strong> en les orientant dans leurs choix grâce à un aperçu visuel. </p>
+                        
+                        <div style="margin-top: 8px; font-size: 0.95rem;">
+                            • Offre un aperçu visuel inédit <br>
+                            • Représente le restaurant <br>
+                            • Améliore l'expérience client <br>
+                            • Offre une possibilité de sélection
+                        </div>
+                    </div>
+                    <button class="btn-more" onclick="showView('detail-carte')">En savoir plus ...</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h4 style="color: var(--primary-orange);">Roue d'avis 5 étoiles</h4>
+                        <p class="card-description">Vos clients tournent une roue qui leur permet d'obtenir un <strong>gain</strong> en échange d'un <strong>avis 5 étoiles</strong> Google. Processus <strong>100% automatisé</strong>, vos clients reçoivent un mail avec un code.</p>
+                        
+                        <div style="margin-top: 8px; font-size: 0.95rem;">
+                            • Améliore l'expérience client <br>
+                            • Fidélise la clientèle <br>
+                            • Améliore l'image de marque <br>
+                            • Offre des opportunités en marketing
+                        </div>
+                    </div>
+                    <button class="btn-more" onclick="showView('detail-roue')">En savoir plus ...</button>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <h4 style="color: var(--primary-orange);">Web fidélité</h4>
+                        <p class="card-description">Un programme de fidélité <strong>100% digital</strong> et personnalisé. Fini les cartes papier perdues : récompensez vos clients réguliers avec un système de points <strong>simple et intuitif</strong>.</p>
+                        
+                        <div style="margin-top: 8px; font-size: 0.95rem;">
+                            • Augmente la fidélité de vos clients <br>
+                            • Digitalisation des cartes classiques <br>
+                            • Offre des récompenses attractives <br>
+                            • Incite le client à revenir souvent
+                        </div>
+                    </div>
+                    <button class="btn-more" onclick="showView('detail-fidelite')">En savoir plus ...</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="footer">
-        &copy; 2026 Prototype-Rylia - rylia.fr
+    <div id="detail-carte" class="view">
+        <div class="detail-page">
+            <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Carte Digitale</h1>
+            <p style="margin-top:20px;">Nous vous proposons une carte digitale dynamique et personnalisée pour le menu de votre restaurant</p>
+
+            <div class="detail-section">
+                <h2>Démonstration de la solution</h2>
+                <div class="demo-grid">
+                    <div>
+                        <div class="phone-mockup">
+                            <div class="phone-notch"></div>
+                            <video autoplay loop muted playsinline>
+                                <source src="demonstration-carte.mp4" type="video/mp4">
+                                Votre navigateur supporte pas la vidéo.
+                            </video>
+                        </div>
+                        <p class="mockup-caption">Le client parcourt la carte</p>
+                    </div>
+                    <div>
+                        <div class="phone-mockup">
+                            <div class="phone-notch"></div>
+                            <img src="screen-carte.jpg" alt="Aperçu des détails">
+                        </div>
+                        <p class="mockup-caption">Accueil de la carte</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2>C'est quoi ?</h2>
+                <p>
+                    La <strong>Carte Digitale</strong> réinvente le menu traditionnel pour offrir une expérience immersive. 
+                    Accessible instantanément via <strong>QR Code</strong>, elle guide vos clients grâce à une interface visuelle et des <strong>filtres intelligents</strong> (végétarien, épicé, sans gluten...) qui facilitent leur choix. 
+                    Entièrement <strong>personnalisable à votre image</strong>, elle valorise vos plats, rassure sur les allergènes et modernise instantanément votre service.
+                </p>
+            </div>
+
+            <div class="detail-section">
+                <h2>Détails de la solution</h2>
+                <p>Cette carte est <strong>entièrement personnalisable</strong> selon vos souhaits<br></p>
+                <p style="margin-top: 12px;"> → Elle reflète l'image du restaurant grâce à un code couleur, des illustrations, des phrases...<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : logo ; slogan ; référence ; couleur du restaurant ...</span></em><br>
+                <p style="margin-top: 10px;"> → Elle guide le consommateur dans son choix grâce à la sélection du type de plat<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : pâtes ; burgers ; wraps ...</span></em><br>
+                <p style="margin-top: 10px;"> → L'ajout d'un filtre pour que le consommateur détermine ses envies<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : épicé ; végétarien ; sucré-salé ...</span></em><br>
+                <p style="margin-top: 10px;"> → Le filtre permet aussi au consommateur de choisir en fonction de ses allergies<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : gluten ; moutarde ; lait ; soja ...</span></em><br>
+                <p style="margin-top: 10px;"> → Créer un QR code directement lisible par le consommateur<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : le QR code disposé sur chaque table</span></em>
+            </div>
+
+            <div class="detail-section">
+                <h2>Objectifs</h2>
+                <p> → Améliorer l'expérience client, créer une vue immersive<br>
+                <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le consommateur clique et devient acteur, il peut filtrer ses envies, ses goûts, ses allergies ...</span></em><br>
+                <p style="margin-top: 10px;"> → Représenter le restaurant grâce aux nouvelles technologies<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• La carte est à l'effigie de votre restaurant, elle suit votre style, vos caractéristiques ...</span></em><br>
+                <p style="margin-top: 10px;"> → Moderniser l'image de marque<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• L'établissement est vu comme une enseigne innovante et dynamique qui utilise les outils de demain</span></em><br>
+                <p style="margin-top: 10px;"> → Faciliter l'accès<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Installation de QR code qui facilite et fluidifie l'accès à tout consommateur</span></em><br>
+            </div>
+
+            <div class="detail-section">
+                <h2>Indice de la solution</h2>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Immersion visuelle</span>
+                </div>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Modernisation de l'image</span>
+                </div>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 89%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Facile d'utilisation</span>
+                </div>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 80%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Aide au choix client</span>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <div id="detail-roue" class="view">
+        <div class="detail-page">
+            <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Roue d'avis 5 étoiles</h1>
+            <p style="margin-top:20px;">Boostez votre visibilité locale avec notre système de roue automatisé.</p>
+            
+            <div class="detail-section">
+                <h2>Démonstration de la solution</h2>
+                <div class="demo-grid">
+                    <div>
+                        <div class="phone-mockup">
+                            <div class="phone-notch"></div>
+                            <video autoplay loop muted playsinline>
+                                <source src="demonstration-roue.mp4" type="video/mp4">
+                                Votre navigateur ne supporte pas la vidéo.
+                            </video>
+                        </div>
+                        <p class="mockup-caption">Le client scanne et joue</p>
+                    </div>
+                    <div>
+                        <div class="phone-mockup">
+                            <div class="phone-notch"></div>
+                            <img src="screen-roue.jpg" alt="Résultat du gain">
+                        </div>
+                        <p class="mockup-caption">Le client récupère son coupon</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2>C'est quoi ?</h2>
+                <p>
+                    La <strong>roue d'avis</strong> est une solution ludique qui fidélise vos clients. 
+                    Accessible via un simple <strong>QR Code</strong>, elle invite le client à tourner une roue virtuelle pour gagner une récompense immédiate (boisson, dessert, réduction...) en échange d'un <strong>avis 5 étoiles</strong> sur Google. 
+                    Entièrement automatisée, cette solution booste votre <strong>visibilité locale</strong> tout en fidélisant votre clientèle grâce à une expérience de jeu gagnant-gagnant.
+                </p>
+            </div>
+
+            <div class="detail-section">
+                <h2>Détails de la solution</h2>
+                <p>Cette roue est <strong>entièrement personnalisable</strong> selon vos souhaits<br></p>
+                <p style="margin-top: 12px;"> → Création d'une roue avec des gains en échange d'un avis Google<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemples : boisson ; snack ; réduction ; menu gratuit ...</span></em><br>
+                <p style="margin-top: 10px;"> → Le client est redirigé vers le dépôt d'avis Google pour récupérer son gain<br></p>
+                <p style="margin-top: 12px;"> → Elle reflète l'image du restaurant grâce à un code couleur, des illustrations, des phrases...<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemples : logo ; slogan ; référence ; couleur du restaurant ...</span></em><br>
+                <p style="margin-top: 10px;"> → Des probabilités choisies par le restaurateur<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : forte probabilité d'obtenir une boisson</span></em><br>
+                <p style="margin-top: 10px;"> → Mise en place de délais qui empêchent les abus de l'utilisateur<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemples :&nbsp;- Temps d'attente de 24h avant de pouvoir relancer la roue<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Gain récupérable 24h après, disponible uniquement 10 jours</span></em>
+                <p style="margin-top: 10px;"> → Le gain peut être récupérable sous condition de consommation<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Au choix du restaurateur sur l'obligation ou non de consommer pour récupérer le gain</span></em>
+                <p style="margin-top: 10px;"> → Un contrôle simple pour le restaurateur via un tableau Excel automatisé<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le tableau Excel informe sur la date du gain, l'expiration, le code, la date de disponibilité, le mail du gagnant.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Il y a une case à cocher une fois le gain validé, ce qui facilite l'utilisation même pendant les rushs !</span></em><br>
+            </div>
+
+            <div class="detail-section">
+                <h2>Objectifs</h2>
+                <p> → Fidéliser la clientèle<br>
+                <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le consommateur clique, gagne et revient pour consommer et récupérer son gain</span></em><br>
+                <p style="margin-top: 10px;"> → Améliorer l'expérience client<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le client est mis en condition de jeu, il n'est jamais perdant, il ne peut qu'être satisfait</span></em><br>
+                <p style="margin-top: 10px;"> → Moderniser l'image de marque<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• L'établissement est vu comme une enseigne innovante et dynamique qui utilise les outils de demain</span></em><br>
+                <p style="margin-top: 10px;"> → Gagnant-gagnant<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le client gagne un produit, vous gagnez un avis</span></em><br>
+                <p style="margin-top: 10px;"> → Réputation en flèche<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Grâce aux avis votre classement local augmente, votre image de marque aussi</span></em><br>
+                <p style="margin-top: 10px;"> → Faciliter l'accès<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Au format QR code cela facilite l'accès à tout consommateur</span></em><br>
+            </div>
+
+            <div class="detail-section">
+                <h2>Indice de la solution</h2>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 100%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Expérience client</span>
+                </div>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Fidélisation de la clientèle</span>
+                </div>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Boost visibilité Google</span>
+                </div>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 88%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Image de marque</span>
+                </div>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 80%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Facilité d'utilisation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-fidelite" class="view">
+        <div class="detail-page">
+            <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Web fidélité</h1>
+            <p style="margin-top:20px;">Récompensez vos clients les plus fidèles grâce à une solution 100% digitale et sans contrainte.</p>
+            
+            <div class="detail-section">
+                <h2>Démonstration de la solution</h2>
+                <div class="demo-grid">
+                    <div>
+                        <div class="phone-mockup">
+                            <div class="phone-notch"></div>
+                            <video autoplay loop muted playsinline>
+                                <source src="demonstration-fidelite.mp4" type="video/mp4">
+                                Votre navigateur ne supporte pas la vidéo.
+                            </video>
+                        </div>
+                        <p class="mockup-caption">Espace client & restaurateur</p>
+                    </div>
+                    <div>
+                        <div class="phone-mockup">
+                            <div class="phone-notch"></div>
+                            <img src="screen-fidelite.jpg" alt="Aperçu de l'espace fidélité">
+                        </div>
+                        <p class="mockup-caption">Accueil espace client</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2>C'est quoi ?</h2>
+                <p>
+                    La solution <strong>Web Fidélité</strong> est une plateforme double interface : 
+                    un espace <strong>Membre</strong> où le client suit ses points et ses paliers de récompenses via un QR Code personnel, 
+                    et un espace <strong>Admin</strong> permettant au commerçant de scanner les clients et de créditer des points en fonction du montant des additions. 
+                    Tout est synchronisé en temps réel pour une fluidité totale.
+                </p>
+            </div>
+
+            <div class="detail-section">
+                <h2>Détails de la solution</h2>
+                <p>Cette solution de fidélité permet à votre restaurant un grand pas vers le digital<br></p>
+                <p style="margin-top: 12px;"> → Création d'un système de fidélité par compte<br></p>
+                <p style="margin-top: 10px;"> → Différents paliers de récompenses<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : 5 paliers différents pour des récompenses uniques</span></em><br>
+                <p style="margin-top: 10px;"> → Un compte admin pour le restaurateur<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : le client donne son compte, le salarié rentre le montant de la commande et valide.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ensuite les points sont automatiquement mis à jour sur le compte client</span></em><br>
+                <p style="margin-top: 10px;"> → Un classement global met en compétition les clients<br></p>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le client est tenté d'obtenir le meilleur classement, il revient et consomme davantage</span></em>
+            </div>
+
+            <div class="detail-section">
+                <h2>Objectifs</h2>
+                <p> → Augmenter la fréquence de visite<br>
+                <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Un client proche de sa récompense sera naturellement incité à revenir chez vous plutôt qu'ailleurs.</span></em><br>
+                <p style="margin-top: 10px;"> → Éliminer les contraintes du format papier<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Fini les "J'ai oublié ma carte" ou les cartes perdues, le client a toujours son téléphone sur lui.</span></em><br>
+                <p style="margin-top: 10px;"> → Moderniser l'image de marque<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• L'établissement est vu comme une enseigne innovante avec un programme adapté aux habitudes actuelles.</span></em><br>
+                <p style="margin-top: 10px;"> → Système de classement<br>
+                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le classement peut motiver davantage les clients à revenir (envisager une récompense mensuelle pour le premier).</span></em><br>
+            </div>
+
+            <div class="detail-section">
+                <h2>Indice de la solution</h2>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 100%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Fidélisation de la clientèle</span>
+                </div>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Fréquence de visite</span>
+                </div>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 90%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Accessibilité mobile</span>
+                </div>
+                <div class="rating-item">
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 85%;"></div></div>
+                    <span class="rating-sep"> | </span>
+                    <span class="rating-text">Augmentation du panier moyen</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contact-view" class="view">
+        <div class="detail-page">
+            <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Contactez-nous</h1>
+            <p style="margin-top:20px; text-align:center;">Une question sur nos solutions ? Envie de digitaliser votre restaurant ?<br>Notre équipe est à votre écoute.</p>
+
+            <div class="detail-section">
+                <h2>Envoyez-nous un message</h2>
+                <form action="https://formspree.io/f/xvzbqkwl" method="POST" id="contactForm">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Nom complet</label>
+                        <input type="text" id="name" name="nom" class="form-input" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="restaurant">Nom du restaurant</label>
+                        <input type="text" id="restaurant" name="restaurant" class="form-input" placeholder="Le nom de votre établissement">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="ville">Ville du restaurant</label>
+                        <input type="text" id="ville" name="ville" class="form-input" placeholder="Ex: Paris, Lyon..." list="villes-list">
+                        <datalist id="villes-list"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Numéro de téléphone</label>
+                        <input type="tel" id="phone" name="telephone" class="form-input" placeholder="06 12 34 56 78" maxlength="14">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Adresse Email</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="exemple@email.com" required>
+                        <small id="email-error" style="color:red; display:none; font-size:0.85rem; margin-top:5px;">L'adresse email semble invalide ou l'extension n'est pas reconnue.</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Quels modules vous intéressent ?</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="module" value="Carte digitale">
+                                Carte digitale
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="module" value="Roue d'avis">
+                                Roue d'avis 5 étoiles
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="module" value="Web fidélité">
+                                Web fidélité
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="message">Votre message</label>
+                        <textarea id="message" name="message" class="form-textarea" placeholder="Dites-nous en plus sur votre projet..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Envoyer ma demande</button>
+                </form>
+                <div id="my-form-status">
+                    Merci ! Votre demande a bien été envoyée.<br>
+                    Notre équipe Rylia reviendra vers vous très rapidement.
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2>Nos coordonnées</h2>
+                <div style="margin-top: 20px;">
+                    <div class="contact-info-item">
+                        <img src="logo-mail.jpg" alt="Email" class="icon-contact-img">
+                        <span>contact@rylia.fr</span>
+                    </div>
+                    <div class="contact-info-item">
+                        <img src="logo-telephone.jpg" alt="Téléphone" class="icon-contact-img">
+                        <span>xx xx xx xx xx</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            const backBtn = document.getElementById('header-back-btn');
+            if (viewId === 'main-home') {
+                backBtn.style.display = 'none';
+            } else {
+                backBtn.style.display = 'flex';
+            }
+            window.scrollTo(0,0);
+        }
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+            if (document.getElementById('main-home').classList.contains('active')) {
+                document.getElementById('header-back-btn').style.display = 'none';
+            }
+
+            const villeInput = document.getElementById('ville');
+            const dataList = document.getElementById('villes-list');
+
+            if (villeInput) {
+                villeInput.addEventListener('input', function() {
+                    const query = this.value;
+                    if (query.length < 3) return; 
+                    fetch(`https://api-adresse.data.gouv.fr/search/?q=${query}&type=municipality&limit=5`)
+                        .then(response => response.json())
+                        .then(data => {
+                            dataList.innerHTML = ''; 
+                            if (data.features) {
+                                data.features.forEach(feature => {
+                                    const option = document.createElement('option');
+                                    option.value = `${feature.properties.city} (${feature.properties.postcode})`; 
+                                    dataList.appendChild(option);
+                                });
+                            }
+                        })
+                        .catch(err => console.error("Erreur récupération ville:", err));
+                });
+            }
+
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    let rawValue = e.target.value.replace(/\D/g, '');
+                    if (rawValue.length > 10) { rawValue = rawValue.substring(0, 10); }
+                    const formattedValue = rawValue.replace(/(\d{2})(?=\d)/g, '$1 ');
+                    e.target.value = formattedValue;
+                });
+            }
+
+            const form = document.getElementById('contactForm');
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('email-error');
+            const statusDiv = document.getElementById('my-form-status');
+
+            const commonProviders = [
+                'gmail.com', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com', 
+                'yahoo.com', 'yahoo.fr', 'icloud.com', 'orange.fr', 'wanadoo.fr', 
+                'sfr.fr', 'free.fr', 'bbox.fr', 'laposte.net', 'neuf.fr', 'club-internet.fr',
+                'protonmail.com', 'me.com', 'mac.com'
+            ];
+
+            const validTLDs = [
+                'com', 'fr', 'net', 'org', 'eu', 'be', 'ch', 'info', 'biz', 'io', 'co', 'me', 'edu', 'gov', 'uk', 'de', 'it', 'es', 'ca'
+            ];
+
+            function validateEmail(email) {
+                const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!regex.test(email)) return false;
+                const parts = email.split('@');
+                const domain = parts[1].toLowerCase();
+                const extension = domain.split('.').pop();
+                if (commonProviders.includes(domain)) return true;
+                if (validTLDs.includes(extension)) return true;
+                return false; 
+            }
+
+            if (emailInput) {
+                emailInput.addEventListener('blur', function() {
+                    if (this.value.length > 0 && !validateEmail(this.value)) {
+                        emailError.style.display = 'block';
+                    } else { emailError.style.display = 'none'; }
+                });
+                emailInput.addEventListener('input', function() { emailError.style.display = 'none'; });
+            }
+
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = emailInput.value;
+                    if (!validateEmail(email)) {
+                        emailError.style.display = 'block';
+                        emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        alert("L'adresse email renseignée ne semble pas valide. Merci de vérifier.");
+                        return;
+                    }
+                    const data = new FormData(form);
+                    fetch(form.action, {
+                        method: form.method,
+                        body: data,
+                        headers: { 'Accept': 'application/json' }
+                    }).then(response => {
+                        if (response.ok) {
+                            form.style.display = "none";
+                            statusDiv.style.display = "block";
+                            form.reset();
+                        } else {
+                            response.json().then(data => {
+                                if (Object.hasOwn(data, 'errors')) {
+                                    alert(data["errors"].map(error => error["message"]).join(", "));
+                                } else { alert("Une erreur s'est produite lors de l'envoi."); }
+                            });
+                        }
+                    }).catch(error => { alert("Une erreur réseau s'est produite. Veuillez réessayer."); });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
