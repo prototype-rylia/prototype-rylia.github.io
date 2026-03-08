@@ -209,6 +209,75 @@
             color: white;
         }
 
+                /* --- STYLE SECTION SITE VITRINE (SÉPARATION EN 2) --- */
+        .card-split-section {
+            display: flex;
+            align-items: center; /* Centre verticalement les éléments */
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .split-list {
+            flex: 1; /* Prend la moitié de l'espace */
+            font-size: 0.95rem;
+            padding-right: 20px;
+            /* On reprend le même style que vos autres cartes, mais en vertical (border-right) */
+            border-right: 1px solid #e0e0e0; 
+            line-height: 1.6;
+        }
+
+        .split-action {
+            flex: 1; /* Prend l'autre moitié de l'espace */
+            display: flex;
+            flex-direction: column; /* Empile le texte et le bouton verticalement */
+            justify-content: center; /* Centre le tout verticalement */
+            align-items: center; /* Centre le tout horizontalement */
+            padding-left: 20px;
+        }
+
+        .action-text {
+            margin-bottom: 10px; /* Espace entre le texte et le bouton */
+            font-size: 0.95rem; /* Même taille que vos puces */
+            font-weight: 600; /* Rend le texte un peu plus gras (optionnel) */
+            text-align: center;
+            color: var(--text-dark); /* Garde la couleur de votre texte */
+        }
+
+        .split-action .btn-more {
+            margin-top: 0; /* Écrase la marge du bouton standard pour bien le centrer */
+            width: auto;
+            padding: 10px 20px; /* Rend le bouton un peu plus imposant */
+        }
+
+        /* --- AJUSTEMENTS POUR MOBILE (Responsive) --- */
+        @media (max-width: 600px) {
+            .card-split-section {
+                flex-direction: column; /* Empile les éléments l'un sur l'autre */
+                align-items: stretch;
+            }
+            .split-list {
+                border-right: none; /* Enlève la ligne verticale */
+                /* La ligne redevient horizontale sur mobile, toujours avec la même couleur */
+                border-bottom: 1px solid #e0e0e0; 
+                padding-right: 0;
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+            }
+            .split-action {
+                padding-left: 0;
+            }
+            .split-action .btn-more {
+                width: 100%; /* Le bouton prend toute la largeur sur mobile */
+            }
+        }
+
+        .card-featured {
+            max-width: 1000px; /* C'est ici que vous gérez la largeur max ! (Essayez 800px, 1000px, ou 100%) */
+            width: 100%;
+            margin: 0 auto; /* Permet de bien centrer la carte si elle est plus petite que l'écran */
+        }
+
         /* --- PAGES DE DÉTAILS --- */
         .detail-page {
             margin-top: 80px;
@@ -466,6 +535,83 @@
             }
         }
 
+        /* --- FOOTER --- */
+        .site-footer {
+            background-color: #f1f1f1; /* Fond gris clair */
+            color: var(--text-dark); /* Texte par défaut en foncé */
+            padding: 60px 20px 20px 20px;
+            font-size: 0.9rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        /* Titre principal "Rylia." */
+        .footer-col h3 {
+            color: var(--primary-orange); 
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* Sous-titres des colonnes */
+        .footer-col h4 {
+            color: var(--text-dark); 
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* Petite ligne orange sous les sous-titres */
+        .footer-col h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 30px;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        /* Texte descriptif */
+        .footer-col p {
+            line-height: 1.5;
+            color: var(--text-light); /* Gris un peu plus doux que le noir pur */
+        }
+
+        /* Listes de liens */
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        /* Les liens (normaux) */
+        .footer-col ul li a {
+            color: var(--text-light); /* Liens en gris foncé */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        /* Les liens (quand on passe la souris dessus) */
+        .footer-col ul li a:hover {
+            color: var(--primary-orange); /* Devient orange */
+        }
+
+        /* La ligne du tout bas (Copyright) */
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #ccc; /* Ligne de séparation grise */
+            color: var(--text-light);
     </style>
 </head>
 <body>
@@ -490,7 +636,7 @@
             <div class="concept-container">
                 <h2 class="concept-title">C'est quoi Rylia ?</h2>
                 <p class="concept-text">
-                    Rylia accompagne les restaurateurs dans leur <span class="highlight-text">transformation numérique</span> en créant des ponts entre votre <br>savoir-faire et les outils de demain.<br>
+                    Rylia accompagne les commerçants dans leur <span class="highlight-text">transformation numérique</span> en créant des ponts entre votre <br>savoir-faire et les outils de demain.<br>
                 </p>
                 <p class="concept-text">
                     Notre approche permet d'offrir une <span class="highlight-text">expérience client inédite</span>, fluide et mémorable, plaçant la <span class="highlight-text">fidélisation</span> au cœur de votre stratégie digitale pour transformer chaque interaction en une relation durable.
@@ -498,15 +644,44 @@
             </div>
         </section>
 
+<div class="container">
+    <h3 class="section-title">Besoin d'un site internet ?</h3>
+    <div class="placeholder-grid">
+        <div class="card card-featured" style="justify-content: flex-start;">
+            <div>
+                <h4 style="color: var(--primary-orange);">Un site vitrine</h4>
+                <p class="card-description">
+                    Vous souhaitez développer votre <strong>présence en ligne</strong> ? Nous concevons des sites internet <strong>100% sur-mesure</strong> exclusivement pensés et conçus à votre demande. Selon <strong>vos besoins spécifiques</strong>, votre plateforme digitale reflétera parfaitement l'identité de votre commerce pour vous <strong>démarquer</strong> efficacement sur le web. Une solution <strong>clé en main</strong> pour booster votre visibilité en ligne avec un design unique qui <strong>vous ressemble</strong> !
+                </p>
+            </div>
+            
+            <div class="card-split-section">
+                <div class="split-list">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Design 100% sur-mesure<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Adapté aux mobiles et tablettes<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Optimisation du référencement<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Accompagnement dédié
+                </div>
+                
+                <div class="split-action">
+                    <p class="action-text">Envie de passer à l'action ?</p>
+                    <button class="btn-more" onclick="showView('contact-view')">Parlez-nous de votre projet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
         <div class="container">
-            <h3 class="section-title">Nos Solutions</h3>
+            <h3 class="section-title">Autres solutions digitales</h3>
             <div class="placeholder-grid">
                 <div class="card">
                     <div>
                         <h4 style="color: var(--primary-orange);">Carte digitale</h4>
                         <p class="card-description">Une carte digitale complètement <strong>personnalisable</strong> à votre image. Elle fluidifie les <strong>expériences clients</strong> en les orientant dans leurs choix grâce à un aperçu visuel. </p>
                         
-                        <div style="margin-top: 8px; font-size: 0.95rem;">
+                        <div style="margin-top: 15px; padding-top: 15px; font-size: 0.95rem; border-top: 1px solid #e0e0e0;">
                             • Offre un aperçu visuel inédit <br>
                             • Représente le restaurant <br>
                             • Améliore l'expérience client <br>
@@ -521,7 +696,7 @@
                         <h4 style="color: var(--primary-orange);">Roue d'avis 5 étoiles</h4>
                         <p class="card-description">Vos clients tournent une roue qui leur permet d'obtenir un <strong>gain</strong> en échange d'un <strong>avis 5 étoiles</strong> Google. Processus <strong>100% automatisé</strong>, vos clients reçoivent un mail avec un code.</p>
                         
-                        <div style="margin-top: 8px; font-size: 0.95rem;">
+                        <div style="margin-top: 15px; padding-top: 15px; font-size: 0.95rem; border-top: 1px solid #e0e0e0;">
                             • Améliore l'expérience client <br>
                             • Fidélise la clientèle <br>
                             • Améliore l'image de marque <br>
@@ -536,7 +711,7 @@
                         <h4 style="color: var(--primary-orange);">Web fidélité</h4>
                         <p class="card-description">Un programme de fidélité <strong>100% digital</strong> et personnalisé. Fini les cartes papier perdues : récompensez vos clients réguliers avec un système de points <strong>simple et intuitif</strong>.</p>
                         
-                        <div style="margin-top: 8px; font-size: 0.95rem;">
+                        <div style="margin-top: 15px; padding-top: 15px; font-size: 0.95rem; border-top: 1px solid #e0e0e0;">
                             • Augmente la fidélité de vos clients <br>
                             • Digitalisation des cartes classiques <br>
                             • Offre des récompenses attractives <br>
@@ -837,8 +1012,7 @@
 
     <div id="contact-view" class="view">
         <div class="detail-page">
-            <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Contactez-nous</h1>
-            <p style="margin-top:20px; text-align:center;">Une question sur nos solutions ? Envie de digitaliser votre restaurant ?<br>Notre équipe est à votre écoute.</p>
+            <p style="margin-top:20px; text-align:center;">Une question sur nos solutions ? Envie de digitaliser votre commerce ?<br>Notre équipe est à votre écoute.</p>
 
             <div class="detail-section">
                 <h2>Envoyez-nous un message</h2>
@@ -866,8 +1040,13 @@
                         <small id="email-error" style="color:red; display:none; font-size:0.85rem; margin-top:5px;">L'adresse email semble invalide ou l'extension n'est pas reconnue.</small>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Quels modules vous intéressent ?</label>
+                        <label class="form-label">Quel(s) module(s) vous intéressent ?</label>
                         <div class="checkbox-group">
+
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="module" value="Site internet">
+                                Site internet
+                            </label>
                             <label class="checkbox-item">
                                 <input type="checkbox" name="module" value="Carte digitale">
                                 Carte digitale
@@ -909,6 +1088,37 @@
             </div>
         </div>
     </div>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Rylia.</h3>
+                <p>Solutions digitales clés en main pour booster l'engagement et la fidélité des clients de votre restaurant.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Informations Légales</h4>
+                <ul>
+                    <li><a href="mentions-legales.html" target="_blank">Mentions Légales</a></li>
+                    <li><a href="confidentialite.html" target="_blank">Politique de Confidentialité</a></li>
+                    <li><a href="cgv-cgu.html" target="_blank">CGV / CGU</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <li>Email : contact@rylia.fr</li>
+                    <li>Téléphone : 01 23 45 67 89</li>
+                    <li>Lundi au Vendredi, 9h - 18h</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 Rylia. Tous droits réservés.</p>
+        </div>
+    </footer>
 
     <script>
         function showView(viewId) {
