@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rylia - Solution Digitale</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         /* --- VARIABLES DE COULEUR --- */
         :root {
@@ -27,6 +28,24 @@
             line-height: 1.6;
         }
 
+        /* --- BARRE DE DÉFILEMENT SUR-MESURE --- */
+        ::-webkit-scrollbar {
+            width: 8px; /* Largeur très fine et élégante */
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light); /* Fond de la barre (gris très clair de ton site) */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-orange); /* La poignée aux couleurs de Rylia */
+            border-radius: 10px; /* Bords bien arrondis */
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-orange); /* Devient un peu plus foncée quand on clique/survole */
+        }
+
         /* --- HEADER --- */
         header {
             position: fixed;
@@ -40,6 +59,22 @@
             padding: 0 40px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             z-index: 1000;
+            /* Ajout de la transition pour que le rétrécissement soit fluide */
+            transition: height 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        /* --- ÉTAT DU HEADER AU SCROLL --- */
+        header.scrolled {
+            height: 60px; /* Le header devient plus fin */
+            background-color: rgba(255, 255, 255, 0.85); /* Devient légèrement transparent */
+            backdrop-filter: blur(10px); /* Effet flou sur ce qu'il y a derrière (Glassmorphism) */
+            -webkit-backdrop-filter: blur(10px); /* Pour la compatibilité avec Safari */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* L'ombre s'accentue légèrement */
+        }
+
+        header.scrolled .brand-slogan {
+            max-height: 0;
+            opacity: 0;
         }
 
         .nav-section { flex: 1; display: flex; align-items: center; }
@@ -59,6 +94,11 @@
             font-size: 0.85rem;
             color: #777;
             font-weight: 400;
+            /* Ajout d'une transition pour une disparition fluide */
+            transition: all 0.3s ease; 
+            max-height: 20px;
+            opacity: 1;
+            overflow: hidden;
         }
 
 
@@ -177,13 +217,27 @@
             flex-direction: column;
             justify-content: space-between;
             min-height: 300px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: default;
+            
+            /* LA SOLUTION : On retire la "transition" et on utilise une animation pour le retour à la normale */
+            animation: cardZoomOut 0.3s ease forwards;
         }
 
         .card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            /* On utilise une animation pour le survol */
+            animation: cardZoomIn 0.2s ease forwards;
+            z-index: 10;
+        }
+
+        /* --- ANIMATIONS INDÉPENDANTES (Ignorées par AOS) --- */
+        @keyframes cardZoomIn {
+            from { scale: 1; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+            to { scale: 1.03; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        }
+
+        @keyframes cardZoomOut {
+            from { scale: 1.03; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+            to { scale: 1; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         }
 
         .card-description {
@@ -612,9 +666,33 @@
             padding-top: 20px;
             border-top: 1px solid #ccc; /* Ligne de séparation grise */
             color: var(--text-light);
+        }
+
+        /* --- BARRE DE PROGRESSION DE LECTURE --- */
+        #progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px; 
+            background: rgba(255, 255, 255, 0.05); /* Fond presque invisible */
+            z-index: 1001;
+        }
+
+        #progress-bar {
+            height: 100%;
+            /* On utilise RGBA pour l'opacité : 0.5 signifie 50% de transparence */
+            background: rgba(255, 107, 0, 0.5); 
+            width: 0%;
+            transition: width 0.1s ease;
+        }
     </style>
 </head>
 <body>
+
+<div id="progress-container">
+    <div id="progress-bar"></div>
+</div>
 
     <header>
         <div class="nav-section left">
@@ -633,7 +711,7 @@
 
     <div id="main-home" class="view active">
         <section class="concept-section">
-            <div class="concept-container">
+            <div class="concept-container" data-aos="fade-in" data-aos-duration="1200">
                 <h2 class="concept-title">C'est quoi Rylia ?</h2>
                 <p class="concept-text">
                     Rylia accompagne les commerçants dans leur <span class="highlight-text">transformation numérique</span> en créant des ponts entre votre <br>savoir-faire et les outils de demain.<br>
@@ -647,7 +725,7 @@
 <div class="container">
     <h3 class="section-title">Besoin d'un site internet ?</h3>
     <div class="placeholder-grid">
-        <div class="card card-featured" style="justify-content: flex-start;">
+        <div class="card card-featured" style="justify-content: flex-start;" data-aos="fade-up">
             <div>
                 <h4 style="color: var(--primary-orange);">Un site vitrine</h4>
                 <p class="card-description">
@@ -676,7 +754,7 @@
         <div class="container">
             <h3 class="section-title">Autres solutions digitales</h3>
             <div class="placeholder-grid">
-                <div class="card">
+                <div class="card" data-aos="fade-up" data-aos-delay="100">
                     <div>
                         <h4 style="color: var(--primary-orange);">Carte digitale</h4>
                         <p class="card-description">Une carte digitale complètement <strong>personnalisable</strong> à votre image. Elle fluidifie les <strong>expériences clients</strong> en les orientant dans leurs choix grâce à un aperçu visuel. </p>
@@ -691,7 +769,7 @@
                     <button class="btn-more" onclick="showView('detail-carte')">En savoir plus ...</button>
                 </div>
 
-                <div class="card">
+                <div class="card" data-aos="fade-up" data-aos-delay="200">
                     <div>
                         <h4 style="color: var(--primary-orange);">Roue d'avis 5 étoiles</h4>
                         <p class="card-description">Vos clients tournent une roue qui leur permet d'obtenir un <strong>gain</strong> en échange d'un <strong>avis 5 étoiles</strong> Google. Processus <strong>100% automatisé</strong>, vos clients reçoivent un mail avec un code.</p>
@@ -706,7 +784,7 @@
                     <button class="btn-more" onclick="showView('detail-roue')">En savoir plus ...</button>
                 </div>
 
-                <div class="card">
+                <div class="card" data-aos="fade-up" data-aos-delay="300">
                     <div>
                         <h4 style="color: var(--primary-orange);">Web fidélité</h4>
                         <p class="card-description">Un programme de fidélité <strong>100% digital</strong> et personnalisé. Fini les cartes papier perdues : récompensez vos clients réguliers avec un système de points <strong>simple et intuitif</strong>.</p>
@@ -1109,8 +1187,7 @@
                 <h4>Contact</h4>
                 <ul>
                     <li>Email : contact@rylia.fr</li>
-                    <li>Téléphone : 01 23 45 67 89</li>
-                    <li>Lundi au Vendredi, 9h - 18h</li>
+                    <li>Téléphone : xx xx xx xx xx</li>
                 </ul>
             </div>
         </div>
@@ -1238,6 +1315,37 @@
                 });
             }
         });
+
+    // --- ANIMATION DU HEADER AU SCROLL ---
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            // Si on descend de plus de 50 pixels, on ajoute la classe "scrolled"
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                // Sinon, on l'enlève pour revenir à l'état normal
+                header.classList.remove('scrolled');
+            }
+        });
+
+    // --- LOGIQUE DE LA BARRE DE PROGRESSION ---
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        });    
     </script>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      // Initialisation des animations
+      AOS.init({
+        duration: 800, /* Durée de l'animation en millisecondes */
+        once: true,    /* L'animation ne se joue qu'une seule fois en descendant */
+        offset: 100    /* Déclenche l'animation un peu plus tôt/tard */
+      });
+    </script>
+
 </body>
 </html>
