@@ -216,7 +216,8 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 300px;
+            height: auto;
+            min-height: 0px;
             cursor: default;
             
             /* LA SOLUTION : On retire la "transition" et on utilise une animation pour le retour à la normale */
@@ -326,11 +327,6 @@
             }
         }
 
-        .card-featured {
-            max-width: 1000px; /* C'est ici que vous gérez la largeur max ! (Essayez 800px, 1000px, ou 100%) */
-            width: 100%;
-            margin: 0 auto; /* Permet de bien centrer la carte si elle est plus petite que l'écran */
-        }
 
         /* --- PAGES DE DÉTAILS --- */
         .detail-page {
@@ -686,9 +682,37 @@
             width: 0%;
             transition: width 0.1s ease;
         }
+
+        /* Le rideau de transition */
+    .page-transition {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--bg-light); /* Utilise la couleur de fond de ton site */
+        z-index: 99999; /* Toujours au-dessus de tout */
+        transition: opacity 0.4s ease-in-out; /* Durée de l'animation */
+        pointer-events: none; /* Empêche de bloquer les clics en temps normal */
+        opacity: 1; /* Au chargement, le rideau est opaque */
+    }
+
+    /* Classe pour cacher le rideau (fade in de la page) */
+    .page-transition.is-loaded {
+        opacity: 0;
+    }
+
+    /* Classe pour remettre le rideau (fade out de la page) */
+    .page-transition.is-leaving {
+        opacity: 1;
+        pointer-events: all;
+    }
+
     </style>
 </head>
 <body>
+
+<div class="page-transition"></div>
 
 <div id="progress-container">
     <div id="progress-bar"></div>
@@ -725,7 +749,7 @@
 <div class="container">
     <h3 class="section-title">Besoin d'un site internet ?</h3>
     <div class="placeholder-grid">
-        <div class="card card-featured" style="justify-content: flex-start;" data-aos="fade-up">
+        <div class="card" style="justify-content: flex-start;" data-aos="fade-up">
             <div>
                 <h4 style="color: var(--primary-orange);">Un site vitrine</h4>
                 <p class="card-description">
@@ -735,10 +759,8 @@
             
             <div class="card-split-section">
                 <div class="split-list">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Design 100% sur-mesure<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Adapté aux mobiles et tablettes<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Optimisation du référencement<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Accompagnement dédié
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Design 100% sur-mesure&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Optimisation du référencement<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Adapté aux mobiles et tablettes&nbsp;&nbsp;&nbsp;&nbsp;• Accompagnement dédié
                 </div>
                 
                 <div class="split-action">
@@ -798,6 +820,20 @@
                     </div>
                     <button class="btn-more" onclick="showView('detail-fidelite')">En savoir plus ...</button>
                 </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <h3 class="section-title">Comment ça marche ?</h3>
+            <div class="placeholder-grid">
+                
+                <div class="card" data-aos="fade-up" data-aos-delay="100">
+                    <div>
+                        <h4 style="color: var(--primary-orange);">Notre méthodologie </h4>
+                        <p class="card-description">Ici le texte méthodologie</p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -1199,15 +1235,35 @@
 
     <script>
         function showView(viewId) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
+            const transitionEl = document.querySelector('.page-transition');
             const backBtn = document.getElementById('header-back-btn');
+            
+            // --- CAS 1 : ON RETOURNE À L'ACCUEIL (Pas d'animation) ---
             if (viewId === 'main-home') {
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                document.getElementById(viewId).classList.add('active');
                 backBtn.style.display = 'none';
-            } else {
-                backBtn.style.display = 'flex';
+                window.scrollTo(0, 0);
+                return; // Le "return" arrête la fonction ici, on ne lit pas la suite !
             }
-            window.scrollTo(0,0);
+            
+            // --- CAS 2 : ON ENTRE DANS UNE NOUVELLE PAGE (Avec animation) ---
+            // 1. Le rideau tombe
+            transitionEl.classList.remove('is-loaded');
+            transitionEl.classList.add('is-leaving');
+            
+            // 2. On attend 400ms que le rideau soit fermé
+            setTimeout(() => {
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                document.getElementById(viewId).classList.add('active');
+                backBtn.style.display = 'flex';
+                window.scrollTo(0, 0);
+                
+                // 3. Le rideau se lève
+                transitionEl.classList.remove('is-leaving');
+                transitionEl.classList.add('is-loaded');
+                
+            }, 225);
         }
 
         window.addEventListener('DOMContentLoaded', (event) => {
@@ -1345,6 +1401,38 @@
         once: true,    /* L'animation ne se joue qu'une seule fois en descendant */
         offset: 100    /* Déclenche l'animation un peu plus tôt/tard */
       });
+    </script>
+
+    <script>
+    // On sélectionne toutes les cartes de la page
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach(card => {
+        // On cherche s'il y a un lien (balise <a>) ou un <button> dans la carte
+        const actionButton = card.querySelector('a, button');
+
+        if (actionButton) {
+            // S'il y a un bouton, on met le curseur en "petite main" pour montrer que c'est cliquable
+            card.style.cursor = 'pointer';
+
+            // Quand on clique n'importe où sur la carte...
+            card.addEventListener('click', function(e) {
+                // On s'assure qu'on n'a pas cliqué DÉJÀ sur le bouton (pour éviter de déclencher l'action 2 fois)
+                if (e.target !== actionButton) {
+                    actionButton.click(); // On simule le clic sur le bouton
+                }
+            });
+        }
+    });
+    </script>
+
+    <script>
+    window.addEventListener('load', () => {
+        const transitionEl = document.querySelector('.page-transition');
+        if (transitionEl) {
+            transitionEl.classList.add('is-loaded');
+        }
+    });
     </script>
 
 </body>
