@@ -23,11 +23,16 @@
             box-sizing: border-box;
         }
 
+        html {
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-light);
             color: var(--text-dark);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         /* --- BARRE DE DÉFILEMENT SUR-MESURE --- */
@@ -195,6 +200,8 @@
             padding: 20px 40px;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .section-title {
@@ -520,6 +527,37 @@
         }
 
         /* --- STYLE FORMULAIRE CONTACT --- */
+        #contactForm {
+            padding: 22px;
+        }
+
+        /* --- BADGE ÉMOJI EN-TÊTE DE CARD MODULE --- */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+        .card-emoji {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #fff8f4, #ffe1cc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(255, 107, 0, 0.12);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card:hover .card-emoji {
+            transform: scale(1.08) rotate(-6deg);
+        }
+        .card-header h4 {
+            margin: 0 !important;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -1025,38 +1063,8 @@
         to   { opacity: 0; transform: translateY(-12px); }
     }
 
-    /* --- EFFET SPOTLIGHT SUR LES CARDS MODULES --- */
-    .card {
-        position: relative;
-        overflow: hidden;
-        isolation: isolate;
-    }
-    .card::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(
-            circle 280px at var(--mouse-x, 50%) var(--mouse-y, 50%),
-            rgba(255, 107, 0, 0.14),
-            rgba(255, 107, 0, 0.05) 35%,
-            transparent 70%
-        );
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        pointer-events: none;
-        border-radius: inherit;
-        z-index: 0;
-    }
-    .card:hover::before {
-        opacity: 1;
-    }
-    .card > * {
-        position: relative;
-        z-index: 1;
-    }
-
-    /* --- VAGUES SVG ANIMÉES (parallax en bas de viewport) --- */
-    .bg-waves {
+    /* --- VAGUES SVG (uniquement sur la page contact) --- */
+    .bottom-waves {
         position: fixed;
         bottom: 0;
         left: 0;
@@ -1066,7 +1074,7 @@
         z-index: 0;
         overflow: hidden;
     }
-    .bg-wave {
+    .bottom-wave {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -1074,54 +1082,151 @@
         height: 100%;
         will-change: transform;
     }
-    .bg-wave path {
+    .bottom-wave path {
         fill: var(--primary-orange);
     }
-    .bg-wave-1 {
+    .bottom-wave-1 {
         opacity: 0.12;
-        animation: wave-drift 20s linear infinite;
+        animation: bottom-wave-drift 20s linear infinite;
     }
-    .bg-wave-2 {
+    .bottom-wave-2 {
         opacity: 0.08;
-        animation: wave-drift 35s linear infinite reverse;
+        animation: bottom-wave-drift 35s linear infinite reverse;
         bottom: -25px;
     }
-    .bg-wave-3 {
+    .bottom-wave-3 {
         opacity: 0.05;
-        animation: wave-drift 50s linear infinite;
+        animation: bottom-wave-drift 50s linear infinite;
         bottom: -50px;
     }
-    @keyframes wave-drift {
+    @keyframes bottom-wave-drift {
         0%   { transform: translateX(0); }
         100% { transform: translateX(-50%); }
     }
     @media (max-width: 600px) {
-        .bg-waves { height: 140px; }
+        .bottom-waves { height: 140px; }
     }
-    /* Le contenu reste au-dessus des vagues */
-    body > header,
-    body > .view,
-    body > footer {
+
+    /* --- PARTICULES DES VUES DÉTAIL (couvre toute la vue, scroll inclus) --- */
+    .detail-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        display: block;
+    }
+
+    /* --- VIDEO PLAYER (vidéo floutée avec bouton play) --- */
+    .video-player {
         position: relative;
-        z-index: 1;
+        overflow: hidden;
+        border-radius: 4px;
+        cursor: pointer;
+        background: #1a1a1a;
+    }
+    .video-player video {
+        width: 100%;
+        display: block;
+        filter: blur(12px);
+        transform: scale(1.06);
+        transition: filter 0.5s ease, transform 0.5s ease;
+    }
+    .video-player.playing video {
+        filter: blur(0);
+        transform: scale(1);
+        cursor: default;
+    }
+    .video-player .play-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 78px;
+        height: 78px;
+        border-radius: 50%;
+        background: var(--primary-orange);
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 8px 24px rgba(255, 107, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+        z-index: 2;
+        padding: 0;
+    }
+    .video-player .play-button::before {
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: 22px solid white;
+        border-top: 14px solid transparent;
+        border-bottom: 14px solid transparent;
+        margin-left: 6px;
+    }
+    .video-player .play-button:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+        box-shadow: 0 12px 32px rgba(255, 107, 0, 0.6);
+    }
+    .video-player.playing .play-button {
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    .video-player .play-label {
+        position: absolute;
+        top: calc(50% + 60px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.55);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        backdrop-filter: blur(4px);
+        transition: opacity 0.3s ease;
+        z-index: 2;
+        white-space: nowrap;
+    }
+    .video-player.playing .play-label {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Bouton "découvrir le tableau de bord" sous les vidéos */
+    .dashboard-link-btn {
+        margin-top: 18px;
+        margin-bottom: 24px;
+        text-align: center;
+    }
+    .dashboard-link-btn button {
+        background: white;
+        color: var(--primary-orange);
+        border: 1.5px solid var(--primary-orange);
+        padding: 11px 22px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.92rem;
+        cursor: pointer;
+        font-family: inherit;
+        box-shadow: 0 2px 10px rgba(255, 107, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+    .dashboard-link-btn button:hover {
+        transform: translateY(-2px);
+        background: var(--primary-orange);
+        color: white;
+        box-shadow: 0 6px 18px rgba(255, 107, 0, 0.25);
     }
 
     </style>
 </head>
 <body>
-
-<!-- Vagues SVG animées en arrière-plan (parallax) -->
-<div class="bg-waves" aria-hidden="true">
-    <svg class="bg-wave bg-wave-1" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,160 C 180,80 540,80 720,160 C 900,240 1260,240 1440,160 C 1620,80 1980,80 2160,160 C 2340,240 2700,240 2880,160 L 2880,320 L 0,320 Z"></path>
-    </svg>
-    <svg class="bg-wave bg-wave-2" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,180 C 200,120 480,100 720,180 C 960,260 1200,260 1440,180 C 1680,100 1960,120 2160,180 C 2400,260 2640,260 2880,180 L 2880,320 L 0,320 Z"></path>
-    </svg>
-    <svg class="bg-wave bg-wave-3" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,200 C 240,140 540,140 720,200 C 900,260 1260,260 1440,200 C 1620,140 1920,140 2160,200 C 2340,260 2640,260 2880,200 L 2880,320 L 0,320 Z"></path>
-    </svg>
-</div>
 
 <div class="page-transition"></div>
 
@@ -1145,6 +1250,18 @@
     </header>
 
     <div id="main-home" class="view active">
+        <!-- Vagues SVG animées (uniquement sur cette page) -->
+        <div class="bottom-waves" aria-hidden="true">
+            <svg class="bottom-wave bottom-wave-1" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,160 C 180,80 540,80 720,160 C 900,240 1260,240 1440,160 C 1620,80 1980,80 2160,160 C 2340,240 2700,240 2880,160 L 2880,320 L 0,320 Z"></path>
+            </svg>
+            <svg class="bottom-wave bottom-wave-2" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,180 C 200,120 480,100 720,180 C 960,260 1200,260 1440,180 C 1680,100 1960,120 2160,180 C 2400,260 2640,260 2880,180 L 2880,320 L 0,320 Z"></path>
+            </svg>
+            <svg class="bottom-wave bottom-wave-3" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,200 C 240,140 540,140 720,200 C 900,260 1260,260 1440,200 C 1620,140 1920,140 2160,200 C 2340,260 2640,260 2880,200 L 2880,320 L 0,320 Z"></path>
+            </svg>
+        </div>
         <section class="concept-section">
             <canvas id="particles-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
             <div class="concept-container" data-aos="fade-in" data-aos-duration="1200" style="position:relative; z-index:1;">
@@ -1191,7 +1308,10 @@
             <div class="placeholder-grid">
                 <div class="card" data-aos="fade-up" data-aos-delay="100">
                     <div>
-                        <h4 style="color: var(--primary-orange);">Carte digitale</h4>
+                        <div class="card-header">
+                            <div class="card-emoji">🍽️</div>
+                            <h4 style="color: var(--primary-orange);">Carte digitale</h4>
+                        </div>
                         <p class="card-description">Une carte digitale complètement <strong>personnalisable</strong> à votre image. Elle fluidifie l'<strong>expérience client</strong> en les orientant dans leurs choix grâce à un aperçu visuel. </p>
                         
                         <div style="margin-top: 15px; padding-top: 15px; font-size: 0.95rem; border-top: 1px solid #e0e0e0;">
@@ -1206,7 +1326,10 @@
 
                 <div class="card" data-aos="fade-up" data-aos-delay="200">
                     <div>
-                        <h4 style="color: var(--primary-orange);">Roue d'avis 5 étoiles</h4>
+                        <div class="card-header">
+                            <div class="card-emoji">⭐</div>
+                            <h4 style="color: var(--primary-orange);">Roue d'avis 5 étoiles</h4>
+                        </div>
                         <p class="card-description">Vos clients tournent une roue qui leur permet d'obtenir un <strong>gain</strong> en échange d'un <strong>avis 5 étoiles</strong> Google. Processus <strong>100% automatisé</strong>, vos clients reçoivent un mail avec un code.</p>
                         
                         <div style="margin-top: 15px; padding-top: 15px; font-size: 0.95rem; border-top: 1px solid #e0e0e0;">
@@ -1221,7 +1344,10 @@
 
                 <div class="card" data-aos="fade-up" data-aos-delay="300">
                     <div>
-                        <h4 style="color: var(--primary-orange);">Web fidélité</h4>
+                        <div class="card-header">
+                            <div class="card-emoji">🎁</div>
+                            <h4 style="color: var(--primary-orange);">Web fidélité</h4>
+                        </div>
                         <p class="card-description">Un programme de fidélité <strong>100% digital</strong> et personnalisé. Finies les cartes papier perdues : récompensez vos clients réguliers avec un système de points <strong>simple et intuitif</strong>.</p>
                         
                         <div style="margin-top: 15px; padding-top: 15px; font-size: 0.95rem; border-top: 1px solid #e0e0e0;">
@@ -1308,7 +1434,7 @@
                 <div class="price-card" onclick="showView('detail-carte')" style="cursor:pointer;" data-aos="fade-up" data-aos-delay="100">
                     <div class="price-icon">🍽️</div>
                     <p class="price-name">Carte digitale</p>
-                    <p class="price-amount">29,90€ <span>/ mois</span></p>
+                    <p class="price-amount">34,90€ <span>/ mois</span></p>
                     <p class="price-sub">+ 215€ de mise en place</p>
                     <hr class="price-divider">
                     <div class="price-feature"><div class="price-check">✓</div>Menu visuel personnalisé</div>
@@ -1371,7 +1497,7 @@
 
 
     <div id="detail-carte" class="view" style="position:relative;">
-        <canvas id="particles-canvas-carte" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
+        <canvas class="detail-particles"></canvas>
         <div class="detail-page" style="position:relative; z-index:1;">
             <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Carte Digitale</h1>
             <p class="product-intro">Un menu vivant, filtrable, accessible en un scan — conçu pour refléter votre identité et simplifier le choix de chaque client.</p>
@@ -1418,6 +1544,49 @@
                 </div>
             </div>
 
+            <div class='detail-section'>
+                <h2>Dashboard commerçant</h2>
+
+                <!-- MOCKUP PC DASHBOARD - À COMPLÉTER -->
+                    <div style="margin-top: 35px; text-align: center;">
+                        <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px;">Tableau de bord commerçant</p>
+
+                        <!-- Cadre écran PC -->
+                        <div style="display: inline-block; background: #1a1a1a; border-radius: 14px 14px 6px 6px; padding: 10px 10px 0 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); max-width: 780px; width: 100%;">
+                            <!-- Barre de titre Mac-style -->
+                            <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px 8px 8px;">
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f57;"></div>
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background: #febc2e;"></div>
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background: #28c840;"></div>
+                                <div style="flex: 1; background: #333; border-radius: 4px; height: 18px; margin-left: 10px; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 0.65rem; color: #888;">rylia.fr/carte-digitale/dashboard/</span>
+                                </div>
+                            </div>
+
+                            <!-- VIDÉO DU DASHBOARD - À COMPLÉTER -->
+                            <div class="video-player">
+                                <video poster="dashboard-carte.png" preload="metadata" playsinline>
+                                    <source src="dashboard-carte.mp4" type="video/mp4">
+                                </video>
+                                <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
+                                <span class="play-label">Voir la présentation</span>
+                            </div>
+                        </div>
+
+                        <!-- Support + base -->
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <div style="width: 120px; height: 14px; background: #2a2a2a; border-radius: 0 0 4px 4px;"></div>
+                            <div style="width: 200px; height: 8px; background: #1a1a1a; border-radius: 0 0 6px 6px; margin-top: 2px;"></div>
+                        </div>
+
+                        <p class="mockup-caption" style="margin-top: 12px;">Interface de gestion commerçant</p>
+
+                        <div class="dashboard-link-btn">
+                            <button onclick="showView('detail-dashboard')">📊 Découvrir le tableau de bord en détail →</button>
+                        </div>
+                    </div>
+            </div>
+
             <div class="detail-section">
                 <h2>Indice de la solution</h2>
                 <div class="rating-item">
@@ -1445,7 +1614,7 @@
     </div>
 
     <div id="detail-roue" class="view" style="position:relative;">
-        <canvas id="particles-canvas-roue" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
+        <canvas class="detail-particles"></canvas>
         <div class="detail-page" style="position:relative; z-index:1;">
             <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Roue d'avis 5 étoiles</h1>
             <p class="product-intro">Transformez chaque repas en opportunité : vos clients jouent, gagnent, et vous laissent un avis 5 étoiles — automatiquement.</p>
@@ -1475,6 +1644,23 @@
                     CLIQUEZ ICI</a>
             </div>
 
+            <div class="detail-section">
+                <h2>En quelques mots</h2>
+                <div class="detail-body">Et si chaque repas vous rapportait un avis Google ? La <strong>Roue d'avis Rylia</strong> transforme le dépôt d'avis en jeu : votre client scanne un QR Code, tourne la roue et remporte un gain immédiat. En échange, il vous laisse un <strong>avis 5 étoiles</strong>. Tout est <strong>100% automatisé</strong> — il reçoit son code par mail, vous gérez tout depuis un tableau de bord simple. Résultat : votre réputation Google décolle, et vos clients reviennent récupérer leur gain.</div>
+            </div>
+
+            <div class="detail-section">
+                <h2>Ce que ça vous apporte</h2>
+                <div class="pills-grid">
+                    <div class="pill-feature"><div class="pill-icon">⭐</div><div class="pill-content"><strong>Avis Google en continu</strong><span>Chaque scan génère un avis — votre classement local grimpe naturellement.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎁</div><div class="pill-content"><strong>Gains 100% personnalisables</strong><span>Boisson, dessert, réduction… vous choisissez ce que vous offrez et à quelle fréquence.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🤖</div><div class="pill-content"><strong>Zéro gestion manuelle</strong><span>Le code est envoyé automatiquement par mail. Aucune saisie de votre côté.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔒</div><div class="pill-content"><strong>Anti-abus intégré</strong><span>Délai de 24h entre chaque partie, gain valable 10 jours — vous gardez le contrôle.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎯</div><div class="pill-content"><strong>Probabilités au choix</strong><span>Vous définissez les chances pour chaque gain — pour rester rentable à chaque tirage.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔄</div><div class="pill-content"><strong>Client fidélisé, pas juste satisfait</strong><span>Il revient récupérer son gain — et consomme à nouveau chez vous.</span></div></div>
+                </div>
+            </div>
+
             <div class='detail-section'>
                 <h2>Dashboard commerçant</h2>
 
@@ -1494,8 +1680,14 @@
                                 </div>
                             </div>
 
-                            <!-- IMAGE DU DASHBOARD -->
-                            <img src="dashboard-roue.png" alt="Dashboard roue d'avis" style="width: 100%; display: block; border-radius: 4px;">
+                            <!-- VIDÉO DU DASHBOARD -->
+                            <div class="video-player">
+                                <video poster="dashboard-roue.png" preload="metadata" playsinline>
+                                    <source src="dashboard-roue.mp4" type="video/mp4">
+                                </video>
+                                <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
+                                <span class="play-label">Voir la présentation</span>
+                            </div>
                         </div>
 
                         <!-- Support + base -->
@@ -1505,25 +1697,11 @@
                         </div>
 
                         <p class="mockup-caption" style="margin-top: 12px;">Interface de gestion commerçant</p>
+
+                        <div class="dashboard-link-btn">
+                            <button onclick="showView('detail-dashboard')">📊 Découvrir le tableau de bord en détail →</button>
+                        </div>
                     </div>
-            </div>
-
-
-            <div class="detail-section">
-                <h2>En quelques mots</h2>
-                <div class="detail-body">Et si chaque repas vous rapportait un avis Google ? La <strong>Roue d'avis Rylia</strong> transforme le dépôt d'avis en jeu : votre client scanne un QR Code, tourne la roue et remporte un gain immédiat. En échange, il vous laisse un <strong>avis 5 étoiles</strong>. Tout est <strong>100% automatisé</strong> — il reçoit son code par mail, vous gérez tout depuis un tableau de bord simple. Résultat : votre réputation Google décolle, et vos clients reviennent récupérer leur gain.</div>
-            </div>
-
-            <div class="detail-section">
-                <h2>Ce que ça vous apporte</h2>
-                <div class="pills-grid">
-                    <div class="pill-feature"><div class="pill-icon">⭐</div><div class="pill-content"><strong>Avis Google en continu</strong><span>Chaque scan génère un avis — votre classement local grimpe naturellement.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🎁</div><div class="pill-content"><strong>Gains 100% personnalisables</strong><span>Boisson, dessert, réduction… vous choisissez ce que vous offrez et à quelle fréquence.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🤖</div><div class="pill-content"><strong>Zéro gestion manuelle</strong><span>Le code est envoyé automatiquement par mail. Aucune saisie de votre côté.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🔒</div><div class="pill-content"><strong>Anti-abus intégré</strong><span>Délai de 24h entre chaque partie, gain valable 10 jours — vous gardez le contrôle.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🎯</div><div class="pill-content"><strong>Probabilités au choix</strong><span>Vous définissez les chances pour chaque gain — pour rester rentable à chaque tirage.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🔄</div><div class="pill-content"><strong>Client fidélisé, pas juste satisfait</strong><span>Il revient récupérer son gain — et consomme à nouveau chez vous.</span></div></div>
-                </div>
             </div>
 
             <div class="detail-section">
@@ -1558,7 +1736,7 @@
     </div>
 
     <div id="detail-fidelite" class="view" style="position:relative;">
-        <canvas id="particles-canvas-fidelite" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
+        <canvas class="detail-particles"></canvas>
         <div class="detail-page" style="position:relative; z-index:1;">
             <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Web fidélité</h1>
             <p class="product-intro">Un programme de fidélité moderne, sans carte papier, qui récompense vos habitués et les incite naturellement à revenir.</p>
@@ -1588,6 +1766,23 @@
                     CLIQUEZ ICI</a>
             </div>
 
+            <div class="detail-section">
+                <h2>En quelques mots</h2>
+                <div class="detail-body">Fini la carte papier oubliée dans un tiroir. Avec le <strong>Web Fidélité Rylia</strong>, vos clients cumulent des points à chaque visite depuis leur téléphone — sans rien à installer. Vous gérez tout en quelques secondes depuis votre espace commerçant : vous scannez, le système crédite. Un <strong>classement entre clients</strong> crée une émulation naturelle qui les pousse à revenir plus souvent. Simple pour vous, engageant pour eux.</div>
+            </div>
+
+            <div class="detail-section">
+                <h2>Ce que ça vous apporte</h2>
+                <div class="pills-grid">
+                    <div class="pill-feature"><div class="pill-icon">📲</div><div class="pill-content"><strong>Adieu les cartes perdues</strong><span>Tout est sur le téléphone du client — il ne peut plus oublier son programme fidélité.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🏆</div><div class="pill-content"><strong>Paliers de récompenses motivants</strong><span>5 niveaux personnalisables pour garder vos clients engagés sur la durée.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Validation express au comptoir</strong><span>Un scan, un montant saisi — les points sont crédités en temps réel, même en rush.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📊</div><div class="pill-content"><strong>Classement & compétition</strong><span>Vos clients se challengent entre eux — et reviennent consommer pour grimper.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔁</div><div class="pill-content"><strong>Fréquence de visite en hausse</strong><span>Un client proche d'une récompense choisit votre établissement, pas celui d'en face.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🛠️</div><div class="pill-content"><strong>Aucune contrainte technique</strong><span>Pas d'app à installer, synchronisation instantanée, interface pensée pour être intuitive.</span></div></div>
+                </div>
+            </div>
+
             <div class='detail-section'>
                 <h2>Dashboard commerçant</h2>
 
@@ -1607,8 +1802,14 @@
                                 </div>
                             </div>
 
-                            <!-- IMAGE DU DASHBOARD -->
-                            <img src="dashboard-fidelite.png" alt="Dashboard fidelité" style="width: 100%; display: block; border-radius: 4px;">
+                            <!-- VIDÉO DU DASHBOARD -->
+                            <div class="video-player">
+                                <video poster="dashboard-fidelite.png" preload="metadata" playsinline>
+                                    <source src="dashboard-fidelite.mp4" type="video/mp4">
+                                </video>
+                                <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
+                                <span class="play-label">Voir la présentation</span>
+                            </div>
                         </div>
 
                         <!-- Support + base -->
@@ -1618,24 +1819,11 @@
                         </div>
 
                         <p class="mockup-caption" style="margin-top: 12px;">Interface de gestion commerçant</p>
+
+                        <div class="dashboard-link-btn">
+                            <button onclick="showView('detail-dashboard')">📊 Découvrir le tableau de bord en détail →</button>
+                        </div>
                     </div>
-            </div>
-
-            <div class="detail-section">
-                <h2>En quelques mots</h2>
-                <div class="detail-body">Fini la carte papier oubliée dans un tiroir. Avec le <strong>Web Fidélité Rylia</strong>, vos clients cumulent des points à chaque visite depuis leur téléphone — sans rien à installer. Vous gérez tout en quelques secondes depuis votre espace commerçant : vous scannez, le système crédite. Un <strong>classement entre clients</strong> crée une émulation naturelle qui les pousse à revenir plus souvent. Simple pour vous, engageant pour eux.</div>
-            </div>
-
-            <div class="detail-section">
-                <h2>Ce que ça vous apporte</h2>
-                <div class="pills-grid">
-                    <div class="pill-feature"><div class="pill-icon">📲</div><div class="pill-content"><strong>Adieu les cartes perdues</strong><span>Tout est sur le téléphone du client — il ne peut plus oublier son programme fidélité.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🏆</div><div class="pill-content"><strong>Paliers de récompenses motivants</strong><span>5 niveaux personnalisables pour garder vos clients engagés sur la durée.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Validation express au comptoir</strong><span>Un scan, un montant saisi — les points sont crédités en temps réel, même en rush.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">📊</div><div class="pill-content"><strong>Classement & compétition</strong><span>Vos clients se challengent entre eux — et reviennent consommer pour grimper.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🔁</div><div class="pill-content"><strong>Fréquence de visite en hausse</strong><span>Un client proche d'une récompense choisit votre établissement, pas celui d'en face.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🛠️</div><div class="pill-content"><strong>Aucune contrainte technique</strong><span>Pas d'app à installer, synchronisation instantanée, interface pensée pour être intuitive.</span></div></div>
-                </div>
             </div>
 
             <div class="detail-section">
@@ -1665,7 +1853,7 @@
     </div>
 
     <div id="detail-dashboard" class="view" style="position:relative;">
-        <canvas id="particles-canvas-dashboard" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
+        <canvas class="detail-particles"></canvas>
         <div class="detail-page" style="position:relative; z-index:1;">
             <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Tableau de bord</h1>
             <p class="product-intro">Un seul espace pour piloter toute votre activité — vos modules, vos statistiques, vos paramètres, accessibles d'un clic depuis n'importe où.</p>
@@ -1673,9 +1861,8 @@
             <div class='detail-section'>
                 <h2>Aperçu du tableau de bord</h2>
 
-                <!-- MOCKUP PC DASHBOARD 1 - Roue d'avis -->
                 <div style="margin-top: 35px; text-align: center;">
-                    <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px;">Gestion de la roue d'avis</p>
+                    <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px;">Le dashboard principal</p>
 
                     <div style="display: inline-block; background: #1a1a1a; border-radius: 14px 14px 6px 6px; padding: 10px 10px 0 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); max-width: 780px; width: 100%;">
                         <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px 8px 8px;">
@@ -1683,10 +1870,17 @@
                             <div style="width: 10px; height: 10px; border-radius: 50%; background: #febc2e;"></div>
                             <div style="width: 10px; height: 10px; border-radius: 50%; background: #28c840;"></div>
                             <div style="flex: 1; background: #333; border-radius: 4px; height: 18px; margin-left: 10px; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 0.65rem; color: #888;">rylia.fr/dashboard-roue/</span>
+                                <span style="font-size: 0.65rem; color: #888;">rylia.fr/dashboard/</span>
                             </div>
                         </div>
-                        <img src="dashboard-roue.png" alt="Dashboard roue d'avis" style="width: 100%; display: block; border-radius: 4px;">
+                        <!-- VIDÉO DE PRÉSENTATION DU DASHBOARD -->
+                        <div class="video-player">
+                            <video poster="dashboard-presentation.png" preload="metadata" playsinline>
+                                <source src="dashboard-presentation.mp4" type="video/mp4">
+                            </video>
+                            <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
+                            <span class="play-label">Voir la présentation</span>
+                        </div>
                     </div>
 
                     <div style="display: flex; flex-direction: column; align-items: center;">
@@ -1694,48 +1888,57 @@
                         <div style="width: 200px; height: 8px; background: #1a1a1a; border-radius: 0 0 6px 6px; margin-top: 2px;"></div>
                     </div>
 
-                    <p class="mockup-caption" style="margin-top: 12px;">Module Roue d'avis</p>
-                </div>
-
-                <!-- MOCKUP PC DASHBOARD 2 - Fidélité -->
-                <div style="margin-top: 50px; text-align: center;">
-                    <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px;">Gestion du programme de fidélité</p>
-
-                    <div style="display: inline-block; background: #1a1a1a; border-radius: 14px 14px 6px 6px; padding: 10px 10px 0 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); max-width: 780px; width: 100%;">
-                        <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px 8px 8px;">
-                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f57;"></div>
-                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #febc2e;"></div>
-                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #28c840;"></div>
-                            <div style="flex: 1; background: #333; border-radius: 4px; height: 18px; margin-left: 10px; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 0.65rem; color: #888;">rylia.fr/fidelite/admin/</span>
-                            </div>
-                        </div>
-                        <img src="dashboard-fidelite.png" alt="Dashboard fidélité" style="width: 100%; display: block; border-radius: 4px;">
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; align-items: center;">
-                        <div style="width: 120px; height: 14px; background: #2a2a2a; border-radius: 0 0 4px 4px;"></div>
-                        <div style="width: 200px; height: 8px; background: #1a1a1a; border-radius: 0 0 6px 6px; margin-top: 2px;"></div>
-                    </div>
-
-                    <p class="mockup-caption" style="margin-top: 12px;">Module Web fidélité</p>
+                    <p class="mockup-caption" style="margin-top: 12px;">Une gestion fluide et centralisé pour tous vos modules</p>
                 </div>
             </div>
 
             <div class="detail-section">
                 <h2>En quelques mots</h2>
-                <div class="detail-body">Gérer plusieurs modules ne devrait jamais être compliqué. Avec le <strong>tableau de bord Rylia</strong>, vous accédez à <strong>tous vos outils depuis un seul espace</strong> : modifiez vos récompenses fidélité, vos gains de roue, votre carte digitale ou les contenus de votre site, le tout <strong>en quelques clics</strong>. Chaque modification est <strong>appliquée en temps réel</strong>, sans délai et sans intervention technique. Et où que vous soyez — derrière votre comptoir, en déplacement ou chez vous —, votre panel reste à portée de main, <strong>sur ordinateur, tablette ou smartphone</strong>.</div>
+                <div class="detail-body">Gérer plusieurs modules ne devrait jamais être compliqué. Avec le <strong>tableau de bord Rylia</strong>, vous accédez à <strong>tous vos outils depuis un seul espace</strong> : modifiez vos récompenses fidélité, vos gains de roue, votre carte digitale, le tout <strong>en quelques clics</strong>. Chaque modification est <strong>appliquée en temps réel</strong>, sans délai et sans intervention technique. Et où que vous soyez, derrière votre comptoir, en déplacement ou chez vous, votre panel reste à portée de main, <strong>sur ordinateur, tablette ou smartphone</strong>.</div>
             </div>
 
             <div class="detail-section">
                 <h2>Ce que ça vous apporte</h2>
                 <div class="pills-grid">
-                    <div class="pill-feature"><div class="pill-icon">🧩</div><div class="pill-content"><strong>Tous vos modules réunis</strong><span>Roue d'avis, fidélité, carte digitale, site web — tout est centralisé au même endroit.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Modifications en temps réel</strong><span>Changez gains, plats, récompenses ou tarifs en quelques secondes — c'est en ligne immédiatement.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🧩</div><div class="pill-content"><strong>Tous vos modules réunis</strong><span>Roue d'avis, fidélité, carte digitale, site web, tout est centralisé au même endroit.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Modifications en temps réel</strong><span>Changez gains, plats, récompenses ou tarifs en quelques secondes, c'est en ligne immédiatement.</span></div></div>
                     <div class="pill-feature"><div class="pill-icon">📊</div><div class="pill-content"><strong>Statistiques détaillées</strong><span>Avis générés, points distribués, visites, scans… pilotez votre activité avec des chiffres concrets.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📃</div><div class="pill-content"><strong>Vos factures à porté de main</strong><span>Téléchargez vos factures directement depuis le dashboard.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎟️</div><div class="pill-content"><strong>Système de ticket</strong><span>Depuis votre espace, ouvrez un ticket si vous avez la moindre question.</span></div></div>
                     <div class="pill-feature"><div class="pill-icon">🔐</div><div class="pill-content"><strong>Espace 100% sécurisé</strong><span>Accès personnel et protégé : vous seul gérez votre établissement, en toute confidentialité.</span></div></div>
                     <div class="pill-feature"><div class="pill-icon">📱</div><div class="pill-content"><strong>Accessible partout</strong><span>Ordinateur, tablette, smartphone : votre tableau de bord vous suit où que vous soyez.</span></div></div>
                     <div class="pill-feature"><div class="pill-icon">🎯</div><div class="pill-content"><strong>Aucune compétence requise</strong><span>Pensé pour les commerçants, pas pour les développeurs. Si vous utilisez un smartphone, vous saurez l'utiliser.</span></div></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2>Accéder aux dashboards par module</h2>
+                <p style="padding: 18px 22px 0 22px; color: var(--text-light); font-size: 0.95rem; line-height: 1.5; margin: 0;">
+                    Chaque module dispose de son propre tableau de bord, accessible depuis votre panel principal. Découvrez en détail le fonctionnement de chacun :
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; padding: 22px;">
+
+                    <div onclick="showView('detail-carte')" style="cursor: pointer; background: linear-gradient(135deg, #fff8f4, #ffe1cc); border-radius: 12px; padding: 22px; border-bottom: 3px solid var(--primary-orange); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease; text-align: center;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(255,107,0,0.18)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <div style="width: 56px; height: 56px; border-radius: 14px; background: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; font-size: 1.8rem; box-shadow: 0 2px 10px rgba(255, 107, 0, 0.15);">🍽️</div>
+                        <h4 style="color: var(--primary-orange); font-size: 1.05rem; margin: 0 0 6px 0;">Carte digitale</h4>
+                        <p style="color: var(--text-light); font-size: 0.85rem; line-height: 1.45; margin: 0 0 12px 0;">Modifiez vos plats, prix et allergènes en temps réel.</p>
+                        <span style="color: var(--primary-orange); font-size: 0.85rem; font-weight: 600;">Découvrir →</span>
+                    </div>
+
+                    <div onclick="showView('detail-roue')" style="cursor: pointer; background: linear-gradient(135deg, #fff8f4, #ffe1cc); border-radius: 12px; padding: 22px; border-bottom: 3px solid var(--primary-orange); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease; text-align: center;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(255,107,0,0.18)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <div style="width: 56px; height: 56px; border-radius: 14px; background: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; font-size: 1.8rem; box-shadow: 0 2px 10px rgba(255, 107, 0, 0.15);">⭐</div>
+                        <h4 style="color: var(--primary-orange); font-size: 1.05rem; margin: 0 0 6px 0;">Roue d'avis</h4>
+                        <p style="color: var(--text-light); font-size: 0.85rem; line-height: 1.45; margin: 0 0 12px 0;">Gérez vos gains, probabilités et suivez les avis générés.</p>
+                        <span style="color: var(--primary-orange); font-size: 0.85rem; font-weight: 600;">Découvrir →</span>
+                    </div>
+
+                    <div onclick="showView('detail-fidelite')" style="cursor: pointer; background: linear-gradient(135deg, #fff8f4, #ffe1cc); border-radius: 12px; padding: 22px; border-bottom: 3px solid var(--primary-orange); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease; text-align: center;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(255,107,0,0.18)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <div style="width: 56px; height: 56px; border-radius: 14px; background: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; font-size: 1.8rem; box-shadow: 0 2px 10px rgba(255, 107, 0, 0.15);">🎁</div>
+                        <h4 style="color: var(--primary-orange); font-size: 1.05rem; margin: 0 0 6px 0;">Web fidélité</h4>
+                        <p style="color: var(--text-light); font-size: 0.85rem; line-height: 1.45; margin: 0 0 12px 0;">Configurez vos paliers, récompenses et suivez vos clients.</p>
+                        <span style="color: var(--primary-orange); font-size: 0.85rem; font-weight: 600;">Découvrir →</span>
+                    </div>
+
                 </div>
             </div>
 
@@ -1771,7 +1974,18 @@
     </div>
 
     <div id="contact-view" class="view" style="position:relative;">
-        <canvas id="particles-canvas-contact" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
+        <!-- Vagues SVG animées (uniquement sur cette page) -->
+        <div class="bottom-waves" aria-hidden="true">
+            <svg class="bottom-wave bottom-wave-1" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,160 C 180,80 540,80 720,160 C 900,240 1260,240 1440,160 C 1620,80 1980,80 2160,160 C 2340,240 2700,240 2880,160 L 2880,320 L 0,320 Z"></path>
+            </svg>
+            <svg class="bottom-wave bottom-wave-2" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,180 C 200,120 480,100 720,180 C 960,260 1200,260 1440,180 C 1680,100 1960,120 2160,180 C 2400,260 2640,260 2880,180 L 2880,320 L 0,320 Z"></path>
+            </svg>
+            <svg class="bottom-wave bottom-wave-3" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,200 C 240,140 540,140 720,200 C 900,260 1260,260 1440,200 C 1620,140 1920,140 2160,200 C 2340,260 2640,260 2880,200 L 2880,320 L 0,320 Z"></path>
+            </svg>
+        </div>
         <div class="detail-page" style="position:relative; z-index:1;">
             <p style="margin-top:20px; text-align:center;">Une question sur nos solutions ? Envie de digitaliser votre commerce ?<br>Notre équipe est à votre écoute.</p>
 
@@ -1836,7 +2050,7 @@
 
             <div class="detail-section">
                 <h2>Nos coordonnées</h2>
-                <div style="margin-top: 20px;">
+                <div style="margin-top: 20px; padding: 0 22px 22px 22px;">
                     <div class="contact-info-item">
                         <img src="logo-mail.jpg" alt="Email" class="icon-contact-img">
                         <span>contact@rylia.fr</span>
@@ -2162,269 +2376,104 @@
     draw();
     </script>
 
-    <script>
-    const canvasContact = document.getElementById('particles-canvas-contact');
-    const ctxContact = canvasContact.getContext('2d');
-    let particlesContact = [];
-
-    function resizeCanvasContact() {
-        canvasContact.width = window.innerWidth;
-        canvasContact.height = window.innerHeight;
-    }
-
-    function createParticlesContact() {
-        particlesContact = [];
-        const count = Math.floor((canvasContact.width * canvasContact.height) / 18000);
-        for (let i = 0; i < count; i++) {
-            particlesContact.push({
-                x: Math.random() * canvasContact.width,
-                y: Math.random() * canvasContact.height,
-                r: Math.random() * 3 + 1,
-                dx: (Math.random() - 0.5) * 0.4,
-                dy: (Math.random() - 0.5) * 0.4,
-                opacity: Math.random() * 0.4 + 0.1
-            });
-        }
-    }
-
-    function drawContact() {
-        ctxContact.clearRect(0, 0, canvasContact.width, canvasContact.height);
-        particlesContact.forEach(p => {
-            ctxContact.beginPath();
-            ctxContact.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctxContact.fillStyle = `rgba(255, 107, 0, ${p.opacity})`;
-            ctxContact.fill();
-            p.x += p.dx;
-            p.y += p.dy;
-            if (p.x < 0 || p.x > canvasContact.width) p.dx *= -1;
-            if (p.y < 0 || p.y > canvasContact.height) p.dy *= -1;
-        });
-        requestAnimationFrame(drawContact);
-    }
-
-    resizeCanvasContact();
-    createParticlesContact();
-    drawContact();
-    window.addEventListener('resize', () => {
-        resizeCanvasContact();
-        createParticlesContact();
-    });
-    </script>
 
     <script>
-    const canvasCarte = document.getElementById('particles-canvas-carte');
-    const ctxCarte = canvasCarte.getContext('2d');
-    let particlesCarte = [];
+    // --- PARTICULES POUR TOUTES LES VUES DÉTAIL (canvas avec class="detail-particles") ---
+    (function() {
+        const detailCanvases = document.querySelectorAll('canvas.detail-particles');
 
-    function resizeCanvasCarte() {
-        canvasCarte.width = window.innerWidth;
-        canvasCarte.height = window.innerHeight;
-    }
+        detailCanvases.forEach(canvasEl => {
+            const ctx = canvasEl.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            let particles = [];
+            let cssWidth = 0;
+            let cssHeight = 0;
+            let drawStarted = false;
 
-    function createParticlesCarte() {
-        particlesCarte = [];
-        const count = Math.floor((canvasCarte.width * canvasCarte.height) / 18000);
-        for (let i = 0; i < count; i++) {
-            particlesCarte.push({
-                x: Math.random() * canvasCarte.width,
-                y: Math.random() * canvasCarte.height,
-                r: Math.random() * 3 + 1,
-                dx: (Math.random() - 0.5) * 0.4,
-                dy: (Math.random() - 0.5) * 0.4,
-                opacity: Math.random() * 0.4 + 0.1
+            function resize() {
+                // Taille CSS réelle du canvas (= 100% de la vue, scroll inclus)
+                cssWidth = canvasEl.clientWidth;
+                cssHeight = canvasEl.clientHeight;
+                if (cssWidth === 0 || cssHeight === 0) return;
+                canvasEl.width = cssWidth * dpr;
+                canvasEl.height = cssHeight * dpr;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+
+            function createParticles() {
+                particles = [];
+                if (cssWidth === 0 || cssHeight === 0) return;
+                // Densité raisonnable : ~1 particule pour 14000 px²
+                const count = Math.floor((cssWidth * cssHeight) / 14000);
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * cssWidth,
+                        y: Math.random() * cssHeight,
+                        r: Math.random() * 2 + 1,           // rayon 1 à 3 (toujours rond)
+                        dx: (Math.random() - 0.5) * 0.35,
+                        dy: (Math.random() - 0.5) * 0.35,
+                        opacity: Math.random() * 0.35 + 0.1
+                    });
+                }
+            }
+
+            function draw() {
+                if (cssWidth > 0 && cssHeight > 0) {
+                    ctx.clearRect(0, 0, cssWidth, cssHeight);
+                    particles.forEach(p => {
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255, 107, 0, ${p.opacity})`;
+                        ctx.fill();
+                        p.x += p.dx;
+                        p.y += p.dy;
+                        if (p.x < 0 || p.x > cssWidth) p.dx *= -1;
+                        if (p.y < 0 || p.y > cssHeight) p.dy *= -1;
+                    });
+                }
+                requestAnimationFrame(draw);
+            }
+
+            // ResizeObserver détecte quand la vue devient visible (display:block)
+            // ou quand son contenu change de hauteur (animations, contenu dynamique)
+            const ro = new ResizeObserver(() => {
+                resize();
+                createParticles();
+                if (!drawStarted && cssWidth > 0 && cssHeight > 0) {
+                    drawStarted = true;
+                    draw();
+                }
             });
-        }
-    }
-
-    function drawCarte() {
-        ctxCarte.clearRect(0, 0, canvasCarte.width, canvasCarte.height);
-        particlesCarte.forEach(p => {
-            ctxCarte.beginPath();
-            ctxCarte.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctxCarte.fillStyle = `rgba(255, 107, 0, ${p.opacity})`;
-            ctxCarte.fill();
-            p.x += p.dx;
-            p.y += p.dy;
-            if (p.x < 0 || p.x > canvasCarte.width) p.dx *= -1;
-            if (p.y < 0 || p.y > canvasCarte.height) p.dy *= -1;
+            ro.observe(canvasEl);
         });
-        requestAnimationFrame(drawCarte);
-    }
-
-    resizeCanvasCarte();
-    createParticlesCarte();
-    drawCarte();
-    window.addEventListener('resize', () => {
-        resizeCanvasCarte();
-        createParticlesCarte();
-    });
-    </script>
-
-    <script>
-    const canvasRoue = document.getElementById('particles-canvas-roue');
-    const ctxRoue = canvasRoue.getContext('2d');
-    let particlesRoue = [];
-
-    function resizeCanvasRoue() {
-        canvasRoue.width = window.innerWidth;
-        canvasRoue.height = window.innerHeight;
-    }
-
-    function createParticlesRoue() {
-        particlesRoue = [];
-        const count = Math.floor((canvasRoue.width * canvasRoue.height) / 18000);
-        for (let i = 0; i < count; i++) {
-            particlesRoue.push({
-                x: Math.random() * canvasRoue.width,
-                y: Math.random() * canvasRoue.height,
-                r: Math.random() * 3 + 1,
-                dx: (Math.random() - 0.5) * 0.4,
-                dy: (Math.random() - 0.5) * 0.4,
-                opacity: Math.random() * 0.4 + 0.1
-            });
-        }
-    }
-
-    function drawRoue() {
-        ctxRoue.clearRect(0, 0, canvasRoue.width, canvasRoue.height);
-        particlesRoue.forEach(p => {
-            ctxRoue.beginPath();
-            ctxRoue.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctxRoue.fillStyle = `rgba(255, 107, 0, ${p.opacity})`;
-            ctxRoue.fill();
-            p.x += p.dx;
-            p.y += p.dy;
-            if (p.x < 0 || p.x > canvasRoue.width) p.dx *= -1;
-            if (p.y < 0 || p.y > canvasRoue.height) p.dy *= -1;
-        });
-        requestAnimationFrame(drawRoue);
-    }
-
-    resizeCanvasRoue();
-    createParticlesRoue();
-    drawRoue();
-    window.addEventListener('resize', () => {
-        resizeCanvasRoue();
-        createParticlesRoue();
-    });
-    </script>
-
-    <script>
-    const canvasFidelite = document.getElementById('particles-canvas-fidelite');
-    const ctxFidelite = canvasFidelite.getContext('2d');
-    let particlesFidelite = [];
-
-    function resizeCanvasFidelite() {
-        canvasFidelite.width = window.innerWidth;
-        canvasFidelite.height = window.innerHeight;
-    }
-
-    function createParticlesFidelite() {
-        particlesFidelite = [];
-        const count = Math.floor((canvasFidelite.width * canvasFidelite.height) / 18000);
-        for (let i = 0; i < count; i++) {
-            particlesFidelite.push({
-                x: Math.random() * canvasFidelite.width,
-                y: Math.random() * canvasFidelite.height,
-                r: Math.random() * 3 + 1,
-                dx: (Math.random() - 0.5) * 0.4,
-                dy: (Math.random() - 0.5) * 0.4,
-                opacity: Math.random() * 0.4 + 0.1
-            });
-        }
-    }
-
-    function drawFidelite() {
-        ctxFidelite.clearRect(0, 0, canvasFidelite.width, canvasFidelite.height);
-        particlesFidelite.forEach(p => {
-            ctxFidelite.beginPath();
-            ctxFidelite.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctxFidelite.fillStyle = `rgba(255, 107, 0, ${p.opacity})`;
-            ctxFidelite.fill();
-            p.x += p.dx;
-            p.y += p.dy;
-            if (p.x < 0 || p.x > canvasFidelite.width) p.dx *= -1;
-            if (p.y < 0 || p.y > canvasFidelite.height) p.dy *= -1;
-        });
-        requestAnimationFrame(drawFidelite);
-    }
-
-    resizeCanvasFidelite();
-    createParticlesFidelite();
-    drawFidelite();
-    window.addEventListener('resize', () => {
-        resizeCanvasFidelite();
-        createParticlesFidelite();
-    });
+    })();
     </script>
 
 
     <script>
-    const canvasDashboard = document.getElementById('particles-canvas-dashboard');
-    const ctxDashboard = canvasDashboard.getContext('2d');
-    let particlesDashboard = [];
+    // --- VIDEO PLAYER : flou + bouton play, transition vers lecture nette ---
+    document.querySelectorAll('.video-player').forEach(player => {
+        const video = player.querySelector('video');
+        const button = player.querySelector('.play-button');
 
-    function resizeCanvasDashboard() {
-        canvasDashboard.width = window.innerWidth;
-        canvasDashboard.height = window.innerHeight;
-    }
-
-    function createParticlesDashboard() {
-        particlesDashboard = [];
-        const count = Math.floor((canvasDashboard.width * canvasDashboard.height) / 18000);
-        for (let i = 0; i < count; i++) {
-            particlesDashboard.push({
-                x: Math.random() * canvasDashboard.width,
-                y: Math.random() * canvasDashboard.height,
-                r: Math.random() * 3 + 1,
-                dx: (Math.random() - 0.5) * 0.4,
-                dy: (Math.random() - 0.5) * 0.4,
-                opacity: Math.random() * 0.4 + 0.1
-            });
+        function startPlayback() {
+            player.classList.add('playing');
+            video.controls = true;
+            video.play().catch(() => {/* lecture automatique bloquée, c'est OK */});
         }
-    }
 
-    function drawDashboard() {
-        ctxDashboard.clearRect(0, 0, canvasDashboard.width, canvasDashboard.height);
-        particlesDashboard.forEach(p => {
-            ctxDashboard.beginPath();
-            ctxDashboard.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctxDashboard.fillStyle = `rgba(255, 107, 0, ${p.opacity})`;
-            ctxDashboard.fill();
-            p.x += p.dx;
-            p.y += p.dy;
-            if (p.x < 0 || p.x > canvasDashboard.width) p.dx *= -1;
-            if (p.y < 0 || p.y > canvasDashboard.height) p.dy *= -1;
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            startPlayback();
         });
-        requestAnimationFrame(drawDashboard);
-    }
 
-    resizeCanvasDashboard();
-    createParticlesDashboard();
-    drawDashboard();
-    window.addEventListener('resize', () => {
-        resizeCanvasDashboard();
-        createParticlesDashboard();
+        // Permettre aussi de cliquer sur la vidéo floutée elle-même
+        player.addEventListener('click', (e) => {
+            if (!player.classList.contains('playing')) {
+                startPlayback();
+            }
+        });
     });
-    </script>
-
-
-    <script>
-    // --- EFFET SPOTLIGHT : suivre la position de la souris dans chaque card ---
-    function initSpotlight() {
-        document.querySelectorAll('.card').forEach(card => {
-            if (card.dataset.spotlightInit) return;
-            card.dataset.spotlightInit = 'true';
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
-            });
-        });
-    }
-    document.addEventListener('DOMContentLoaded', initSpotlight);
     </script>
 
 
