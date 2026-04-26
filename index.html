@@ -341,57 +341,132 @@
             margin-right: auto;
         }
 
+        /* --- PAGES DE DÉTAIL : FLAT CARD --- */
         .detail-section {
             background: white;
-            padding: 25px;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-top: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border-left: 4px solid var(--primary-orange);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid #e8e8e8;
+            overflow: hidden;
         }
 
         .detail-section h2 {
-            font-size: 1.2rem;
-            color: var(--primary-orange);
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 14px 22px;
+            background: linear-gradient(to right, rgba(255,107,0,0.07), transparent);
+            border-bottom: 1px solid #efefef;
         }
 
-        /* --- NOUVEAU STYLE ANALYTIQUE (BARRES À GAUCHE) --- */
+        .detail-body {
+            padding: 18px 22px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.75;
+        }
+
+        /* Accroche produit sous le h1 */
+        .product-intro {
+            font-size: 1rem;
+            color: var(--text-light);
+            line-height: 1.75;
+            text-align: center;
+            max-width: 660px;
+            margin: 12px auto 0;
+        }
+
+        /* Grille de features */
+        .pills-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 18px 22px;
+        }
+        @media (max-width: 600px) { .pills-grid { grid-template-columns: 1fr; } }
+
+        .pill-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
+            background: #fafafa;
+            border: 1px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 13px 15px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.2s, background 0.2s;
+        }
+        .pill-feature.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .pill-feature:hover {
+            border-color: rgba(255,107,0,0.3);
+            background: #fff8f4;
+        }
+        .pill-icon {
+            font-size: 18px;
+            line-height: 1;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .pill-content strong {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 3px;
+        }
+        .pill-content span {
+            font-size: 0.82rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        /* Indice de la solution */
         .rating-item {
             display: flex;
             align-items: center;
-            padding: 10px 0;
+            padding: 11px 22px;
             border-bottom: 1px solid #f5f5f5;
-            gap: 12px;
+            gap: 14px;
         }
-
         .rating-item:last-child { border-bottom: none; }
 
+        .rating-text {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            min-width: 180px;
+        }
+
         .impact-bar-container {
-            width: 80px; /* Taille compacte fixe pour l'alignement */
-            height: 8px;
-            background-color: #eee;
-            border-radius: 4px;
+            flex: 1;
+            height: 5px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
             overflow: hidden;
-            flex-shrink: 0;
         }
 
         .impact-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary-orange), var(--dark-orange));
-            border-radius: 4px;
+            width: 0%;
+            background: var(--primary-orange);
+            border-radius: 3px;
+            transition: width 1s ease 0.3s;
         }
 
-        .rating-sep {
-            color: #ccc;
-            font-weight: 300;
-        }
+        .rating-sep { display: none; }
 
-        .rating-text {
-            font-size: 0.95rem;
-            font-weight: 500;
+        .rating-pct {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-orange);
+            min-width: 34px;
+            text-align: right;
         }
 
         /* --- STYLE DÉMO DOUBLE MOCKUP --- */
@@ -914,9 +989,139 @@
         background: var(--dark-orange);
     }
 
+    /* --- EFFET HOVER DES BANNIÈRES (Site web & Dashboard) --- */
+    .feature-banner {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.4s ease;
+    }
+    .feature-banner:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(255, 107, 0, 0.18) !important;
+    }
+    .banner-glyph {
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 0.5s ease;
+        transform-origin: center;
+    }
+    .feature-banner:hover .banner-glyph {
+        transform: scale(1.12) rotate(-6deg);
+        opacity: 0.28 !important;
+    }
+
+    /* --- TRANSITIONS DE VUES (fade + slide vertical) --- */
+    .view.active {
+        animation: viewEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .view.is-leaving {
+        animation: viewLeave 0.28s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+        pointer-events: none;
+    }
+    @keyframes viewEnter {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes viewLeave {
+        from { opacity: 1; transform: translateY(0); }
+        to   { opacity: 0; transform: translateY(-12px); }
+    }
+
+    /* --- EFFET SPOTLIGHT SUR LES CARDS MODULES --- */
+    .card {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+    }
+    .card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            circle 280px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(255, 107, 0, 0.14),
+            rgba(255, 107, 0, 0.05) 35%,
+            transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+        border-radius: inherit;
+        z-index: 0;
+    }
+    .card:hover::before {
+        opacity: 1;
+    }
+    .card > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* --- VAGUES SVG ANIMÉES (parallax en bas de viewport) --- */
+    .bg-waves {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 220px;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+    }
+    .bg-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+        will-change: transform;
+    }
+    .bg-wave path {
+        fill: var(--primary-orange);
+    }
+    .bg-wave-1 {
+        opacity: 0.12;
+        animation: wave-drift 20s linear infinite;
+    }
+    .bg-wave-2 {
+        opacity: 0.08;
+        animation: wave-drift 35s linear infinite reverse;
+        bottom: -25px;
+    }
+    .bg-wave-3 {
+        opacity: 0.05;
+        animation: wave-drift 50s linear infinite;
+        bottom: -50px;
+    }
+    @keyframes wave-drift {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    @media (max-width: 600px) {
+        .bg-waves { height: 140px; }
+    }
+    /* Le contenu reste au-dessus des vagues */
+    body > header,
+    body > .view,
+    body > footer {
+        position: relative;
+        z-index: 1;
+    }
+
     </style>
 </head>
 <body>
+
+<!-- Vagues SVG animées en arrière-plan (parallax) -->
+<div class="bg-waves" aria-hidden="true">
+    <svg class="bg-wave bg-wave-1" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,160 C 180,80 540,80 720,160 C 900,240 1260,240 1440,160 C 1620,80 1980,80 2160,160 C 2340,240 2700,240 2880,160 L 2880,320 L 0,320 Z"></path>
+    </svg>
+    <svg class="bg-wave bg-wave-2" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,180 C 200,120 480,100 720,180 C 960,260 1200,260 1440,180 C 1680,100 1960,120 2160,180 C 2400,260 2640,260 2880,180 L 2880,320 L 0,320 Z"></path>
+    </svg>
+    <svg class="bg-wave bg-wave-3" viewBox="0 0 2880 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,200 C 240,140 540,140 720,200 C 900,260 1260,260 1440,200 C 1620,140 1920,140 2160,200 C 2340,260 2640,260 2880,200 L 2880,320 L 0,320 Z"></path>
+    </svg>
+</div>
 
 <div class="page-transition"></div>
 
@@ -955,39 +1160,38 @@
 
 <div class="container">
     <h3 class="section-title">Besoin d'un site internet ?</h3>
-    <div class="placeholder-grid">
-        <div class="card" style="justify-content: flex-start;" data-aos="fade-up">
-            <div>
-                <h4 style="color: var(--primary-orange); display: flex; align-items: center; gap: 10px;"><div class="price-icon" style="margin-bottom: 0;">🌐</div>Un site vitrine</h4>
-                <p class="card-description">
-                    Vous souhaitez développer votre <strong>présence en ligne</strong> ? Nous concevons des sites internet <strong>100% sur-mesure</strong> exclusivement pensés et conçus à votre demande. Selon <strong>vos besoins spécifiques</strong>, votre plateforme digitale reflétera parfaitement l'identité de votre commerce pour vous <strong>démarquer</strong> efficacement sur le web. Une solution <strong>clé en main</strong> pour booster votre visibilité en ligne avec un design unique qui <strong>vous ressemble</strong> !
-                </p>
+    <div data-aos="fade-up" class="feature-banner" style="background: linear-gradient(135deg, #fff8f4, #ffe1cc); border-radius: 14px; padding: 36px 38px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); border-bottom: 3px solid var(--primary-orange); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;">
+        <!-- Pictogramme XL filigrane orange -->
+        <div class="banner-glyph" style="position: absolute; right: -25px; bottom: -40px; font-size: 13rem; opacity: 0.18; line-height: 1; pointer-events: none; user-select: none;">🌐</div>
+
+        <div style="flex: 1 1 360px; position: relative; z-index: 1;">
+            <h4 style="color: var(--primary-orange); font-size: 1.55rem; margin-bottom: 10px; font-weight: 700;">Un site vitrine 100% sur-mesure</h4>
+            <p style="color: var(--text-light); font-size: 1rem; line-height: 1.55; margin-bottom: 16px; max-width: 600px;">
+                Développez votre <strong>présence en ligne</strong> avec un site web pensé pour refléter votre identité — design unique, optimisé mobile, référencement inclus.
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--text-dark); font-size: 0.9rem; font-weight: 500;">
+                <span><span style="color: var(--primary-orange); font-weight: bold;">✓</span> Référencement</span>
+                <span><span style="color: var(--primary-orange); font-weight: bold;">✓</span> Mobile & tablette</span>
+                <span><span style="color: var(--primary-orange); font-weight: bold;">✓</span> Design unique</span>
+                <span><span style="color: var(--primary-orange); font-weight: bold;">✓</span> Suivi dédié</span>
             </div>
-            
-            <div class="card-split-section">
-                <div class="split-list">
-                    <span>• Optimisation du référencement</span>
-                    <span>• Adapté aux mobiles et tablettes</span>
-                    <span>• Accompagnement dédié</span>
-                    <span>• Design 100% sur-mesure</span>
-                </div>
-                
-                <div class="split-action">
-                    <p class="action-text">Envie de passer à l'action ?</p>
-                    <button class="btn-more" onclick="showView('contact-view')">Parlez-nous de votre projet</button>
-                </div>
-            </div>
+        </div>
+
+        <div style="position: relative; z-index: 1;">
+            <button onclick="showView('contact-view')" style="background: white; color: var(--primary-orange); border: 1.5px solid var(--primary-orange); padding: 12px 26px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 2px 10px rgba(255,107,0,0.1); transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease; font-family: inherit;" onmouseover="this.style.transform='translateY(-2px)'; this.style.background='var(--primary-orange)'; this.style.color='white'; this.style.boxShadow='0 6px 18px rgba(255,107,0,0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.background='white'; this.style.color='var(--primary-orange)'; this.style.boxShadow='0 2px 10px rgba(255,107,0,0.1)';">
+                Parlez-nous de votre projet →
+            </button>
         </div>
     </div>
 </div>
 
 
         <div class="container">
-            <h3 class="section-title">Nos solutions digitales</h3>
+            <h3 class="section-title">Autres solutions digitales</h3>
             <div class="placeholder-grid">
                 <div class="card" data-aos="fade-up" data-aos-delay="100">
                     <div>
-                        <h4 style="color: var(--primary-orange); display: flex; align-items: center; gap: 10px;"><div class="price-icon" style="margin-bottom: 0;">🍽️</div>Carte digitale</h4>
+                        <h4 style="color: var(--primary-orange);">Carte digitale</h4>
                         <p class="card-description">Une carte digitale complètement <strong>personnalisable</strong> à votre image. Elle fluidifie l'<strong>expérience client</strong> en les orientant dans leurs choix grâce à un aperçu visuel. </p>
                         
                         <div style="margin-top: 15px; padding-top: 15px; font-size: 0.95rem; border-top: 1px solid #e0e0e0;">
@@ -1002,7 +1206,7 @@
 
                 <div class="card" data-aos="fade-up" data-aos-delay="200">
                     <div>
-                        <h4 style="color: var(--primary-orange); display: flex; align-items: center; gap: 10px;"><div class="price-icon" style="margin-bottom: 0;">⭐</div>Roue d'avis 5 étoiles</h4>
+                        <h4 style="color: var(--primary-orange);">Roue d'avis 5 étoiles</h4>
                         <p class="card-description">Vos clients tournent une roue qui leur permet d'obtenir un <strong>gain</strong> en échange d'un <strong>avis 5 étoiles</strong> Google. Processus <strong>100% automatisé</strong>, vos clients reçoivent un mail avec un code.</p>
                         
                         <div style="margin-top: 15px; padding-top: 15px; font-size: 0.95rem; border-top: 1px solid #e0e0e0;">
@@ -1017,7 +1221,7 @@
 
                 <div class="card" data-aos="fade-up" data-aos-delay="300">
                     <div>
-                    <h4 style="color: var(--primary-orange); display: flex; align-items: center; gap: 10px;"><div class="price-icon" style="margin-bottom: 0;">🎁</div>Web fidélité</h4>
+                        <h4 style="color: var(--primary-orange);">Web fidélité</h4>
                         <p class="card-description">Un programme de fidélité <strong>100% digital</strong> et personnalisé. Finies les cartes papier perdues : récompensez vos clients réguliers avec un système de points <strong>simple et intuitif</strong>.</p>
                         
                         <div style="margin-top: 15px; padding-top: 15px; font-size: 0.95rem; border-top: 1px solid #e0e0e0;">
@@ -1034,20 +1238,26 @@
 
         <div class="container">
             <h3 class="section-title">Notre tableau de bord</h3>
-            <div class="placeholder-grid">
-                <div class="card" data-aos="fade-up">
-                    <div>
-                        <h4 style="color: var(--primary-orange); display: flex; align-items: center; gap: 10px;"><div class="price-icon" style="margin-bottom: 0;">📊</div>Dashboard de gestion</h4>
-                        <p class="card-description">Un tableau de bord centralisé pour <strong>piloter</strong> toutes vos solutions digitales. Suivez vos performances en temps réel, gérez vos clients et optimisez votre activité depuis une interface <strong>intuitive</strong>.</p>
-                        
-                        <div style="margin-top: 15px; padding-top: 15px; font-size: 0.95rem; border-top: 1px solid #e0e0e0;">
-                            • Vue d'ensemble de l'activité <br>
-                            • Gestion centralisée des clients <br>
-                            • Statistiques et analytics <br>
-                            • Interface simple et efficace
-                        </div>
+            <div data-aos="fade-up" class="feature-banner" style="background: linear-gradient(135deg, #fff8f4, #ffe1cc); border-radius: 14px; padding: 36px 38px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); border-bottom: 3px solid var(--primary-orange); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px;">
+                <div class="banner-glyph" style="position: absolute; right: -25px; bottom: -40px; font-size: 13rem; opacity: 0.18; line-height: 1; pointer-events: none; user-select: none;">📊</div>
+
+                <div style="flex: 1 1 360px; position: relative; z-index: 1;">
+                    <h4 style="color: var(--primary-orange); font-size: 1.55rem; margin-bottom: 10px; font-weight: 700;">Votre panel de gestion centralisé</h4>
+                    <p style="color: var(--text-light); font-size: 1rem; line-height: 1.55; margin-bottom: 16px; max-width: 600px;">
+                        Un <strong>espace unique</strong> pour piloter tous vos modules Rylia — simple, intuitif, et accessible partout. Aucune compétence technique nécessaire.
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--text-dark); font-size: 0.9rem; font-weight: 500;">
+                        <span><span style="color: var(--primary-orange); font-weight: bold;">✓</span> Tout centralisé</span>
+                        <span><span style="color: var(--primary-orange); font-weight: bold;">✓</span> Temps réel</span>
+                        <span><span style="color: var(--primary-orange); font-weight: bold;">✓</span> Statistiques</span>
+                        <span><span style="color: var(--primary-orange); font-weight: bold;">✓</span> Multi-appareils</span>
                     </div>
-                    <button class="btn-more" onclick="showView('detail-dashboard')">En savoir plus ...</button>
+                </div>
+
+                <div style="position: relative; z-index: 1;">
+                    <button onclick="showView('detail-dashboard')" style="background: white; color: var(--primary-orange); border: 1.5px solid var(--primary-orange); padding: 12px 26px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 2px 10px rgba(255,107,0,0.1); transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease; font-family: inherit;" onmouseover="this.style.transform='translateY(-2px)'; this.style.background='var(--primary-orange)'; this.style.color='white'; this.style.boxShadow='0 6px 18px rgba(255,107,0,0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.background='white'; this.style.color='var(--primary-orange)'; this.style.boxShadow='0 2px 10px rgba(255,107,0,0.1)';">
+                        En savoir plus →
+                    </button>
                 </div>
             </div>
         </div>
@@ -1069,7 +1279,7 @@
                     <div class="price-cta"><button onclick="showView('contact-view')">Nous contacter</button></div>
                 </div>
 
-                <div class="price-card" onclick="showView('detail-fidelite')" style="cursor:pointer;" data-aos="fade-up" data-aos-delay="100">
+                <div class="price-card" onclick="showView('detail-fidelite')" style="cursor:pointer;" data-aos="fade-up" data-aos-delay="300">
                     <div class="price-icon">🎁</div>
                     <p class="price-name">Web fidélité</p>
                     <p class="price-amount">39,90€ <span>/ mois</span></p>
@@ -1095,7 +1305,7 @@
                     <div class="price-cta"><button onclick="showView('detail-roue')">Découvrir</button></div>
                 </div>
 
-                <div class="price-card" onclick="showView('detail-carte')" style="cursor:pointer;" data-aos="fade-up" data-aos-delay="300">
+                <div class="price-card" onclick="showView('detail-carte')" style="cursor:pointer;" data-aos="fade-up" data-aos-delay="100">
                     <div class="price-icon">🍽️</div>
                     <p class="price-name">Carte digitale</p>
                     <p class="price-amount">29,90€ <span>/ mois</span></p>
@@ -1164,7 +1374,7 @@
         <canvas id="particles-canvas-carte" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
         <div class="detail-page" style="position:relative; z-index:1;">
             <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Carte Digitale</h1>
-            <p style="margin-top:20px;">Nous vous proposons une carte digitale dynamique et personnalisée pour le menu de votre restaurant</p>
+            <p class="product-intro">Un menu vivant, filtrable, accessible en un scan — conçu pour refléter votre identité et simplifier le choix de chaque client.</p>
 
             <div class="detail-section">
                 <h2>Démonstration de la solution</h2>
@@ -1192,62 +1402,43 @@
             </div>
 
             <div class="detail-section">
-                <h2>C'est quoi ?</h2>
-                <p>
-                    La <strong>Carte Digitale</strong> réinvente le menu traditionnel pour offrir une expérience immersive. 
-                    Accessible instantanément via <strong>QR Code</strong>, elle guide vos clients grâce à une interface visuelle et des <strong>filtres intelligents</strong> (végétarien, épicé, sans gluten...) qui facilitent leur choix. 
-                    Entièrement <strong>personnalisable à votre image</strong>, elle valorise vos plats, rassure sur les allergènes et modernise instantanément votre service.
-                </p>
+                <h2>En quelques mots</h2>
+                <div class="detail-body">Votre menu, réinventé. La <strong>Carte Digitale Rylia</strong> transforme une simple carte en expérience immersive : vos plats mis en valeur par des visuels, des filtres intelligents pour guider chaque client, et tout ça accessible en un coup de QR Code depuis la table. <strong>Zéro impression, zéro délai</strong> — vous mettez à jour votre carte en temps réel, depuis n'importe où.</div>
             </div>
 
             <div class="detail-section">
-                <h2>Détails de la solution</h2>
-                <p>Cette carte est <strong>entièrement personnalisable</strong> selon vos souhaits<br></p>
-                <p style="margin-top: 12px;"> → Elle reflète l'image du restaurant grâce à un code couleur, des illustrations, des phrases...<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : logo ; slogan ; référence ; couleur du restaurant...</span></em><br>
-                <p style="margin-top: 10px;"> → Elle guide le consommateur dans son choix grâce à la sélection du type de plat<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : pâtes ; burgers ; wraps...</span></em><br>
-                <p style="margin-top: 10px;"> → L'ajout d'un filtre pour que le consommateur détermine ses envies<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : épicé ; végétarien ; sucré-salé...</span></em><br>
-                <p style="margin-top: 10px;"> → Le filtre permet aussi au consommateur de choisir en fonction de ses allergies<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : gluten ; moutarde ; lait ; soja...</span></em><br>
-                <p style="margin-top: 10px;"> → Créer un QR code directement lisible par le consommateur<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : le QR code disposé sur chaque table</span></em>
-            </div>
-
-            <div class="detail-section">
-                <h2>Objectifs</h2>
-                <p> → Améliorer l'expérience client, créer une vue immersive<br>
-                <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le consommateur clique et devient acteur, il peut filtrer ses envies, ses goûts, ses allergies ...</span></em><br>
-                <p style="margin-top: 10px;"> → Représenter le restaurant grâce aux nouvelles technologies<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• La carte est à l'effigie de votre restaurant, elle suit votre style, vos caractéristiques ...</span></em><br>
-                <p style="margin-top: 10px;"> → Moderniser l'image de marque<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• L'établissement est vu comme une enseigne innovante et dynamique qui utilise les outils de demain</span></em><br>
-                <p style="margin-top: 10px;"> → Faciliter l'accès<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Installation de QR code qui facilite et fluidifie l'accès à tout consommateur</span></em><br>
+                <h2>Ce que ça vous apporte</h2>
+                <div class="pills-grid">
+                    <div class="pill-feature"><div class="pill-icon">🎨</div><div class="pill-content"><strong>100% à votre image</strong><span>Couleurs, logo, slogan — la carte reflète l'identité de votre établissement.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔍</div><div class="pill-content"><strong>Filtres intelligents</strong><span>Le client trie par type de plat, régime ou allergie en un geste.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📱</div><div class="pill-content"><strong>Accès instantané par QR Code</strong><span>Un scan depuis la table, pas d'app à télécharger, aucune friction.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Mise à jour en temps réel</strong><span>Prix, plat du jour, rupture de stock — modifiable à tout moment.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🌿</div><div class="pill-content"><strong>Allergènes & régimes affichés</strong><span>Gluten, lactose, végétarien… vos clients mangent en toute confiance.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">✨</div><div class="pill-content"><strong>Image de marque boostée</strong><span>Un établissement qui adopte le digital, ça se remarque — et ça se retient.</span></div></div>
+                </div>
             </div>
 
             <div class="detail-section">
                 <h2>Indice de la solution</h2>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Immersion visuelle</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="95"></div></div>
+                    <span class="rating-pct">95%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Modernisation de l'image</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="95"></div></div>
+                    <span class="rating-pct">95%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 89%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Facile d'utilisation</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="89"></div></div>
+                    <span class="rating-pct">89%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 80%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Aide au choix client</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="80"></div></div>
+                    <span class="rating-pct">80%</span>
                 </div>
             </div>
         </div>
@@ -1257,7 +1448,7 @@
         <canvas id="particles-canvas-roue" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
         <div class="detail-page" style="position:relative; z-index:1;">
             <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Roue d'avis 5 étoiles</h1>
-            <p style="margin-top:20px;">Boostez votre visibilité locale avec notre système de roue automatisé.</p>
+            <p class="product-intro">Transformez chaque repas en opportunité : vos clients jouent, gagnent, et vous laissent un avis 5 étoiles — automatiquement.</p>
             
             <div class="detail-section">
                 <h2>Démonstration de la solution</h2>
@@ -1319,74 +1510,48 @@
 
 
             <div class="detail-section">
-                <h2>C'est quoi ?</h2>
-                <p>
-                    La <strong>roue d'avis</strong> est une solution ludique qui fidélise vos clients. 
-                    Accessible via un simple <strong>QR Code</strong>, elle invite le client à tourner une roue virtuelle pour gagner une récompense immédiate (boisson, dessert, réduction...) en échange d'un <strong>avis 5 étoiles</strong> sur Google. 
-                    Entièrement automatisée, cette solution booste votre <strong>visibilité locale</strong> tout en fidélisant votre clientèle grâce à une expérience de jeu gagnant-gagnant.
-                </p>
+                <h2>En quelques mots</h2>
+                <div class="detail-body">Et si chaque repas vous rapportait un avis Google ? La <strong>Roue d'avis Rylia</strong> transforme le dépôt d'avis en jeu : votre client scanne un QR Code, tourne la roue et remporte un gain immédiat. En échange, il vous laisse un <strong>avis 5 étoiles</strong>. Tout est <strong>100% automatisé</strong> — il reçoit son code par mail, vous gérez tout depuis un tableau de bord simple. Résultat : votre réputation Google décolle, et vos clients reviennent récupérer leur gain.</div>
             </div>
 
             <div class="detail-section">
-                <h2>Détails de la solution</h2>
-                <p>Cette roue est <strong>entièrement personnalisable</strong> selon vos souhaits<br></p>
-                <p style="margin-top: 12px;"> → Création d'une roue avec des gains en échange d'un avis Google<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemples : boisson ; snack ; réduction ; menu gratuit ...</span></em><br>
-                <p style="margin-top: 10px;"> → Le client est redirigé vers le dépôt d'avis Google pour récupérer son gain<br></p>
-                <p style="margin-top: 12px;"> → Elle reflète l'image du commerce grâce à un code couleur, des illustrations, des phrases...<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemples : logo ; slogan ; référence ; identité visuelle ...</span></em><br>
-                <p style="margin-top: 10px;"> → Des probabilités choisies par le commerçant<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : forte probabilité d'obtenir une boisson</span></em><br>
-                <p style="margin-top: 10px;"> → Mise en place de délais qui empêchent les abus de l'utilisateur<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemples :&nbsp;- Temps d'attente de 24h avant de pouvoir relancer la roue<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Gain récupérable 24h après, disponible uniquement 10 jours</span></em>
-                <p style="margin-top: 10px;"> → Le gain peut être récupérable sous condition de consommation<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Au choix du commerçant sur l'obligation ou non de consommer pour récupérer le gain</span></em>
-                <p style="margin-top: 10px;"> → Un contrôle simple pour le commerçant via un tableau Excel automatisé<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le tableau Excel informe sur la date du gain, l'expiration, le code, la date de disponibilité, le mail du gagnant.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Il y a une case à cocher une fois le gain validé, ce qui facilite l'utilisation même pendant les rushs !</span></em><br>
-            </div>
-
-            <div class="detail-section">
-                <h2>Objectifs</h2>
-                <p> → Fidéliser la clientèle<br>
-                <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le consommateur clique, gagne et revient pour consommer et récupérer son gain</span></em><br>
-                <p style="margin-top: 10px;"> → Améliorer l'expérience client<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le client est mis en condition de jeu, il n'est jamais perdant, il ne peut qu'être satisfait</span></em><br>
-                <p style="margin-top: 10px;"> → Moderniser l'image de marque<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• L'établissement est vu comme une enseigne innovante et dynamique qui utilise les outils de demain</span></em><br>
-                <p style="margin-top: 10px;"> → Gagnant-gagnant<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le client gagne un produit, vous gagnez un avis</span></em><br>
-                <p style="margin-top: 10px;"> → Réputation en flèche<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Grâce aux avis votre classement local augmente, votre image de marque aussi</span></em><br>
-                <p style="margin-top: 10px;"> → Faciliter l'accès<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Au format QR code cela facilite l'accès à tout consommateur</span></em><br>
+                <h2>Ce que ça vous apporte</h2>
+                <div class="pills-grid">
+                    <div class="pill-feature"><div class="pill-icon">⭐</div><div class="pill-content"><strong>Avis Google en continu</strong><span>Chaque scan génère un avis — votre classement local grimpe naturellement.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎁</div><div class="pill-content"><strong>Gains 100% personnalisables</strong><span>Boisson, dessert, réduction… vous choisissez ce que vous offrez et à quelle fréquence.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🤖</div><div class="pill-content"><strong>Zéro gestion manuelle</strong><span>Le code est envoyé automatiquement par mail. Aucune saisie de votre côté.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔒</div><div class="pill-content"><strong>Anti-abus intégré</strong><span>Délai de 24h entre chaque partie, gain valable 10 jours — vous gardez le contrôle.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎯</div><div class="pill-content"><strong>Probabilités au choix</strong><span>Vous définissez les chances pour chaque gain — pour rester rentable à chaque tirage.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔄</div><div class="pill-content"><strong>Client fidélisé, pas juste satisfait</strong><span>Il revient récupérer son gain — et consomme à nouveau chez vous.</span></div></div>
+                </div>
             </div>
 
             <div class="detail-section">
                 <h2>Indice de la solution</h2>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 100%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Expérience client</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="100"></div></div>
+                    <span class="rating-pct">100%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Fidélisation de la clientèle</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="95"></div></div>
+                    <span class="rating-pct">95%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Boost visibilité Google</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="95"></div></div>
+                    <span class="rating-pct">95%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 88%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Image de marque</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="88"></div></div>
+                    <span class="rating-pct">88%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 80%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Facilité d'utilisation</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="80"></div></div>
+                    <span class="rating-pct">80%</span>
                 </div>
             </div>
         </div>
@@ -1396,7 +1561,7 @@
         <canvas id="particles-canvas-fidelite" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
         <div class="detail-page" style="position:relative; z-index:1;">
             <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Web fidélité</h1>
-            <p style="margin-top:20px;">Récompensez vos clients les plus fidèles grâce à une solution 100% digitale et sans contrainte.</p>
+            <p class="product-intro">Un programme de fidélité moderne, sans carte papier, qui récompense vos habitués et les incite naturellement à revenir.</p>
             
             <div class="detail-section">
                 <h2>Démonstration de la solution</h2>
@@ -1457,60 +1622,43 @@
             </div>
 
             <div class="detail-section">
-                <h2>C'est quoi ?</h2>
-                <p>
-                    La solution <strong>Web Fidélité</strong> est une plateforme double interface : 
-                    un espace <strong>Membre</strong> où le client suit ses points et ses paliers de récompenses via un QR Code personnel, 
-                    et un espace <strong>Admin</strong> permettant au commerçant de scanner les clients et de créditer des points en fonction du montant des additions. 
-                    Tout est synchronisé en temps réel pour une fluidité totale.
-                </p>
+                <h2>En quelques mots</h2>
+                <div class="detail-body">Fini la carte papier oubliée dans un tiroir. Avec le <strong>Web Fidélité Rylia</strong>, vos clients cumulent des points à chaque visite depuis leur téléphone — sans rien à installer. Vous gérez tout en quelques secondes depuis votre espace commerçant : vous scannez, le système crédite. Un <strong>classement entre clients</strong> crée une émulation naturelle qui les pousse à revenir plus souvent. Simple pour vous, engageant pour eux.</div>
             </div>
 
             <div class="detail-section">
-                <h2>Détails de la solution</h2>
-                <p>Cette solution de fidélité permet à votre commerce un grand pas vers le digital<br></p>
-                <p style="margin-top: 12px;"> → Création d'un système de fidélité par compte<br></p>
-                <p style="margin-top: 10px;"> → Différents paliers de récompenses<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : 5 paliers différents pour des récompenses uniques</span></em><br>
-                <p style="margin-top: 10px;"> → Un compte admin pour le commerçant<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Exemple : le client donne son compte, le salarié rentre le montant de la commande et valide.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ensuite les points sont automatiquement mis à jour sur le compte client</span></em><br>
-                <p style="margin-top: 10px;"> → Un classement global met en compétition les clients<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le client est tenté d'obtenir le meilleur classement, il revient et consomme davantage</span></em>
-            </div>
-
-            <div class="detail-section">
-                <h2>Objectifs</h2>
-                <p> → Augmenter la fréquence de visite<br>
-                <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Un client proche de sa récompense sera naturellement incité à revenir chez vous plutôt qu'ailleurs.</span></em><br>
-                <p style="margin-top: 10px;"> → Éliminer les contraintes du format papier<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Fini les "J'ai oublié ma carte" ou les cartes perdues, le client a toujours son téléphone sur lui.</span></em><br>
-                <p style="margin-top: 10px;"> → Moderniser l'image de marque<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• L'établissement est vu comme une enseigne innovante avec un programme adapté aux habitudes actuelles.</span></em><br>
-                <p style="margin-top: 10px;"> → Système de classement<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Le classement peut motiver davantage les clients à revenir (envisager une récompense mensuelle pour le premier).</span></em><br>
+                <h2>Ce que ça vous apporte</h2>
+                <div class="pills-grid">
+                    <div class="pill-feature"><div class="pill-icon">📲</div><div class="pill-content"><strong>Adieu les cartes perdues</strong><span>Tout est sur le téléphone du client — il ne peut plus oublier son programme fidélité.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🏆</div><div class="pill-content"><strong>Paliers de récompenses motivants</strong><span>5 niveaux personnalisables pour garder vos clients engagés sur la durée.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Validation express au comptoir</strong><span>Un scan, un montant saisi — les points sont crédités en temps réel, même en rush.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📊</div><div class="pill-content"><strong>Classement & compétition</strong><span>Vos clients se challengent entre eux — et reviennent consommer pour grimper.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔁</div><div class="pill-content"><strong>Fréquence de visite en hausse</strong><span>Un client proche d'une récompense choisit votre établissement, pas celui d'en face.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🛠️</div><div class="pill-content"><strong>Aucune contrainte technique</strong><span>Pas d'app à installer, synchronisation instantanée, interface pensée pour être intuitive.</span></div></div>
+                </div>
             </div>
 
             <div class="detail-section">
                 <h2>Indice de la solution</h2>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 100%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Fidélisation de la clientèle</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="100"></div></div>
+                    <span class="rating-pct">100%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Fréquence de visite</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="95"></div></div>
+                    <span class="rating-pct">95%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 90%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Accessibilité mobile</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="90"></div></div>
+                    <span class="rating-pct">90%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 85%;"></div></div>
-                    <span class="rating-sep"> | </span>
                     <span class="rating-text">Augmentation du panier moyen</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="85"></div></div>
+                    <span class="rating-pct">85%</span>
                 </div>
             </div>
         </div>
@@ -1520,99 +1668,103 @@
         <canvas id="particles-canvas-dashboard" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0;"></canvas>
         <div class="detail-page" style="position:relative; z-index:1;">
             <h1 style="color: var(--primary-orange); text-align: center; margin-top: 20px;">Tableau de bord</h1>
-            <p style="margin-top:20px;">Pilotez votre activité digitale depuis une interface centralisée et intuitive.</p>
-            
-            <div class="detail-section">
-                <h2>Démonstration de la solution</h2>
-                
-                <!-- MOCKUP PC DASHBOARD -->
-                <div style="margin-top: 35px; text-align: center;">
-                    <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px;">Interface du tableau de bord</p>
+            <p class="product-intro">Un seul espace pour piloter toute votre activité — vos modules, vos statistiques, vos paramètres, accessibles d'un clic depuis n'importe où.</p>
 
-                    <!-- Cadre écran PC -->
+            <div class='detail-section'>
+                <h2>Aperçu du tableau de bord</h2>
+
+                <!-- MOCKUP PC DASHBOARD 1 - Roue d'avis -->
+                <div style="margin-top: 35px; text-align: center;">
+                    <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px;">Gestion de la roue d'avis</p>
+
                     <div style="display: inline-block; background: #1a1a1a; border-radius: 14px 14px 6px 6px; padding: 10px 10px 0 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); max-width: 780px; width: 100%;">
-                        <!-- Barre de titre Mac-style -->
                         <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px 8px 8px;">
                             <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f57;"></div>
                             <div style="width: 10px; height: 10px; border-radius: 50%; background: #febc2e;"></div>
                             <div style="width: 10px; height: 10px; border-radius: 50%; background: #28c840;"></div>
                             <div style="flex: 1; background: #333; border-radius: 4px; height: 18px; margin-left: 10px; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 0.65rem; color: #888;">rylia.fr/dashboard/</span>
+                                <span style="font-size: 0.65rem; color: #888;">rylia.fr/dashboard-roue/</span>
                             </div>
                         </div>
-
-                        <!-- VIDÉO DU DASHBOARD EN BOUCLE -->
-                        <video autoplay loop muted playsinline style="width: 100%; display: block; border-radius: 4px;">
-                            <source src="dashboard-demo.mp4" type="video/mp4">
-                            Votre navigateur ne supporte pas la vidéo.
-                        </video>
+                        <img src="dashboard-roue.png" alt="Dashboard roue d'avis" style="width: 100%; display: block; border-radius: 4px;">
                     </div>
 
-                    <!-- Support + base -->
                     <div style="display: flex; flex-direction: column; align-items: center;">
                         <div style="width: 120px; height: 14px; background: #2a2a2a; border-radius: 0 0 4px 4px;"></div>
                         <div style="width: 200px; height: 8px; background: #1a1a1a; border-radius: 0 0 6px 6px; margin-top: 2px;"></div>
                     </div>
 
-                    <p class="mockup-caption" style="margin-top: 12px;">Démonstration de l'interface</p>
+                    <p class="mockup-caption" style="margin-top: 12px;">Module Roue d'avis</p>
+                </div>
+
+                <!-- MOCKUP PC DASHBOARD 2 - Fidélité -->
+                <div style="margin-top: 50px; text-align: center;">
+                    <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px;">Gestion du programme de fidélité</p>
+
+                    <div style="display: inline-block; background: #1a1a1a; border-radius: 14px 14px 6px 6px; padding: 10px 10px 0 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); max-width: 780px; width: 100%;">
+                        <div style="display: flex; align-items: center; gap: 6px; padding: 6px 8px 8px 8px;">
+                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f57;"></div>
+                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #febc2e;"></div>
+                            <div style="width: 10px; height: 10px; border-radius: 50%; background: #28c840;"></div>
+                            <div style="flex: 1; background: #333; border-radius: 4px; height: 18px; margin-left: 10px; display: flex; align-items: center; justify-content: center;">
+                                <span style="font-size: 0.65rem; color: #888;">rylia.fr/fidelite/admin/</span>
+                            </div>
+                        </div>
+                        <img src="dashboard-fidelite.png" alt="Dashboard fidélité" style="width: 100%; display: block; border-radius: 4px;">
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 120px; height: 14px; background: #2a2a2a; border-radius: 0 0 4px 4px;"></div>
+                        <div style="width: 200px; height: 8px; background: #1a1a1a; border-radius: 0 0 6px 6px; margin-top: 2px;"></div>
+                    </div>
+
+                    <p class="mockup-caption" style="margin-top: 12px;">Module Web fidélité</p>
                 </div>
             </div>
 
             <div class="detail-section">
-                <h2>C'est quoi ?</h2>
-                <p>
-                    Le <strong>Tableau de bord Rylia</strong> est votre centre de contrôle digital. 
-                    Il centralise la gestion de toutes vos solutions (carte digitale, roue d'avis, web fidélité) dans une seule interface. 
-                    Vous accédez en temps réel à vos <strong>statistiques clés</strong>, gérez vos clients, suivez vos performances et prenez des décisions éclairées grâce à des <strong>analytics détaillés</strong>.
-                </p>
+                <h2>En quelques mots</h2>
+                <div class="detail-body">Gérer plusieurs modules ne devrait jamais être compliqué. Avec le <strong>tableau de bord Rylia</strong>, vous accédez à <strong>tous vos outils depuis un seul espace</strong> : modifiez vos récompenses fidélité, vos gains de roue, votre carte digitale ou les contenus de votre site, le tout <strong>en quelques clics</strong>. Chaque modification est <strong>appliquée en temps réel</strong>, sans délai et sans intervention technique. Et où que vous soyez — derrière votre comptoir, en déplacement ou chez vous —, votre panel reste à portée de main, <strong>sur ordinateur, tablette ou smartphone</strong>.</div>
             </div>
 
             <div class="detail-section">
-                <h2>Détails de la solution</h2>
-                <p>Ce tableau de bord vous offre une vision <strong>complète</strong> de votre activité digitale<br></p>
-                <p style="margin-top: 12px;"> → Vue d'ensemble de toutes vos solutions actives<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Statut et performances de chaque module en un coup d'œil</span></em><br>
-                <p style="margin-top: 10px;"> → Gestion centralisée de vos clients<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Base de données client, historique des interactions</span></em><br>
-                <p style="margin-top: 10px;"> → Statistiques et analytics en temps réel<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Graphiques, tendances, KPIs personnalisés</span></em><br>
-                <p style="margin-top: 10px;"> → Paramétrage et personnalisation<br></p>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Configurez vos solutions selon vos besoins</span></em><br>
-            </div>
-
-            <div class="detail-section">
-                <h2>Objectifs</h2>
-                <p> → Centraliser la gestion de vos outils digitaux<br>
-                <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Un seul endroit pour tout contrôler et surveiller</span></em><br>
-                <p style="margin-top: 10px;"> → Gagner du temps au quotidien<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Interface intuitive, actions rapides</span></em><br>
-                <p style="margin-top: 10px;"> → Prendre des décisions éclairées<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Analytics et données pour optimiser votre stratégie</span></em><br>
-                <p style="margin-top: 10px;"> → Suivre vos performances en temps réel<br>
-                    <em><span style="font-size: 0.9rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;• Tableaux de bord visuels et KPIs actualisés</span></em><br>
+                <h2>Ce que ça vous apporte</h2>
+                <div class="pills-grid">
+                    <div class="pill-feature"><div class="pill-icon">🧩</div><div class="pill-content"><strong>Tous vos modules réunis</strong><span>Roue d'avis, fidélité, carte digitale, site web — tout est centralisé au même endroit.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Modifications en temps réel</strong><span>Changez gains, plats, récompenses ou tarifs en quelques secondes — c'est en ligne immédiatement.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📊</div><div class="pill-content"><strong>Statistiques détaillées</strong><span>Avis générés, points distribués, visites, scans… pilotez votre activité avec des chiffres concrets.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔐</div><div class="pill-content"><strong>Espace 100% sécurisé</strong><span>Accès personnel et protégé : vous seul gérez votre établissement, en toute confidentialité.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📱</div><div class="pill-content"><strong>Accessible partout</strong><span>Ordinateur, tablette, smartphone : votre tableau de bord vous suit où que vous soyez.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎯</div><div class="pill-content"><strong>Aucune compétence requise</strong><span>Pensé pour les commerçants, pas pour les développeurs. Si vous utilisez un smartphone, vous saurez l'utiliser.</span></div></div>
+                </div>
             </div>
 
             <div class="detail-section">
                 <h2>Indice de la solution</h2>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 100%;"></div></div>
-                    <span class="rating-sep"> | </span>
-                    <span class="rating-text">Centralisation des données</span>
+                    <span class="rating-text">Simplicité d'utilisation</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="100"></div></div>
+                    <span class="rating-pct">100%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 95%;"></div></div>
-                    <span class="rating-sep"> | </span>
-                    <span class="rating-text">Gain de temps</span>
+                    <span class="rating-text">Centralisation des modules</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="100"></div></div>
+                    <span class="rating-pct">100%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 90%;"></div></div>
-                    <span class="rating-sep"> | </span>
-                    <span class="rating-text">Facilité d'utilisation</span>
+                    <span class="rating-text">Accessibilité multi-appareils</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="95"></div></div>
+                    <span class="rating-pct">95%</span>
                 </div>
                 <div class="rating-item">
-                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 92%;"></div></div>
-                    <span class="rating-sep"> | </span>
-                    <span class="rating-text">Visibilité sur les performances</span>
+                    <span class="rating-text">Autonomie du commerçant</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="92"></div></div>
+                    <span class="rating-pct">92%</span>
+                </div>
+                <div class="rating-item">
+                    <span class="rating-text">Réactivité des modifications</span>
+                    <div class="impact-bar-container"><div class="impact-bar-fill" style="width: 0%;" data-target="98"></div></div>
+                    <span class="rating-pct">98%</span>
                 </div>
             </div>
         </div>
@@ -1732,38 +1884,35 @@
         let navigationHistory = [];
 
         function showView(viewId) {
-            const transitionEl = document.querySelector('.page-transition');
+            const targetEl = document.getElementById(viewId);
+            const currentView = document.querySelector('.view.active');
             const backBtn = document.getElementById('header-back-btn');
+
+            if (!targetEl || currentView === targetEl) return;
 
             if (viewId === 'main-home') {
                 navigationHistory = [];
-                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                document.getElementById(viewId).classList.add('active');
-                backBtn.style.display = 'none';
-                window.scrollTo(0, 0);
-                return;
-            }
-
-            const currentView = document.querySelector('.view.active');
-            if (currentView) {
+            } else if (currentView) {
                 navigationHistory.push({ id: currentView.id, scroll: window.scrollY });
             }
 
-            transitionEl.classList.remove('is-loaded');
-            transitionEl.classList.add('is-leaving');
-
-            setTimeout(() => {
-                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                document.getElementById(viewId).classList.add('active');
-                backBtn.style.display = 'flex';
+            const finishSwitch = () => {
+                if (currentView) currentView.classList.remove('active', 'is-leaving');
+                targetEl.classList.add('active');
+                backBtn.style.display = (viewId === 'main-home') ? 'none' : 'flex';
                 window.scrollTo(0, 0);
-                transitionEl.classList.remove('is-leaving');
-                transitionEl.classList.add('is-loaded');
-            }, 225);
+            };
+
+            if (!currentView) {
+                finishSwitch();
+                return;
+            }
+
+            currentView.classList.add('is-leaving');
+            setTimeout(finishSwitch, 280);
         }
 
         function goBack() {
-            const transitionEl = document.querySelector('.page-transition');
             const backBtn = document.getElementById('header-back-btn');
 
             if (navigationHistory.length === 0) {
@@ -1772,27 +1921,29 @@
             }
 
             const previous = navigationHistory.pop();
+            const currentView = document.querySelector('.view.active');
+            const targetEl = document.getElementById(previous.id);
 
-            if (previous.id === 'main-home') {
-                navigationHistory = [];
-                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                document.getElementById('main-home').classList.add('active');
-                backBtn.style.display = 'none';
-                window.scrollTo(0, previous.scroll);
+            if (!targetEl) return;
+
+            const finishSwitch = () => {
+                if (currentView) currentView.classList.remove('active', 'is-leaving');
+                targetEl.classList.add('active');
+                if (previous.id === 'main-home' || navigationHistory.length === 0) {
+                    backBtn.style.display = 'none';
+                } else {
+                    backBtn.style.display = 'flex';
+                }
+                window.scrollTo(0, previous.scroll || 0);
+            };
+
+            if (!currentView || currentView === targetEl) {
+                finishSwitch();
                 return;
             }
 
-            transitionEl.classList.remove('is-loaded');
-            transitionEl.classList.add('is-leaving');
-
-            setTimeout(() => {
-                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                document.getElementById(previous.id).classList.add('active');
-                backBtn.style.display = navigationHistory.length > 0 ? 'flex' : 'none';
-                window.scrollTo(0, previous.scroll);
-                transitionEl.classList.remove('is-leaving');
-                transitionEl.classList.add('is-loaded');
-            }, 225);
+            currentView.classList.add('is-leaving');
+            setTimeout(finishSwitch, 280);
         }
 
         window.addEventListener('DOMContentLoaded', (event) => {
@@ -2207,54 +2358,134 @@
     });
     </script>
 
+
     <script>
-        const canvasDashboard = document.getElementById('particles-canvas-dashboard');
-        const ctxDashboard = canvasDashboard.getContext('2d');
-        let particlesDashboard = [];
+    const canvasDashboard = document.getElementById('particles-canvas-dashboard');
+    const ctxDashboard = canvasDashboard.getContext('2d');
+    let particlesDashboard = [];
 
-        function resizeCanvasDashboard() {
-            canvasDashboard.width = window.innerWidth;
-            canvasDashboard.height = window.innerHeight;
-        }
+    function resizeCanvasDashboard() {
+        canvasDashboard.width = window.innerWidth;
+        canvasDashboard.height = window.innerHeight;
+    }
 
-        function createParticlesDashboard() {
-            particlesDashboard = [];
-            const count = Math.floor((canvasDashboard.width * canvasDashboard.height) / 18000);
-            for (let i = 0; i < count; i++) {
-                particlesDashboard.push({
-                    x: Math.random() * canvasDashboard.width,
-                    y: Math.random() * canvasDashboard.height,
-                    r: Math.random() * 3 + 1,
-                    dx: (Math.random() - 0.5) * 0.4,
-                    dy: (Math.random() - 0.5) * 0.4,
-                    opacity: Math.random() * 0.4 + 0.1
-                });
-            }
-        }
-
-        function drawDashboard() {
-            ctxDashboard.clearRect(0, 0, canvasDashboard.width, canvasDashboard.height);
-            particlesDashboard.forEach(p => {
-                ctxDashboard.beginPath();
-                ctxDashboard.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctxDashboard.fillStyle = `rgba(255, 107, 0, ${p.opacity})`;
-                ctxDashboard.fill();
-                p.x += p.dx;
-                p.y += p.dy;
-                if (p.x < 0 || p.x > canvasDashboard.width) p.dx *= -1;
-                if (p.y < 0 || p.y > canvasDashboard.height) p.dy *= -1;
+    function createParticlesDashboard() {
+        particlesDashboard = [];
+        const count = Math.floor((canvasDashboard.width * canvasDashboard.height) / 18000);
+        for (let i = 0; i < count; i++) {
+            particlesDashboard.push({
+                x: Math.random() * canvasDashboard.width,
+                y: Math.random() * canvasDashboard.height,
+                r: Math.random() * 3 + 1,
+                dx: (Math.random() - 0.5) * 0.4,
+                dy: (Math.random() - 0.5) * 0.4,
+                opacity: Math.random() * 0.4 + 0.1
             });
-            requestAnimationFrame(drawDashboard);
         }
+    }
 
+    function drawDashboard() {
+        ctxDashboard.clearRect(0, 0, canvasDashboard.width, canvasDashboard.height);
+        particlesDashboard.forEach(p => {
+            ctxDashboard.beginPath();
+            ctxDashboard.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctxDashboard.fillStyle = `rgba(255, 107, 0, ${p.opacity})`;
+            ctxDashboard.fill();
+            p.x += p.dx;
+            p.y += p.dy;
+            if (p.x < 0 || p.x > canvasDashboard.width) p.dx *= -1;
+            if (p.y < 0 || p.y > canvasDashboard.height) p.dy *= -1;
+        });
+        requestAnimationFrame(drawDashboard);
+    }
+
+    resizeCanvasDashboard();
+    createParticlesDashboard();
+    drawDashboard();
+    window.addEventListener('resize', () => {
         resizeCanvasDashboard();
         createParticlesDashboard();
-        drawDashboard();
-        window.addEventListener('resize', () => {
-            resizeCanvasDashboard();
-            createParticlesDashboard();
-        });
+    });
     </script>
 
+
+    <script>
+    // --- EFFET SPOTLIGHT : suivre la position de la souris dans chaque card ---
+    function initSpotlight() {
+        document.querySelectorAll('.card').forEach(card => {
+            if (card.dataset.spotlightInit) return;
+            card.dataset.spotlightInit = 'true';
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    }
+    document.addEventListener('DOMContentLoaded', initSpotlight);
+    </script>
+
+
+    <script>
+    // Animate pill-features on scroll
+    const pillObs = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                const delay = entry.target.dataset.delay || 0;
+                setTimeout(() => entry.target.classList.add('visible'), delay);
+                pillObs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    function initPills() {
+        document.querySelectorAll('.pill-feature').forEach((el, i) => {
+            el.dataset.delay = (i % 6) * 70;
+            pillObs.observe(el);
+        });
+    }
+
+    // Animate rating bars on scroll
+    const barObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const fill = entry.target.querySelector('.impact-bar-fill');
+                if (fill) {
+                    const target = fill.dataset.target || fill.style.width;
+                    fill.style.width = '0%';
+                    requestAnimationFrame(() => requestAnimationFrame(() => {
+                        fill.style.width = target + '%';
+                    }));
+                }
+                barObs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    function initBars() {
+        document.querySelectorAll('.rating-item').forEach(el => {
+            const fill = el.querySelector('.impact-bar-fill');
+            if (fill && !fill.dataset.target) {
+                const pct = parseInt(fill.style.width);
+                fill.dataset.target = pct;
+                fill.style.width = '0%';
+            }
+            barObs.observe(el);
+        });
+    }
+
+    // Re-init on view change (pills and bars reset when navigating)
+    const origShowView = window.showView;
+    if (typeof origShowView === 'function') {
+        window.showView = function(id) {
+            origShowView(id);
+            setTimeout(() => { initPills(); initBars(); }, 50);
+        };
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { initPills(); initBars(); });
+    </script>
 </body>
 </html>
