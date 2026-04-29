@@ -712,6 +712,32 @@
             z-index: 1;
         }
 
+        .footer-col ul li button {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            color: var(--text-light);
+            cursor: pointer;
+            text-align: left;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col ul li button:hover {
+            color: var(--primary-orange);
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .footer-col ul li:hover {
+            color: var(--primary-orange);
+            cursor: default;
+        }
+
         .footer-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -1104,7 +1130,7 @@
         100% { transform: translateX(-50%); }
     }
     @media (max-width: 600px) {
-        .bottom-waves { height: 140px; }
+        .bottom-waves { display: none; }
     }
 
     /* --- PARTICULES DES VUES DÉTAIL (couvre toute la vue, scroll inclus) --- */
@@ -1529,18 +1555,18 @@
 
             <div class="detail-section">
                 <h2>En quelques mots</h2>
-                <div class="detail-body">Votre menu, réinventé. La <strong>Carte Digitale Rylia</strong> transforme une simple carte en expérience immersive : vos plats mis en valeur par des visuels, des filtres intelligents pour guider chaque client, et tout ça accessible en un coup de QR Code depuis la table. <strong>Zéro impression, zéro délai</strong> — vous mettez à jour votre carte en temps réel, depuis n'importe où.</div>
+                <div class="detail-body">Votre menu, réinventé. La <strong>Carte Digitale Rylia</strong> transforme votre carte papier en expérience visuelle : photos de vos plats, filtres par envies et par allergies, plats du jour mis en avant. Vos clients scannent un QR Code à table, naviguent à leur rythme et commandent avec envie. Vous, vous mettez à jour vos prix, vos disponibilités ou vos nouveautés en quelques secondes depuis votre dashboard. <strong>Plus de réimpressions, plus de cartes obsolètes</strong> : votre menu vit avec vous.</div>
             </div>
 
             <div class="detail-section">
                 <h2>Ce que ça vous apporte</h2>
                 <div class="pills-grid">
-                    <div class="pill-feature"><div class="pill-icon">🎨</div><div class="pill-content"><strong>100% à votre image</strong><span>Couleurs, logo, slogan — la carte reflète l'identité de votre établissement.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🔍</div><div class="pill-content"><strong>Filtres intelligents</strong><span>Le client trie par type de plat, régime ou allergie en un geste.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">📱</div><div class="pill-content"><strong>Accès instantané par QR Code</strong><span>Un scan depuis la table, pas d'app à télécharger, aucune friction.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Mise à jour en temps réel</strong><span>Prix, plat du jour, rupture de stock — modifiable à tout moment.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🌿</div><div class="pill-content"><strong>Allergènes & régimes affichés</strong><span>Gluten, lactose, végétarien… vos clients mangent en toute confiance.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">✨</div><div class="pill-content"><strong>Image de marque boostée</strong><span>Un établissement qui adopte le digital, ça se remarque — et ça se retient.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📸</div><div class="pill-content"><strong>Des plats qui donnent envie</strong><span>Une vraie photo, une description soignée : vos clients commandent ce qu'ils voient. Vos plats à plus forte marge ne passent plus inaperçus.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔍</div><div class="pill-content"><strong>Filtres envies & allergies</strong><span>Vos clients trient par ingrédient, régime ou allergène en un geste. Choix plus rapides, moins d'hésitation, plus de tables qui tournent.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🌟</div><div class="pill-content"><strong>Plat du jour à la une</strong><span>Mettez en avant ce que vous voulez vendre : nouveauté, suggestion du chef, fin de stock. Le client voit ce que vous voulez qu'il voie.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Modifications en temps réel</strong><span>Un prix change, une rupture, un nouveau plat ? Modification depuis le dashboard, visible sur tous les téléphones dans la seconde. Et plus aucune carte à réimprimer.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🌿</div><div class="pill-content"><strong>Allergènes en toute clarté</strong><span>Chaque plat indique ses allergènes. Vos clients sensibles commandent en confiance, vous restez en règle avec la réglementation.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎨</div><div class="pill-content"><strong>100% à votre image</strong><span>Nom, slogan, couleurs, photos : la carte reflète l'identité de votre établissement. Pas un template générique, votre carte.</span></div></div>
                 </div>
             </div>
 
@@ -1646,18 +1672,18 @@
 
             <div class="detail-section">
                 <h2>En quelques mots</h2>
-                <div class="detail-body">Et si chaque repas vous rapportait un avis Google ? La <strong>Roue d'avis Rylia</strong> transforme le dépôt d'avis en jeu : votre client scanne un QR Code, tourne la roue et remporte un gain immédiat. En échange, il vous laisse un <strong>avis 5 étoiles</strong>. Tout est <strong>100% automatisé</strong> — il reçoit son code par mail, vous gérez tout depuis un tableau de bord simple. Résultat : votre réputation Google décolle, et vos clients reviennent récupérer leur gain.</div>
+                <div class="detail-body">Et si chaque repas vous rapportait un avis Google ? La <strong>Roue d'avis Rylia</strong> transforme une simple demande d'avis en moment de jeu : votre client scanne un QR Code en fin de repas, dépose son avis, fait tourner la roue et repart avec un coupon à venir récupérer chez vous. Pour vous, c'est un afflux régulier d'<strong>avis 5 étoiles</strong>, des clients qui reviennent, et une réputation Google qui grimpe toute seule. Vous configurez une fois, le système tourne en pilote automatique.</div>
             </div>
 
             <div class="detail-section">
                 <h2>Ce que ça vous apporte</h2>
                 <div class="pills-grid">
-                    <div class="pill-feature"><div class="pill-icon">⭐</div><div class="pill-content"><strong>Avis Google en continu</strong><span>Chaque scan génère un avis — votre classement local grimpe naturellement.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🎁</div><div class="pill-content"><strong>Gains 100% personnalisables</strong><span>Boisson, dessert, réduction… vous choisissez ce que vous offrez et à quelle fréquence.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🤖</div><div class="pill-content"><strong>Zéro gestion manuelle</strong><span>Le code est envoyé automatiquement par mail. Aucune saisie de votre côté.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🔒</div><div class="pill-content"><strong>Anti-abus intégré</strong><span>Délai de 24h entre chaque partie, gain valable 10 jours — vous gardez le contrôle.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🎯</div><div class="pill-content"><strong>Probabilités au choix</strong><span>Vous définissez les chances pour chaque gain — pour rester rentable à chaque tirage.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🔄</div><div class="pill-content"><strong>Client fidélisé, pas juste satisfait</strong><span>Il revient récupérer son gain — et consomme à nouveau chez vous.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">⭐</div><div class="pill-content"><strong>Avis Google en pilote automatique</strong><span>La roue ne se débloque qu'après dépôt d'un avis sur Google. À chaque partie, votre note grimpe et votre fiche remonte dans les recherches locales.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎮</div><div class="pill-content"><strong>La psychologie du jeu</strong><span>Demander un avis ne marche pas. Proposer un jeu, oui. Vos clients participent avec plaisir au lieu d'esquiver poliment.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎁</div><div class="pill-content"><strong>Vous choisissez les gains</strong><span>Boisson, dessert, réduction, menu offert : à vous de décider ce qui sort de la roue. Modifiable à tout moment depuis le dashboard.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎯</div><div class="pill-content"><strong>Probabilités sous contrôle</strong><span>Vous fixez vous-même les chances de chaque lot pour rester rentable. Le gros lot peut sortir 1 fois sur 100, ou jamais.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔒</div><div class="pill-content"><strong>Anti-abus intégré</strong><span>Une partie toutes les 24h, coupon valable 10 jours. Pas de risque qu'un client vide la roue ou stocke des codes à l'infini.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🔄</div><div class="pill-content"><strong>Une raison concrète de revenir</strong><span>Le gain ne s'utilise qu'en magasin. Votre client revient le récupérer, et il consomme. Un avis gagné, une visite gagnée.</span></div></div>
                 </div>
             </div>
 
@@ -1768,18 +1794,18 @@
 
             <div class="detail-section">
                 <h2>En quelques mots</h2>
-                <div class="detail-body">Fini la carte papier oubliée dans un tiroir. Avec le <strong>Web Fidélité Rylia</strong>, vos clients cumulent des points à chaque visite depuis leur téléphone — sans rien à installer. Vous gérez tout en quelques secondes depuis votre espace commerçant : vous scannez, le système crédite. Un <strong>classement entre clients</strong> crée une émulation naturelle qui les pousse à revenir plus souvent. Simple pour vous, engageant pour eux.</div>
+                <div class="detail-body">Fini la carte papier oubliée au fond du sac. Avec le <strong>Web Fidélité Rylia</strong>, vos clients cumulent leurs points directement depuis leur téléphone, sans aucune app à installer ni compte à créer. Vous scannez le QR au comptoir, le système crédite, c'est réglé en deux secondes. Et grâce aux <strong>événements et coupons ciblés</strong>, vous gardez la main pour relancer vos habitués quand vous le souhaitez. Pensé pour les commerçants qui veulent fidéliser sans se compliquer la vie.</div>
             </div>
 
             <div class="detail-section">
                 <h2>Ce que ça vous apporte</h2>
                 <div class="pills-grid">
-                    <div class="pill-feature"><div class="pill-icon">📲</div><div class="pill-content"><strong>Adieu les cartes perdues</strong><span>Tout est sur le téléphone du client — il ne peut plus oublier son programme fidélité.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🏆</div><div class="pill-content"><strong>Paliers de récompenses motivants</strong><span>5 niveaux personnalisables pour garder vos clients engagés sur la durée.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Validation express au comptoir</strong><span>Un scan, un montant saisi — les points sont crédités en temps réel, même en rush.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">📊</div><div class="pill-content"><strong>Classement & compétition</strong><span>Vos clients se challengent entre eux — et reviennent consommer pour grimper.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🔁</div><div class="pill-content"><strong>Fréquence de visite en hausse</strong><span>Un client proche d'une récompense choisit votre établissement, pas celui d'en face.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🛠️</div><div class="pill-content"><strong>Aucune contrainte technique</strong><span>Pas d'app à installer, synchronisation instantanée, interface pensée pour être intuitive.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎫</div><div class="pill-content"><strong>Adieu les cartes oubliées</strong><span>Le programme vit dans le téléphone du client. Plus rien à imprimer, plus rien à perdre : sa fidélité l'accompagne partout.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Scan QR au comptoir</strong><span>Un scan, un montant, les points sont crédités. Aucun ralentissement de service, même en plein coup de feu.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🏆</div><div class="pill-content"><strong>5 paliers 100% personnalisables</strong><span>Vous choisissez les récompenses, les seuils, les visuels. Adaptez le programme à votre carte et à vos marges.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">👥</div><div class="pill-content"><strong>Votre fichier client se construit tout seul</strong><span>Chaque inscription enrichit automatiquement votre base d'habitués. Vous voyez d'un coup d'œil qui revient, à quelle fréquence, et combien de points ils ont cumulés.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎁</div><div class="pill-content"><strong>Événements & coupons ciblés</strong><span>Lancez une opération sur une période précise ou envoyez un coupon à un client en particulier. Vos relances deviennent un jeu d'enfant.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📊</div><div class="pill-content"><strong>Statistiques en temps réel</strong><span>Suivez l'impact de chaque événement : participation, points distribués, clients actifs. Vous pilotez avec du concret, pas des intuitions.</span></div></div>
                 </div>
             </div>
 
@@ -1894,20 +1920,20 @@
 
             <div class="detail-section">
                 <h2>En quelques mots</h2>
-                <div class="detail-body">Gérer plusieurs modules ne devrait jamais être compliqué. Avec le <strong>tableau de bord Rylia</strong>, vous accédez à <strong>tous vos outils depuis un seul espace</strong> : modifiez vos récompenses fidélité, vos gains de roue, votre carte digitale, le tout <strong>en quelques clics</strong>. Chaque modification est <strong>appliquée en temps réel</strong>, sans délai et sans intervention technique. Et où que vous soyez, derrière votre comptoir, en déplacement ou chez vous, votre panel reste à portée de main, <strong>sur ordinateur, tablette ou smartphone</strong>.</div>
+                <div class="detail-body">Toute votre relation avec Rylia à un seul endroit. Votre <strong>espace client Rylia</strong> vous donne accès à vos modules actifs, à vos factures avec leur statut de paiement, à votre mandat SEPA et à votre fil de tickets de support. Vous mettez à jour vos infos d'entreprise vous-même, vous téléchargez vos justificatifs en un clic, et vous suivez vos demandes sans relancer personne par mail. Pensé pour que vous gardiez la main sur tout, <strong>sans perdre de temps</strong>.</div>
             </div>
 
             <div class="detail-section">
                 <h2>Ce que ça vous apporte</h2>
                 <div class="pills-grid">
-                    <div class="pill-feature"><div class="pill-icon">🧩</div><div class="pill-content"><strong>Tous vos modules réunis</strong><span>Roue d'avis, fidélité, carte digitale, site web, tout est centralisé au même endroit.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">⚡</div><div class="pill-content"><strong>Modifications en temps réel</strong><span>Changez gains, plats, récompenses ou tarifs en quelques secondes, c'est en ligne immédiatement.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">📊</div><div class="pill-content"><strong>Statistiques détaillées</strong><span>Avis générés, points distribués, visites, scans… pilotez votre activité avec des chiffres concrets.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">📃</div><div class="pill-content"><strong>Vos factures à porté de main</strong><span>Téléchargez vos factures directement depuis le dashboard.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🎟️</div><div class="pill-content"><strong>Système de ticket</strong><span>Depuis votre espace, ouvrez un ticket si vous avez la moindre question.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🔐</div><div class="pill-content"><strong>Espace 100% sécurisé</strong><span>Accès personnel et protégé : vous seul gérez votre établissement, en toute confidentialité.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">📱</div><div class="pill-content"><strong>Accessible partout</strong><span>Ordinateur, tablette, smartphone : votre tableau de bord vous suit où que vous soyez.</span></div></div>
-                    <div class="pill-feature"><div class="pill-icon">🎯</div><div class="pill-content"><strong>Aucune compétence requise</strong><span>Pensé pour les commerçants, pas pour les développeurs. Si vous utilisez un smartphone, vous saurez l'utiliser.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📊</div><div class="pill-content"><strong>Vue d'ensemble en un coup d'œil</strong><span>Modules actifs, factures en attente, statut du compte : à la connexion, vos indicateurs clés s'affichent immédiatement. Vous savez où vous en êtes en 3 secondes.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🧩</div><div class="pill-content"><strong>Tous vos modules réunis</strong><span>Site internet, fidélité, roue d'avis, carte digitale : un seul login, un seul espace. Vous lancez chaque module depuis votre tableau de bord en un clic.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📃</div><div class="pill-content"><strong>Factures à portée de main</strong><span>Historique complet, statut de paiement (en attente, réglée), téléchargement PDF immédiat. Votre comptable vous remerciera.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🏦</div><div class="pill-content"><strong>Mandat SEPA</strong><span>IBAN, RUM, jour de prélèvement : votre mandat signé est consultable et téléchargeable à tout moment. Plus de mauvaise surprise.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎟️</div><div class="pill-content"><strong>Support par module</strong><span>Une question, un bug ? Ouvrez un ticket en précisant le module concerné, et suivez son avancement directement dans votre espace. Sans relance par mail.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">👤</div><div class="pill-content"><strong>Fiche entreprise éditable</strong><span>SIRET, TVA, adresse, forme juridique : modifiez vos infos vous-même quand elles changent. Vos factures restent toujours conformes.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">📱</div><div class="pill-content"><strong>Accessible partout, en sécurité</strong><span>Ordinateur, tablette ou smartphone, accès protégé par mot de passe. Votre espace vous suit, derrière le comptoir comme en déplacement.</span></div></div>
+                    <div class="pill-feature"><div class="pill-icon">🎯</div><div class="pill-content"><strong>Pensé pour les commerçants</strong><span>Pas de jargon technique, pas de réglages obscurs. Si vous savez utiliser un smartphone, vous saurez utiliser votre espace, du premier au dernier clic.</span></div></div>
                 </div>
             </div>
 
@@ -2057,7 +2083,7 @@
                     </div>
                     <div class="contact-info-item">
                         <img src="logo-telephone.jpg" alt="Téléphone" class="icon-contact-img">
-                        <span><em>(Bientôt disponible...)</em></span>
+                        <span><em>06 96 69 90 87</em></span>
                     </div>
                 </div>
             </div>
@@ -2069,6 +2095,20 @@
             <div class="footer-col">
                 <h3>Rylia.</h3>
                 <p>Solutions digitales clés en main pour booster l'engagement et la fidélité des clients de votre commerce.</p>
+            </div>
+<div class="footer-col"> 
+                <h4>Nos Solutions</h4>
+                 <ul>
+                    <li>
+                      <a href="#" onclick="showView('main-home'); window.scrollTo({top:0, behavior:'smooth'}); return false;">
+                        Site Web
+                      </a>
+                    </li>
+                    <li><button onclick="showView('detail-carte')">Carte digitale</button></li> 
+                    <li><button onclick="showView('detail-roue')">Roue d'avis</button></li> 
+                    <li><button onclick="showView('detail-fidelite')">Fidélité</button></li>
+                    <li><button onclick="showView('detail-dashboard')">Dashboard</button></li>
+                </ul> 
             </div>
 
             <div class="footer-col">
@@ -2084,7 +2124,7 @@
                 <h4>Contact</h4>
                 <ul>
                     <li>Email : contact@rylia.fr</li>
-                    <li>Téléphone : <em>(Bientôt disponible...)</em></li>
+                    <li>Téléphone : <em>06 69 96 90 87</em><br></li>
                 </ul>
             </div>
         </div>
