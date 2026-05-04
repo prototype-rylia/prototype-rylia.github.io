@@ -375,6 +375,72 @@
             line-height: 1.75;
         }
 
+        /* =========================================================
+           "EN QUELQUES MOTS" AVEC ILLUSTRATION MASCOTTE
+           Layout 2 colonnes : texte à gauche, illustration à droite.
+           ========================================================= */
+        .detail-body.intro-with-mascot {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        .detail-body.intro-with-mascot .intro-text {
+            flex: 1 1 280px;
+            min-width: 0;
+        }
+
+        /* Conteneur de la mascotte — taille fixe, format carré */
+        .detail-body.intro-with-mascot .intro-mascot-wrap {
+            flex: 0 0 180px;
+            width: 180px;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Image de la mascotte */
+        .detail-body.intro-with-mascot .intro-mascot {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 6px 16px rgba(255, 107, 0, 0.18));
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        filter 0.3s ease;
+        }
+
+        /* Au survol : la mascotte se penche vers toi avec un glow renforcé.
+           Hover sur le wrapper plutôt que sur l'image → zone de survol plus
+           généreuse (englobe toute la case 180×180, pas juste la silhouette). */
+        .detail-body.intro-with-mascot .intro-mascot-wrap:hover .intro-mascot {
+            transform: translateY(-8px) scale(1.04) rotate(-3deg);
+            filter: drop-shadow(0 14px 26px rgba(255, 107, 0, 0.32));
+        }
+
+        /* Pas d'effet sur tactile : sinon l'effet reste figé après un tap */
+        @media (hover: none) {
+            .detail-body.intro-with-mascot .intro-mascot-wrap:hover .intro-mascot {
+                transform: none;
+                filter: drop-shadow(0 6px 16px rgba(255, 107, 0, 0.18));
+            }
+        }
+
+        /* Mobile : mascotte sous le texte, légèrement plus petite */
+        @media (max-width: 600px) {
+            .detail-body.intro-with-mascot {
+                flex-direction: column;
+                gap: 18px;
+            }
+            .detail-body.intro-with-mascot .intro-mascot-wrap {
+                flex: 0 0 auto;
+                width: 150px;
+            }
+        }
+        /* ========================================================= */
+
         /* Accroche produit sous le h1 */
         .product-intro {
             font-size: 1rem;
@@ -1251,7 +1317,7 @@
     }
 
     /* =========================================================
-       CHATBOT MASCOTTE LAUNCHER (pose "accroché" au bord)
+       MASCOTTE LAUNCHER (pose "accroché" au bord)
 
        ┌─────── VALEURS À AJUSTER (tweak ici uniquement) ───────┐
        │                                                        │
@@ -1274,11 +1340,32 @@
     /* Ancre stable pour le mode "stuck" (position: absolute sur la mascotte) */
     body { position: relative; }
 
-    .chatbot-launcher {
+    .mascotte-launcher {
         /* ▼▼ Variables à ajuster ▼▼ */
         --mascot-width:         220px;
         --mascot-bottom-offset: -130px;
         --mascot-right-offset:  28px;
+
+        /* Zone de survol/clic réduite par rapport à la taille de l'image.
+           Sert à ignorer la marge transparente autour du dessin pixel art.
+           • 1 valeur (ex: 24px)         → marge identique sur les 4 côtés
+           • 4 valeurs (ex: 30px 20px 100px 20px) → top right bottom left
+           Plus la valeur est grande, plus il faut s'approcher de la
+           silhouette pour déclencher l'effet hover. Astuce : décommente
+           la ligne "background" plus bas pour voir la zone en rouge. */
+        --mascot-hit-inset:     30px 24px 110px 24px;
+
+        /* ─── Position de la bulle de message ────────────────────
+           --bubble-gap        : distance verticale entre la bulle et la mascotte
+                                 (plus grand = bulle plus haute)
+           --bubble-shift-x    : décalage horizontal de la bulle vers la gauche
+                                 depuis le bord droit (plus grand = plus à gauche)
+           --bubble-tail-right : position de la queue de la bulle, mesurée
+                                 depuis le bord droit de la bulle. À ajuster
+                                 pour que la queue pointe vers la mascotte. */
+        --bubble-bottom:        250px;
+        --bubble-shift-x:       100px;
+        --bubble-tail-right:    42px;
         /* ▲▲ Variables à ajuster ▲▲ */
 
         position: fixed;
@@ -1288,14 +1375,16 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        gap: 14px;
         pointer-events: none;
         will-change: bottom;
     }
 
-    .chatbot-mascot-wrapper {
+    .mascotte-wrapper {
         position: relative;
-        pointer-events: auto;
+        /* La zone active n'est PAS le rectangle du bouton, mais un sous-rectangle
+           défini par ::before plus bas. Ça permet d'ignorer les marges
+           transparentes autour du dessin pixel art. */
+        pointer-events: none;
         cursor: pointer;
         width: var(--mascot-width);
         display: flex;
@@ -1310,19 +1399,36 @@
         transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
+    /* Hitbox invisible : seule cette zone capte le hover et le clic.
+       Ses 4 côtés sont rétractés vers l'intérieur via --mascot-hit-inset. */
+    .mascotte-wrapper::before {
+        content: "";
+        position: absolute;
+        inset: var(--mascot-hit-inset);
+        z-index: 3; /* au-dessus des images pour capter avant elles */
+        pointer-events: auto;
+        cursor: pointer;
+
+        /* 🐛 DEBUG : décommente la ligne ci-dessous pour visualiser la zone
+           active en rouge transparent et ajuster --mascot-hit-inset à l'œil */
+        /* background: rgba(255, 0, 0, 0.25); */
+    }
+
     /* Mascotte qui se hisse au survol (comme s'il sortait pour mieux te voir) */
-    .chatbot-mascot-wrapper:hover {
+    .mascotte-wrapper:hover {
         transform: translateY(-6px);
         animation-play-state: paused;
     }
 
-    .chatbot-mascot-wrapper:active {
+    .mascotte-wrapper:active {
         transform: translateY(-3px) scale(0.97);
     }
 
-    .chatbot-mascot-img {
-        position: relative;
-        z-index: 1;
+    /* Image de la mascotte (yeux ouverts par défaut, yeux fermés au hover).
+       Les 2 images sont empilées dans le wrapper. La 1ère (yeux ouverts) est
+       en flux et donne sa hauteur au conteneur. La 2nde (yeux fermés) est
+       superposée par-dessus en absolu, et son opacité passe de 0 à 1 au hover. */
+    .mascotte-img {
         width: 100%;
         height: auto;
         display: block;
@@ -1333,34 +1439,73 @@
         animation: mascotGlow 2.6s ease-in-out infinite;
     }
 
+    .mascotte-img--open {
+        position: relative;
+        z-index: 1;
+    }
+
+    .mascotte-img--closed {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Cross-fade au survol : yeux ouverts s'estompent, yeux fermés apparaissent */
+    .mascotte-wrapper:hover .mascotte-img--open,
+    .mascotte-wrapper:focus-visible .mascotte-img--open {
+        opacity: 0;
+    }
+    .mascotte-wrapper:hover .mascotte-img--closed,
+    .mascotte-wrapper:focus-visible .mascotte-img--closed {
+        opacity: 1;
+    }
+
+    /* Sur tactile (pas de hover réel), on n'affiche jamais les yeux fermés —
+       ça évite que l'image se "bloque" en yeux fermés après un tap. */
+    @media (hover: none) {
+        .mascotte-wrapper:hover .mascotte-img--open,
+        .mascotte-wrapper:focus-visible .mascotte-img--open {
+            opacity: 1;
+        }
+        .mascotte-wrapper:hover .mascotte-img--closed,
+        .mascotte-wrapper:focus-visible .mascotte-img--closed {
+            opacity: 0;
+        }
+    }
+
     /* Notification dot — caché avec la nouvelle pose (la mascotte est déjà très visible) */
-    .chatbot-notification-dot { display: none; }
+    .mascotte-notification-dot { display: none; }
 
     /* Bulle de message "bientôt disponible" */
-    .chatbot-bubble {
+    .mascotte-bubble {
         pointer-events: auto;
         background: white;
         border: 1.5px solid var(--primary-orange);
         border-radius: 16px 16px 4px 16px;
         padding: 14px 18px 14px 16px;
-        max-width: 260px;
+        width: max-content;
+        max-width: 220px;
         box-shadow: 0 10px 30px rgba(255, 107, 0, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08);
-        position: relative;
+        position: absolute;
+        bottom: var(--bubble-bottom);
+        right: var(--bubble-shift-x);
         opacity: 0;
         transform: translateY(10px) scale(0.92);
         transform-origin: bottom right;
         transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         visibility: hidden;
-        margin-right: 6px; /* léger décalage pour que la queue tombe sur la tête */
     }
 
-    .chatbot-bubble.is-open {
+    .mascotte-bubble.is-open {
         opacity: 1;
         transform: translateY(0) scale(1);
         visibility: visible;
     }
 
-    .chatbot-bubble-title {
+    .mascotte-bubble-title {
         font-size: 0.95rem;
         font-weight: 700;
         color: var(--primary-orange);
@@ -1370,14 +1515,14 @@
         gap: 6px;
     }
 
-    .chatbot-bubble-text {
+    .mascotte-bubble-text {
         font-size: 0.85rem;
         color: var(--text-light);
         line-height: 1.45;
         margin: 0;
     }
 
-    .chatbot-bubble-close {
+    .mascotte-bubble-close {
         position: absolute;
         top: 6px;
         right: 8px;
@@ -1393,17 +1538,17 @@
         font-family: inherit;
     }
 
-    .chatbot-bubble-close:hover {
+    .mascotte-bubble-close:hover {
         color: var(--primary-orange);
         background: rgba(255, 107, 0, 0.08);
     }
 
     /* Queue de la bulle pointant vers la tête de la mascotte */
-    .chatbot-bubble::after {
+    .mascotte-bubble::after {
         content: "";
         position: absolute;
         bottom: -8px;
-        right: 42px;
+        right: var(--bubble-tail-right);
         width: 14px;
         height: 14px;
         background: white;
@@ -1418,13 +1563,33 @@
         50%      { transform: translateY(-3px); }
     }
 
+    /* Fondu d'apparition impactant au chargement :
+       - opacity 0 → 1 ET scale 0.85 → 1 (mascotte qui "se matérialise")
+       - durée 1.2s avec un easing expo-out (départ rapide, fin tout en douceur)
+       - transform-origin en bas à droite pour un grossissement ancré au coin
+       - "both" garde l'état initial pendant le délai (pas de flash) */
+    @keyframes mascotLauncherFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.85);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    .mascotte-launcher {
+        transform-origin: bottom right;
+        animation: mascotLauncherFadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+    }
+
     @keyframes mascotGlow {
         0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 107, 0, 0.3)); }
         50%      { filter: drop-shadow(0 0 14px rgba(255, 107, 0, 0.55)); }
     }
 
     /* Accessibilité : focus visible */
-    .chatbot-mascot-wrapper:focus-visible {
+    .mascotte-wrapper:focus-visible {
         outline: 3px solid var(--primary-orange);
         outline-offset: 4px;
         border-radius: 12px;
@@ -1432,8 +1597,8 @@
 
     /* Respect du prefers-reduced-motion */
     @media (prefers-reduced-motion: reduce) {
-        .chatbot-mascot-wrapper,
-        .chatbot-mascot-img {
+        .mascotte-wrapper,
+        .mascotte-img {
             animation: none !important;
         }
     }
@@ -1743,7 +1908,12 @@
 
             <div class="detail-section">
                 <h2>En quelques mots</h2>
-                <div class="detail-body">Votre menu, réinventé. La <strong>Carte Digitale Rylia</strong> transforme votre carte papier en expérience visuelle : photos de vos plats, filtres par envies et par allergies, plats du jour mis en avant. Vos clients scannent un QR Code à table, naviguent à leur rythme et commandent avec envie. Vous, vous mettez à jour vos prix, vos disponibilités ou vos nouveautés en quelques secondes depuis votre dashboard. <strong>Plus de réimpressions, plus de cartes obsolètes</strong> : votre menu vit avec vous.</div>
+                <div class="detail-body intro-with-mascot">
+                    <div class="intro-mascot-wrap">
+                        <img src="mascotte-carte.png" alt="" class="intro-mascot">
+                    </div>
+                    <div class="intro-text">Votre menu, réinventé. La <strong>Carte Digitale Rylia</strong> transforme votre carte papier en expérience visuelle : photos de vos plats, filtres par envies et par allergies, plats du jour mis en avant. Vos clients scannent un QR Code à table, naviguent à leur rythme et commandent avec envie. Vous, vous mettez à jour vos prix, vos disponibilités ou vos nouveautés en quelques secondes depuis votre dashboard. <strong>Plus de réimpressions, plus de cartes obsolètes</strong> : votre menu vit avec vous.</div>
+                </div>
             </div>
 
             <div class="detail-section">
@@ -1860,7 +2030,12 @@
 
             <div class="detail-section">
                 <h2>En quelques mots</h2>
-                <div class="detail-body">Et si chaque repas vous rapportait un avis Google ? La <strong>Roue d'avis Rylia</strong> transforme une simple demande d'avis en moment de jeu : votre client scanne un QR Code en fin de repas, dépose son avis, fait tourner la roue et repart avec un coupon à venir récupérer chez vous. Pour vous, c'est un afflux régulier d'<strong>avis 5 étoiles</strong>, des clients qui reviennent, et une réputation Google qui grimpe toute seule. Vous configurez une fois, le système tourne en pilote automatique.</div>
+                <div class="detail-body intro-with-mascot">
+                    <div class="intro-mascot-wrap">
+                        <img src="mascotte-avis.png" alt="" class="intro-mascot">
+                    </div>
+                    <div class="intro-text">Et si chaque repas vous rapportait un avis Google ? La <strong>Roue d'avis Rylia</strong> transforme une simple demande d'avis en moment de jeu : votre client scanne un QR Code en fin de repas, dépose son avis, fait tourner la roue et repart avec un coupon à venir récupérer chez vous. Pour vous, c'est un afflux régulier d'<strong>avis 5 étoiles</strong>, des clients qui reviennent, et une réputation Google qui grimpe toute seule. Vous configurez une fois, le système tourne en pilote automatique.</div>
+                </div>
             </div>
 
             <div class="detail-section">
@@ -1982,7 +2157,12 @@
 
             <div class="detail-section">
                 <h2>En quelques mots</h2>
-                <div class="detail-body">Fini la carte papier oubliée au fond du sac. Avec le <strong>Web Fidélité Rylia</strong>, vos clients cumulent leurs points directement depuis leur téléphone, sans aucune app à installer ni compte à créer. Vous scannez le QR au comptoir, le système crédite, c'est réglé en deux secondes. Et grâce aux <strong>événements et coupons ciblés</strong>, vous gardez la main pour relancer vos habitués quand vous le souhaitez. Pensé pour les commerçants qui veulent fidéliser sans se compliquer la vie.</div>
+                <div class="detail-body intro-with-mascot">
+                    <div class="intro-mascot-wrap">
+                        <img src="mascotte-fidelite.png" alt="" class="intro-mascot">
+                    </div>
+                    <div class="intro-text">Fini la carte papier oubliée au fond du sac. Avec le <strong>Web Fidélité Rylia</strong>, vos clients cumulent leurs points directement depuis leur téléphone, sans aucune app à installer ni compte à créer. Vous scannez le QR au comptoir, le système crédite, c'est réglé en deux secondes. Et grâce aux <strong>événements et coupons ciblés</strong>, vous gardez la main pour relancer vos habitués quand vous le souhaitez. Pensé pour les commerçants qui veulent fidéliser sans se compliquer la vie.</div>
+                </div>
             </div>
 
             <div class="detail-section">
@@ -2108,7 +2288,12 @@
 
             <div class="detail-section">
                 <h2>En quelques mots</h2>
-                <div class="detail-body">Toute votre relation avec Rylia à un seul endroit. Votre <strong>espace client Rylia</strong> vous donne accès à vos modules actifs, à vos factures avec leur statut de paiement, à votre mandat SEPA et à votre fil de tickets de support. Vous mettez à jour vos infos d'entreprise vous-même, vous téléchargez vos justificatifs en un clic, et vous suivez vos demandes sans relancer personne par mail. Pensé pour que vous gardiez la main sur tout, <strong>sans perdre de temps</strong>.</div>
+                <div class="detail-body intro-with-mascot">
+                    <div class="intro-mascot-wrap">
+                        <img src="mascotte-dashboard.png" alt="" class="intro-mascot">
+                    </div>
+                    <div class="intro-text">Toute votre relation avec Rylia à un seul endroit. Votre <strong>espace client Rylia</strong> vous donne accès à vos modules actifs, à vos factures avec leur statut de paiement, à votre mandat SEPA et à votre fil de tickets de support. Vous mettez à jour vos infos d'entreprise vous-même, vous téléchargez vos justificatifs en un clic, et vous suivez vos demandes sans relancer personne par mail. Pensé pour que vous gardiez la main sur tout, <strong>sans perdre de temps</strong>.</div>
+                </div>
             </div>
 
             <div class="detail-section">
@@ -2767,33 +2952,39 @@
     </script>
 
     <!-- =========================================================
-         CHATBOT MASCOTTE LAUNCHER
+         MASCOTTE LAUNCHER (pose "accroché" au bord)
          ========================================================= -->
-    <div class="chatbot-launcher" aria-live="polite">
+    <div class="mascotte-launcher" aria-live="polite">
 
-        <!-- Bulle "bientôt disponible" -->
-        <div id="chatbot-bubble" class="chatbot-bubble" role="dialog" aria-labelledby="chatbot-bubble-title" aria-hidden="true">
-            <button class="chatbot-bubble-close" id="chatbot-bubble-close" aria-label="Fermer le message">×</button>
-            <div class="chatbot-bubble-title" id="chatbot-bubble-title">
+        <!-- Bulle de message -->
+        <div id="mascotte-bubble" class="mascotte-bubble" role="dialog" aria-labelledby="mascotte-bubble-title" aria-hidden="true">
+            <button class="mascotte-bubble-close" id="mascotte-bubble-close" aria-label="Fermer le message">×</button>
+            <div class="mascotte-bubble-title" id="mascotte-bubble-title">
                 <span>👋</span><span>Salut !</span>
             </div>
-            <p class="chatbot-bubble-text">
-                <em>bientôt disponbile</em>&nbsp;!
+            <p class="mascotte-bubble-text">
+                Moi c'est Rylia, j'accompagne votre commerce dans une transition digitale&nbsp;!
             </p>
         </div>
 
         <!-- Mascotte cliquable -->
         <button
             type="button"
-            class="chatbot-mascot-wrapper"
-            id="chatbot-mascot-button"
-            aria-label="Ouvrir l'assistant Rylia"
+            class="mascotte-wrapper"
+            id="mascotte-button"
+            aria-label="Voir le message de la mascotte"
             aria-expanded="false"
-            aria-controls="chatbot-bubble">
-            <span class="chatbot-notification-dot" aria-hidden="true"></span>
+            aria-controls="mascotte-bubble">
+            <span class="mascotte-notification-dot" aria-hidden="true"></span>
             <img
-                class="chatbot-mascot-img"
+                class="mascotte-img mascotte-img--open"
                 src="mascotte-accroche.png"
+                alt=""
+                aria-hidden="true"
+                draggable="false">
+            <img
+                class="mascotte-img mascotte-img--closed"
+                src="mascotte-accroche-2.png"
                 alt=""
                 aria-hidden="true"
                 draggable="false">
@@ -2803,11 +2994,11 @@
 
     <script>
     (function() {
-        const button = document.getElementById('chatbot-mascot-button');
-        const bubble = document.getElementById('chatbot-bubble');
-        const closeBtn = document.getElementById('chatbot-bubble-close');
-        const dot = document.querySelector('.chatbot-notification-dot');
-        const launcher = document.querySelector('.chatbot-launcher');
+        const button = document.getElementById('mascotte-button');
+        const bubble = document.getElementById('mascotte-bubble');
+        const closeBtn = document.getElementById('mascotte-bubble-close');
+        const dot = document.querySelector('.mascotte-notification-dot');
+        const launcher = document.querySelector('.mascotte-launcher');
         const footer  = document.querySelector('.site-footer');
 
         if (!button || !bubble) return;
