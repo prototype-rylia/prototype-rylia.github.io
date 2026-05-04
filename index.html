@@ -1250,6 +1250,191 @@
         box-shadow: 0 6px 18px rgba(255, 107, 0, 0.25);
     }
 
+    /* =========================================================
+       CHATBOT MASCOTTE LAUNCHER (pose "accroché" au bord)
+
+       ┌─────── VALEURS À AJUSTER (tweak ici uniquement) ───────┐
+       │                                                        │
+       │  --mascot-width         : taille globale (largeur)     │
+       │  --mascot-bottom-offset : décalage vertical            │
+       │      • 0px    → mains au ras du bord inférieur         │
+       │      • -10px  → légèrement enfoncée (mains coupées)    │
+       │      • -25px  → bien enfoncée (juste tête + bouts      │
+       │                  des doigts visibles)                  │
+       │      • +15px  → flotte un peu au-dessus du bord        │
+       │                                                        │
+       │  --mascot-right-offset  : distance du bord droit       │
+       │                                                        │
+       └────────────────────────────────────────────────────────┘
+       Le reste du CSS s'adapte automatiquement à ces 3 valeurs,
+       et le JS de "stick to footer" lit la variable pour rester
+       cohérent quand le footer arrive en bas.
+       ========================================================= */
+
+    .chatbot-launcher {
+        /* ▼▼ Variables à ajuster ▼▼ */
+        --mascot-width:         220px;
+        --mascot-bottom-offset: -130px;
+        --mascot-right-offset:  28px;
+        /* ▲▲ Variables à ajuster ▲▲ */
+
+        position: fixed;
+        bottom: var(--mascot-bottom-offset);
+        right:  var(--mascot-right-offset);
+        z-index: 9998;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 14px;
+        pointer-events: none;
+        will-change: bottom;
+    }
+
+    .chatbot-mascot-wrapper {
+        position: relative;
+        pointer-events: auto;
+        cursor: pointer;
+        width: var(--mascot-width);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        padding: 0;
+        font-family: inherit;
+        outline: none;
+        animation: mascotPeekBob 3.5s ease-in-out infinite;
+        transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Mascotte qui se hisse au survol (comme s'il sortait pour mieux te voir) */
+    .chatbot-mascot-wrapper:hover {
+        transform: translateY(-6px);
+        animation-play-state: paused;
+    }
+
+    .chatbot-mascot-wrapper:active {
+        transform: translateY(-3px) scale(0.97);
+    }
+
+    .chatbot-mascot-img {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: auto;
+        display: block;
+        user-select: none;
+        -webkit-user-drag: none;
+        image-rendering: -webkit-optimize-contrast; /* préserve le pixel art */
+        /* Glow doux orange directement sur la silhouette de la mascotte */
+        animation: mascotGlow 2.6s ease-in-out infinite;
+    }
+
+    /* Notification dot — caché avec la nouvelle pose (la mascotte est déjà très visible) */
+    .chatbot-notification-dot { display: none; }
+
+    /* Bulle de message "bientôt disponible" */
+    .chatbot-bubble {
+        pointer-events: auto;
+        background: white;
+        border: 1.5px solid var(--primary-orange);
+        border-radius: 16px 16px 4px 16px;
+        padding: 14px 18px 14px 16px;
+        max-width: 260px;
+        box-shadow: 0 10px 30px rgba(255, 107, 0, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08);
+        position: relative;
+        opacity: 0;
+        transform: translateY(10px) scale(0.92);
+        transform-origin: bottom right;
+        transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        visibility: hidden;
+        margin-right: 6px; /* léger décalage pour que la queue tombe sur la tête */
+    }
+
+    .chatbot-bubble.is-open {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        visibility: visible;
+    }
+
+    .chatbot-bubble-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--primary-orange);
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .chatbot-bubble-text {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        line-height: 1.45;
+        margin: 0;
+    }
+
+    .chatbot-bubble-close {
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        background: transparent;
+        border: none;
+        color: #aaa;
+        font-size: 1.1rem;
+        cursor: pointer;
+        line-height: 1;
+        padding: 4px;
+        border-radius: 4px;
+        transition: color 0.2s ease, background 0.2s ease;
+        font-family: inherit;
+    }
+
+    .chatbot-bubble-close:hover {
+        color: var(--primary-orange);
+        background: rgba(255, 107, 0, 0.08);
+    }
+
+    /* Queue de la bulle pointant vers la tête de la mascotte */
+    .chatbot-bubble::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        right: 42px;
+        width: 14px;
+        height: 14px;
+        background: white;
+        border-right: 1.5px solid var(--primary-orange);
+        border-bottom: 1.5px solid var(--primary-orange);
+        transform: rotate(45deg);
+    }
+
+    /* --- Animations --- */
+    @keyframes mascotPeekBob {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(-3px); }
+    }
+
+    @keyframes mascotGlow {
+        0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 107, 0, 0.3)); }
+        50%      { filter: drop-shadow(0 0 14px rgba(255, 107, 0, 0.55)); }
+    }
+
+    /* Accessibilité : focus visible */
+    .chatbot-mascot-wrapper:focus-visible {
+        outline: 3px solid var(--primary-orange);
+        outline-offset: 4px;
+        border-radius: 12px;
+    }
+
+    /* Respect du prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+        .chatbot-mascot-wrapper,
+        .chatbot-mascot-img {
+            animation: none !important;
+        }
+    }
+
     </style>
 </head>
 <body>
@@ -1591,8 +1776,8 @@
 
                             <!-- VIDÉO DU DASHBOARD - À COMPLÉTER -->
                             <div class="video-player">
-                                <video poster="dashboard-carte.png" preload="metadata" playsinline>
-                                    <source src="dashboard-carte.mp4" type="video/mp4">
+                                <video preload="metadata" playsinline muted>
+                                    <source src="dashboard-carte.mp4#t=0.1" type="video/mp4">
                                 </video>
                                 <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
                                 <span class="play-label">Voir la présentation</span>
@@ -1708,8 +1893,8 @@
 
                             <!-- VIDÉO DU DASHBOARD -->
                             <div class="video-player">
-                                <video poster="dashboard-roue.png" preload="metadata" playsinline>
-                                    <source src="dashboard-roue.mp4" type="video/mp4">
+                                <video preload="metadata" playsinline muted>
+                                    <source src="dashboard-roue.mp4#t=0.1" type="video/mp4">
                                 </video>
                                 <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
                                 <span class="play-label">Voir la présentation</span>
@@ -1830,8 +2015,8 @@
 
                             <!-- VIDÉO DU DASHBOARD -->
                             <div class="video-player">
-                                <video poster="dashboard-fidelite.png" preload="metadata" playsinline>
-                                    <source src="dashboard-fidelite.mp4" type="video/mp4">
+                                <video preload="metadata" playsinline muted>
+                                    <source src="dashboard-fidelite.mp4#t=0.1" type="video/mp4">
                                 </video>
                                 <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
                                 <span class="play-label">Voir la présentation</span>
@@ -1901,8 +2086,8 @@
                         </div>
                         <!-- VIDÉO DE PRÉSENTATION DU DASHBOARD -->
                         <div class="video-player">
-                            <video poster="dashboard-presentation.png" preload="metadata" playsinline>
-                                <source src="dashboard-presentation.mp4" type="video/mp4">
+                            <video preload="metadata" playsinline muted>
+                                <source src="dashboard-presentation.mp4#t=0.1" type="video/mp4">
                             </video>
                             <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
                             <span class="play-label">Voir la présentation</span>
@@ -2499,6 +2684,7 @@
         function startPlayback() {
             player.classList.add('playing');
             video.controls = true;
+            video.muted = false;
             video.play().catch(() => {/* lecture automatique bloquée, c'est OK */});
         }
 
@@ -2576,5 +2762,159 @@
 
     document.addEventListener('DOMContentLoaded', () => { initPills(); initBars(); });
     </script>
+
+    <!-- =========================================================
+         CHATBOT MASCOTTE LAUNCHER
+         ========================================================= -->
+    <div class="chatbot-launcher" aria-live="polite">
+
+        <!-- Bulle "bientôt disponible" -->
+        <div id="chatbot-bubble" class="chatbot-bubble" role="dialog" aria-labelledby="chatbot-bubble-title" aria-hidden="true">
+            <button class="chatbot-bubble-close" id="chatbot-bubble-close" aria-label="Fermer le message">×</button>
+            <div class="chatbot-bubble-title" id="chatbot-bubble-title">
+                <span>👋</span><span>Salut !</span>
+            </div>
+            <p class="chatbot-bubble-text">
+                <em>bientôt disponbile</em>&nbsp;!
+            </p>
+        </div>
+
+        <!-- Mascotte cliquable -->
+        <button
+            type="button"
+            class="chatbot-mascot-wrapper"
+            id="chatbot-mascot-button"
+            aria-label="Ouvrir l'assistant Rylia"
+            aria-expanded="false"
+            aria-controls="chatbot-bubble">
+            <span class="chatbot-notification-dot" aria-hidden="true"></span>
+            <img
+                class="chatbot-mascot-img"
+                src="mascotte-accroche.png"
+                alt=""
+                aria-hidden="true"
+                draggable="false">
+        </button>
+
+    </div>
+
+    <script>
+    (function() {
+        const button = document.getElementById('chatbot-mascot-button');
+        const bubble = document.getElementById('chatbot-bubble');
+        const closeBtn = document.getElementById('chatbot-bubble-close');
+        const dot = document.querySelector('.chatbot-notification-dot');
+        const launcher = document.querySelector('.chatbot-launcher');
+        const footer  = document.querySelector('.site-footer');
+
+        if (!button || !bubble) return;
+
+        /* --- Ouverture / fermeture de la bulle --- */
+        let isOpen = false;
+        let autoCloseTimer = null;
+
+        function openBubble() {
+            isOpen = true;
+            bubble.classList.add('is-open');
+            bubble.setAttribute('aria-hidden', 'false');
+            button.setAttribute('aria-expanded', 'true');
+            if (dot) dot.style.display = 'none';
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = setTimeout(closeBubble, 6000);
+        }
+
+        function closeBubble() {
+            isOpen = false;
+            bubble.classList.remove('is-open');
+            bubble.setAttribute('aria-hidden', 'true');
+            button.setAttribute('aria-expanded', 'false');
+            clearTimeout(autoCloseTimer);
+        }
+
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (isOpen) closeBubble(); else openBubble();
+        });
+
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeBubble();
+        });
+
+        document.addEventListener('click', function(e) {
+            if (isOpen && !bubble.contains(e.target) && !button.contains(e.target)) {
+                closeBubble();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isOpen) closeBubble();
+        });
+
+        /* ---------------------------------------------------------------
+           STICKY-TO-FOOTER
+           Tant que le footer n'est pas dans le viewport, la mascotte est
+           "accrochée" au bord inférieur de l'écran (CSS prend le relais
+           via --mascot-bottom-offset). Dès que le footer commence à
+           entrer dans le viewport, on fait monter la mascotte pour
+           qu'elle reste posée sur son bord supérieur, comme si elle s'y
+           agrippait. On respecte aussi --mascot-bottom-offset dans cet
+           état pour que le décalage vertical soit cohérent partout.
+           --------------------------------------------------------------- */
+        if (launcher && footer) {
+            let ticking = false;
+
+            function readBaseOffset() {
+                const raw = getComputedStyle(launcher)
+                                .getPropertyValue('--mascot-bottom-offset');
+                const n = parseFloat(raw);
+                return isNaN(n) ? 0 : n;
+            }
+
+            function updateLauncherPosition() {
+                const footerRect = footer.getBoundingClientRect();
+                const viewportH  = window.innerHeight;
+                const baseOffset = readBaseOffset();
+
+                if (footerRect.top < viewportH) {
+                    // Footer dans le viewport → on remonte la mascotte du même
+                    // delta, en conservant l'offset configuré dans la CSS var.
+                    const offsetFromBottom =
+                        (viewportH - footerRect.top) + baseOffset;
+                    launcher.style.bottom = offsetFromBottom + 'px';
+                } else {
+                    // Pas de footer en vue → on enlève l'override inline,
+                    // la valeur CSS (var(--mascot-bottom-offset)) reprend la main.
+                    launcher.style.bottom = '';
+                }
+                ticking = false;
+            }
+
+            function onScrollOrResize() {
+                if (!ticking) {
+                    requestAnimationFrame(updateLauncherPosition);
+                    ticking = true;
+                }
+            }
+
+            window.addEventListener('scroll', onScrollOrResize, { passive: true });
+            window.addEventListener('resize', onScrollOrResize);
+
+            // Position initiale
+            updateLauncherPosition();
+
+            // Recalcul après changement de vue (la hauteur de page change donc
+            // la position du footer change). On hooke après-coup showView.
+            const _origShowView = window.showView;
+            if (typeof _origShowView === 'function') {
+                window.showView = function(id) {
+                    _origShowView(id);
+                    setTimeout(updateLauncherPosition, 320);
+                };
+            }
+        }
+    })();
+    </script>
+
 </body>
 </html>
