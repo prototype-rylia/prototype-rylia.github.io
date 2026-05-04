@@ -1271,6 +1271,9 @@
        cohérent quand le footer arrive en bas.
        ========================================================= */
 
+    /* Ancre stable pour le mode "stuck" (position: absolute sur la mascotte) */
+    body { position: relative; }
+
     .chatbot-launcher {
         /* ▼▼ Variables à ajuster ▼▼ */
         --mascot-width:         220px;
@@ -2852,17 +2855,26 @@
         });
 
         /* ---------------------------------------------------------------
-           STICKY-TO-FOOTER
-           Tant que le footer n'est pas dans le viewport, la mascotte est
-           "accrochée" au bord inférieur de l'écran (CSS prend le relais
-           via --mascot-bottom-offset). Dès que le footer commence à
-           entrer dans le viewport, on fait monter la mascotte pour
-           qu'elle reste posée sur son bord supérieur, comme si elle s'y
-           agrippait. On respecte aussi --mascot-bottom-offset dans cet
-           état pour que le décalage vertical soit cohérent partout.
+           STICKY-TO-FOOTER (sans tracking par frame)
+
+           Principe : on ne suit PAS le footer image par image (ce qui
+           créait du jitter sur 60 Hz et mobile). Au lieu de ça, on
+           bascule la mascotte d'un seul coup entre 2 modes :
+
+             ▸ MODE LIBRE  (free)  : position: fixed
+                  → la mascotte est ancrée au bas du viewport
+                  → le navigateur ne touche à rien pendant le scroll
+             ▸ MODE FIXÉ   (stuck) : position: absolute
+                  → la mascotte est ancrée au document (au-dessus du footer)
+                  → le navigateur la fait défiler nativement, zéro JS
+
+           Les deux modes calculent leurs offsets pour que le pixel
+           position au moment du basculement soit IDENTIQUE → aucun
+           saut visible lors de la transition.
            --------------------------------------------------------------- */
         if (launcher && footer) {
-            let ticking = false;
+            let isStuck = false;
+            let scrollPending = false;
 
             function readBaseOffset() {
                 const raw = getComputedStyle(launcher)
@@ -2871,45 +2883,83 @@
                 return isNaN(n) ? 0 : n;
             }
 
-            function updateLauncherPosition() {
-                const footerRect = footer.getBoundingClientRect();
-                const viewportH  = window.innerHeight;
-                const baseOffset = readBaseOffset();
+            // Calcule la valeur de `bottom` à utiliser en mode "stuck"
+            // (position: absolute), telle que la mascotte se retrouve
+            // exactement au-dessus du bord supérieur du footer, en
+            // tenant compte de --mascot-bottom-offset.
+            //
+            // On utilise body.offsetHeight et footer.offsetTop comme
+            // références : elles sont stables (contrairement à
+            // document.documentElement.scrollHeight, perturbé par
+            // overflow-x: hidden et les éléments absolus eux-mêmes).
+            // Body a `position: relative` pour devenir l'offset parent
+            // explicite de la mascotte en mode absolute.
+            function computeStuckBottom() {
+                const footerOffsetTop = footer.offsetTop;        // Y du footer relatif au body
+                const bodyHeight      = document.body.offsetHeight;
+                const baseOffset      = readBaseOffset();
+                return bodyHeight - footerOffsetTop + baseOffset;
+            }
 
-                if (footerRect.top < viewportH) {
-                    // Footer dans le viewport → on remonte la mascotte du même
-                    // delta, en conservant l'offset configuré dans la CSS var.
-                    const offsetFromBottom =
-                        (viewportH - footerRect.top) + baseOffset;
-                    launcher.style.bottom = offsetFromBottom + 'px';
+            function enterStuck() {
+                if (isStuck) return;
+                launcher.style.position = 'absolute';
+                launcher.style.bottom   = computeStuckBottom() + 'px';
+                isStuck = true;
+            }
+
+            function leaveStuck() {
+                if (!isStuck) return;
+                launcher.style.position = '';     // → revient à "fixed" (CSS)
+                launcher.style.bottom   = '';     // → revient à var(--mascot-bottom-offset)
+                isStuck = false;
+            }
+
+            // Vérifie si on doit basculer d'état. Léger, rapide, ne fait
+            // RIEN si on n'est pas à un moment de bascule.
+            function checkState() {
+                scrollPending = false;
+                const footerTop = footer.getBoundingClientRect().top;
+                const viewportH = window.innerHeight;
+
+                if (footerTop < viewportH) {
+                    if (!isStuck) enterStuck();
                 } else {
-                    // Pas de footer en vue → on enlève l'override inline,
-                    // la valeur CSS (var(--mascot-bottom-offset)) reprend la main.
-                    launcher.style.bottom = '';
-                }
-                ticking = false;
-            }
-
-            function onScrollOrResize() {
-                if (!ticking) {
-                    requestAnimationFrame(updateLauncherPosition);
-                    ticking = true;
+                    if (isStuck) leaveStuck();
                 }
             }
 
-            window.addEventListener('scroll', onScrollOrResize, { passive: true });
-            window.addEventListener('resize', onScrollOrResize);
+            function onScroll() {
+                if (!scrollPending) {
+                    scrollPending = true;
+                    requestAnimationFrame(checkState);
+                }
+            }
 
-            // Position initiale
-            updateLauncherPosition();
+            // Recalcule la position absolue (utile quand la hauteur du
+            // document change : resize, changement de vue, ouverture
+            // d'accordéon, etc.)
+            function refreshStuckPosition() {
+                if (isStuck) {
+                    launcher.style.bottom = computeStuckBottom() + 'px';
+                }
+                checkState();
+            }
 
-            // Recalcul après changement de vue (la hauteur de page change donc
-            // la position du footer change). On hooke après-coup showView.
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', refreshStuckPosition);
+
+            // État initial
+            checkState();
+
+            // Recalcul après changement de vue (la hauteur du document
+            // change quand on passe d'une vue à l'autre).
             const _origShowView = window.showView;
             if (typeof _origShowView === 'function') {
                 window.showView = function(id) {
                     _origShowView(id);
-                    setTimeout(updateLauncherPosition, 320);
+                    // Délai = durée de la transition de vue
+                    setTimeout(refreshStuckPosition, 320);
                 };
             }
         }
