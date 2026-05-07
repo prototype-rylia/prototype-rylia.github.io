@@ -963,15 +963,14 @@
         color: var(--primary-orange);
         letter-spacing: -2px;
         display: inline-block;
-        transform: translateY(110%);
         opacity: 0;
-        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                    opacity 0.6s ease;
+        transform: scale(0.92);
+        transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .intro-brand .intro-letter.is-visible {
-        transform: translateY(0);
         opacity: 1;
+        transform: scale(1);
     }
 
     /* Pixels qui s'échappent du R vers le bas-droit — rappel au logo */
@@ -1028,34 +1027,35 @@
         width: 60px;
     }
 
-    /* Animation de sortie de l'overlay */
+    /* Animation de sortie de l'overlay — slide vers le bas + fade */
     .intro-overlay.is-leaving .intro-letter {
-        transform: translateY(-110%) !important;
         opacity: 0 !important;
-        transition: transform 0.6s cubic-bezier(0.7, 0, 0.84, 0),
-                    opacity 0.4s ease;
+        transform: translateY(70px) !important;
+        transition: opacity 0.55s ease, transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
     .intro-overlay.is-leaving .intro-slogan-inner {
-        transform: translateY(-100%) !important;
+        transform: translateY(100%) !important;
         opacity: 0 !important;
-        transition: transform 0.5s cubic-bezier(0.7, 0, 0.84, 0) 0.05s,
-                    opacity 0.3s ease 0.05s;
+        transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1) 0.08s,
+                    opacity 0.4s ease 0.12s;
     }
 
     .intro-overlay.is-leaving .intro-line {
         width: 0 !important;
-        transition: width 0.4s cubic-bezier(0.7, 0, 0.84, 0);
+        opacity: 0;
+        transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+                    opacity 0.35s ease;
     }
 
 
-    /* Le fond blanc qui se rétracte vers le haut */
+    /* Le fond blanc qui remonte avec une transition fluide */
     .intro-overlay.is-leaving {
-        animation: introSlideUp 0.8s cubic-bezier(0.7, 0, 0.84, 0) 0.35s forwards;
+        animation: introSlideUp 1.05s cubic-bezier(0.76, 0, 0.24, 1) 0.45s forwards;
     }
 
     @keyframes introSlideUp {
-        0%   { clip-path: inset(0 0 0 0); }
+        0%   { clip-path: inset(0 0 0% 0); }
         100% { clip-path: inset(0 0 100% 0); }
     }
 
@@ -3064,112 +3064,175 @@
 
         document.body.style.overflow = 'hidden';
 
-        // Palette dégradé du logo : or → orange primaire → orange foncé
-        var PALETTE = [
-            ['#FFB800', '#FF9500'],
-            ['#FF7A00', '#FF6B00'],
-            ['#E55000', '#CC4000']
-        ];
+        // Palette dégradé du logo
+        var PALETTE = ['#FFB800','#FF9500','#FF7A00','#FF6B00','#FF8C3A','#E55000'];
 
-        function spawnPixelTrail() {
-            var rEl   = letters[0];
-            var rect  = rEl.getBoundingClientRect();
-            var oRect = overlay.getBoundingClientRect();
+        function runPixelWave() {
+            var brandEl   = document.getElementById('intro-brand');
+            var brandRect = brandEl.getBoundingClientRect();
+            var oRect     = overlay.getBoundingClientRect();
 
-            var rx = rect.left  - oRect.left;
-            var ry = rect.top   - oRect.top;
-            var rw = rect.width;
-            var rh = rect.height;
+            // Le balayage commence un peu avant le brand et termine un peu après
+            var startX  = brandRect.left  - oRect.left  - 60;
+            var endX    = brandRect.right - oRect.left  + 60;
+            var topY    = brandRect.top   - oRect.top   - 8;
+            var height  = brandRect.height + 16;
 
-            // Jambe diagonale du R : de (55%, 48%) à (95%, 95%) de la boîte de la lettre
-            var legX1 = rx + rw * 0.55,  legY1 = ry + rh * 0.48;
-            var legX2 = rx + rw * 0.95,  legY2 = ry + rh * 0.95;
+            var DURATION = 850;
+            var startTime = performance.now();
+            var lastSpawn = 0;
+            var SPAWN_GAP = 22; // ms entre chaque salve
 
-            // 2 vagues : première vague 16px, deuxième 10px décalée de 220ms
-            [0, 220].forEach(function(burstDelay, burst) {
-                var count = burst === 0 ? 16 : 10;
+            function tick(now) {
+                var elapsed  = now - startTime;
+                var progress = Math.min(elapsed / DURATION, 1);
 
-                for (var i = 0; i < count; i++) {
-                    (function() {
-                        var t  = Math.random(); // position le long de la jambe
+                // Easing pour adoucir départ et arrivée
+                var eased = progress < 0.5
+                    ? 2 * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
-                        // Origine : le long de la jambe avec un léger jitter
-                        var ox = legX1 + (legX2 - legX1) * t + (Math.random() - 0.5) * rw * 0.11;
-                        var oy = legY1 + (legY2 - legY1) * t + (Math.random() - 0.5) * rh * 0.09;
+                var waveX = startX + (endX - startX) * eased;
 
-                        // Hiérarchie de tailles : grands / moyens / petits
-                        var r2 = Math.random();
-                        var size = r2 < 0.22 ? 16 + Math.random() * 10
-                                 : r2 < 0.58 ?  8 + Math.random() * 7
-                                 :               3 + Math.random() * 4;
-
-                        // Cône de direction : bas-droit dominant (18° à 135°)
-                        var angle = Math.PI * 0.10 + Math.random() * Math.PI * 0.68;
-                        var dist  = 28 + Math.random() * 65;
-                        var dx = Math.cos(angle) * dist;
-                        var dy = Math.sin(angle) * dist;
-
-                        // Couleur selon la position sur la jambe
-                        var pal   = PALETTE[Math.min(Math.floor(t * 3), 2)];
-                        var color = pal[Math.floor(Math.random() * 2)];
-
-                        // Rotation légère
-                        var rot = Math.round((Math.random() - 0.5) * 80);
-
-                        var del = burstDelay + Math.round(Math.random() * 160);
-                        var dur = size > 14 ? 620 + Math.round(Math.random() * 200)
-                                : size > 7  ? 460 + Math.round(Math.random() * 180)
-                                :             300 + Math.round(Math.random() * 130);
-
-                        var px = document.createElement('div');
-                        px.className = 'r-pixel';
-                        px.style.cssText = [
-                            'left:'      + (ox - size / 2) + 'px',
-                            'top:'       + (oy - size / 2) + 'px',
-                            'width:'     + size + 'px',
-                            'height:'    + size + 'px',
-                            '--dx:'      + dx   + 'px',
-                            '--dy:'      + dy   + 'px',
-                            '--rot:'     + rot  + 'deg',
-                            '--del:'     + del  + 'ms',
-                            '--dur:'     + dur  + 'ms',
-                            'background:'+ color
-                        ].join(';');
-
-                        overlay.appendChild(px);
-                        setTimeout(function() {
-                            if (px.parentNode) px.parentNode.removeChild(px);
-                        }, del + dur + 60);
-                    })();
+                if (now - lastSpawn >= SPAWN_GAP) {
+                    lastSpawn = now;
+                    // 3 pixels par salve, répartis verticalement
+                    for (var i = 0; i < 3; i++) {
+                        spawnPixelAt(waveX, topY, height);
+                    }
                 }
-            });
+
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+
+            requestAnimationFrame(tick);
         }
 
-        // Lettres en stagger, pixels déclenchés quand le R a fini sa transition
+        function spawnPixelAt(waveX, topY, height) {
+            var r1 = Math.random();
+            var size = r1 < 0.20 ? 14 + Math.random() * 10
+                     : r1 < 0.58 ?  7 + Math.random() * 6
+                     :              3 + Math.random() * 4;
+
+            // Position : au niveau du front de la vague + léger jitter horizontal
+            var px = waveX - size / 2 + (Math.random() - 0.5) * 22;
+            var py = topY  + Math.random() * height - size / 2;
+
+            // Dérive : surtout vers la droite, léger vertical
+            var dx = 12 + Math.random() * 38;
+            var dy = (Math.random() - 0.5) * 28;
+            var rot = Math.round((Math.random() - 0.5) * 60);
+
+            var dur = size > 12 ? 520 + Math.round(Math.random() * 220)
+                    : size > 6  ? 380 + Math.round(Math.random() * 180)
+                    :             260 + Math.round(Math.random() * 140);
+
+            var color = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+
+            var pxEl = document.createElement('div');
+            pxEl.className = 'r-pixel';
+            pxEl.style.cssText = [
+                'left:'      + px   + 'px',
+                'top:'       + py   + 'px',
+                'width:'     + size + 'px',
+                'height:'    + size + 'px',
+                '--dx:'      + dx   + 'px',
+                '--dy:'      + dy   + 'px',
+                '--rot:'     + rot  + 'deg',
+                '--del:0ms',
+                '--dur:'     + dur  + 'ms',
+                'background:'+ color
+            ].join(';');
+
+            overlay.appendChild(pxEl);
+            setTimeout(function() {
+                if (pxEl.parentNode) pxEl.parentNode.removeChild(pxEl);
+            }, dur + 60);
+        }
+
+        // Démarrage du balayage + lettres révélées au passage de la vague
         setTimeout(function() {
+            runPixelWave();
+            // Lettres révélées en stagger synchronisé avec le passage de la vague
+            // Vague dure 1100ms, on étale les lettres entre 200ms et 950ms
             letters.forEach(function(l, i) {
-                setTimeout(function() { l.classList.add('is-visible'); }, i * 90);
+                setTimeout(function() { l.classList.add('is-visible'); }, 150 + i * 130);
             });
-            setTimeout(spawnPixelTrail, 950); // R complètement posé (transition 0.8s + buffer)
         }, 300);
 
         // Slogan
-        setTimeout(function() { slogan.classList.add('is-visible'); }, 1400);
+        setTimeout(function() { slogan.classList.add('is-visible'); }, 1050);
 
         // Ligne décorative
-        setTimeout(function() { line.classList.add('is-visible'); }, 1650);
+        setTimeout(function() { line.classList.add('is-visible'); }, 1250);
+
+        // Pixels qui suivent le texte vers le bas pour fluidifier la sortie
+        function spawnExitPixels() {
+            var brandEl   = document.getElementById('intro-brand');
+            var brandRect = brandEl.getBoundingClientRect();
+            var oRect     = overlay.getBoundingClientRect();
+
+            var bx = brandRect.left - oRect.left;
+            var by = brandRect.top  - oRect.top;
+            var bw = brandRect.width;
+            var bh = brandRect.height;
+
+            for (var i = 0; i < 22; i++) {
+                (function() {
+                    var r1 = Math.random();
+                    var size = r1 < 0.20 ? 12 + Math.random() * 10
+                             : r1 < 0.60 ?  6 + Math.random() * 6
+                             :              3 + Math.random() * 4;
+
+                    // Origine : un peu partout sur la largeur du brand, plutôt en bas
+                    var px = bx + Math.random() * bw - size / 2;
+                    var py = by + bh * 0.30 + Math.random() * bh * 0.70 - size / 2;
+
+                    // Dérive dominante vers le bas avec léger éparpillement horizontal
+                    var dx = (Math.random() - 0.5) * 50;
+                    var dy = 35 + Math.random() * 80;
+                    var rot = Math.round((Math.random() - 0.5) * 100);
+
+                    var del = Math.round(Math.random() * 220);
+                    var dur = 540 + Math.round(Math.random() * 320);
+
+                    var color = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+
+                    var pxEl = document.createElement('div');
+                    pxEl.className = 'r-pixel';
+                    pxEl.style.cssText = [
+                        'left:'      + px   + 'px',
+                        'top:'       + py   + 'px',
+                        'width:'     + size + 'px',
+                        'height:'    + size + 'px',
+                        '--dx:'      + dx   + 'px',
+                        '--dy:'      + dy   + 'px',
+                        '--rot:'     + rot  + 'deg',
+                        '--del:'     + del  + 'ms',
+                        '--dur:'     + dur  + 'ms',
+                        'background:'+ color
+                    ].join(';');
+
+                    overlay.appendChild(pxEl);
+                    setTimeout(function() {
+                        if (pxEl.parentNode) pxEl.parentNode.removeChild(pxEl);
+                    }, del + dur + 60);
+                })();
+            }
+        }
 
         // Sortie
         setTimeout(function() {
             overlay.classList.add('is-leaving');
-            setTimeout(function() { if (header)   header.classList.add('intro-revealed');   }, 400);
-            setTimeout(function() { if (mainHome) mainHome.classList.add('intro-revealed'); }, 560);
+            spawnExitPixels(); // Pixels qui descendent en même temps que le texte
+            setTimeout(function() { if (header)   header.classList.add('intro-revealed');   }, 600);
+            setTimeout(function() { if (mainHome) mainHome.classList.add('intro-revealed'); }, 760);
             setTimeout(function() {
                 overlay.classList.add('is-done');
                 overlay.style.display = 'none';
                 document.body.style.overflow = '';
-            }, 1200);
-        }, 3000);
+            }, 1300);
+        }, 2750);
     })();
     </script>
 
