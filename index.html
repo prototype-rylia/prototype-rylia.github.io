@@ -6,6 +6,7 @@
     <title>Rylia</title>
     <link rel="icon" type="image/png" href="logo-rylia.png">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <meta property="og:image" content="logo-rylia.png">
     <style>
         /* --- VARIABLES DE COULEUR --- */
@@ -28,7 +29,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-light);
             color: var(--text-dark);
             line-height: 1.6;
@@ -919,6 +920,247 @@
         pointer-events: all;
     }
 
+    /* ======================================================
+       ANIMATION D'ENTRÉE STYLE OBYS — ADAPTÉE RYLIA
+       ====================================================== */
+    .intro-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100vh;
+        background: #fff;
+        z-index: 100000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .intro-overlay.is-done {
+        pointer-events: none;
+    }
+
+
+    /* Le grand nom "Rylia" au centre */
+    .intro-brand {
+        display: flex;
+        gap: 0;
+        overflow: hidden;
+    }
+
+    .intro-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .intro-brand .intro-letter {
+        font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-size: clamp(4rem, 12vw, 10rem);
+        font-weight: 900;
+        color: var(--primary-orange);
+        letter-spacing: -2px;
+        display: inline-block;
+        transform: translateY(110%);
+        opacity: 0;
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 0.6s ease;
+    }
+
+    .intro-brand .intro-letter.is-visible {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Pixels qui s'échappent du R vers le bas-droit — rappel au logo */
+    .r-pixel {
+        position: absolute;
+        border-radius: 2px;
+        opacity: 0;
+        z-index: 4;
+        pointer-events: none;
+        animation: pixelDrift var(--dur, 600ms) cubic-bezier(0.2, 0, 0.8, 1) var(--del, 0ms) forwards;
+    }
+
+    @keyframes pixelDrift {
+        0%   { opacity: 0.92; transform: translate(0, 0) rotate(0deg) scale(1); }
+        30%  { opacity: 0.88; }
+        100% { opacity: 0;    transform: translate(var(--dx, 30px), var(--dy, 30px)) rotate(var(--rot, 20deg)) scale(0.3); }
+    }
+
+    /* Slogan sous le nom */
+    .intro-slogan {
+        font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-size: clamp(0.85rem, 2vw, 1.15rem);
+        color: #999;
+        font-weight: 400;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+
+    .intro-slogan-inner {
+        display: block;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
+                    opacity 0.5s ease 0.15s;
+    }
+
+    .intro-slogan-inner.is-visible {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Ligne décorative sous le slogan */
+    .intro-line {
+        width: 0;
+        height: 2px;
+        background: var(--primary-orange);
+        margin-top: 18px;
+        transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .intro-line.is-visible {
+        width: 60px;
+    }
+
+    /* Animation de sortie de l'overlay */
+    .intro-overlay.is-leaving .intro-letter {
+        transform: translateY(-110%) !important;
+        opacity: 0 !important;
+        transition: transform 0.6s cubic-bezier(0.7, 0, 0.84, 0),
+                    opacity 0.4s ease;
+    }
+
+    .intro-overlay.is-leaving .intro-slogan-inner {
+        transform: translateY(-100%) !important;
+        opacity: 0 !important;
+        transition: transform 0.5s cubic-bezier(0.7, 0, 0.84, 0) 0.05s,
+                    opacity 0.3s ease 0.05s;
+    }
+
+    .intro-overlay.is-leaving .intro-line {
+        width: 0 !important;
+        transition: width 0.4s cubic-bezier(0.7, 0, 0.84, 0);
+    }
+
+
+    /* Le fond blanc qui se rétracte vers le haut */
+    .intro-overlay.is-leaving {
+        animation: introSlideUp 0.8s cubic-bezier(0.7, 0, 0.84, 0) 0.35s forwards;
+    }
+
+    @keyframes introSlideUp {
+        0%   { clip-path: inset(0 0 0 0); }
+        100% { clip-path: inset(0 0 100% 0); }
+    }
+
+    /* Le header et le contenu arrivent en fondu après l'intro */
+    header, #main-home {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    header.intro-revealed, #main-home.intro-revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Respect des préférences utilisateur */
+    @media (prefers-reduced-motion: reduce) {
+        .intro-overlay { display: none !important; }
+        header, #main-home {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        .reveal-up, .reveal-left, .reveal-scale { opacity: 1 !important; transform: none !important; }
+    }
+
+    /* ======================================================
+       ANIMATIONS GLOBALES — REVEAL AU SCROLL
+       ====================================================== */
+    .reveal-up {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-left {
+        opacity: 0;
+        transform: translateX(-30px);
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-scale {
+        opacity: 0;
+        transform: scale(0.95);
+        transition: opacity 0.6s ease,
+                    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-up.is-revealed,
+    .reveal-left.is-revealed,
+    .reveal-scale.is-revealed {
+        opacity: 1;
+        transform: none;
+    }
+
+    /* Section titles — barre orange qui grandit */
+    .section-title {
+        position: relative;
+        border-left: 4px solid transparent;
+        transition: border-color 0.5s ease 0.2s;
+    }
+    .section-title.is-revealed {
+        border-left-color: var(--primary-orange);
+    }
+
+
+    /* Feature banners — glow au scroll */
+    .feature-banner {
+        transition: box-shadow 0.6s ease, transform 0.4s ease;
+    }
+    .feature-banner.is-revealed {
+        box-shadow: 0 12px 40px rgba(255, 107, 0, 0.1) !important;
+    }
+
+    /* Pricing cards — tilt 3D au hover */
+    .price-card {
+        transform-style: preserve-3d;
+        perspective: 800px;
+    }
+
+    /* Steps — icônes pulsent au reveal */
+    .step-icon-pulse {
+        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .step-icon-pulse.is-revealed {
+        animation: stepPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes stepPop {
+        0%   { transform: scale(0.5); opacity: 0; }
+        60%  { transform: scale(1.12); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Footer columns — stagger reveal */
+    .footer-col {
+        opacity: 0;
+        transform: translateY(25px);
+        transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .footer-col.is-revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
     /* --- STYLE SECTION SITE VITRINE CORRIGÉ --- */
     .card-split-section {
         display: flex;
@@ -967,27 +1209,123 @@
         }
     }
 
-    /* --- GRILLE DES ÉTAPES (Comment ça marche ?) --- */
-    .steps-grid {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        gap: 0;
-        max-width: 1000px;
+    /* --- TIMELINE VERTICALE (Comment ça marche ?) --- */
+    .timeline {
+        position: relative;
+        max-width: 700px;
         margin: 20px auto 0;
+        padding: 10px 0;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 28px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--primary-orange), #ffd5b0);
+        border-radius: 3px;
+    }
+
+    .timeline-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 24px;
+        position: relative;
+        padding-bottom: 36px;
+    }
+
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+
+    .timeline-dot {
+        flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--primary-orange);
+        color: white;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 4px 15px rgba(255, 107, 0, 0.25);
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                    box-shadow 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-dot {
+        transform: scale(1.1);
+        box-shadow: 0 6px 22px rgba(255, 107, 0, 0.35);
+    }
+
+    .timeline-card {
+        flex: 1;
+        background: white;
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        padding: 20px 24px;
+        position: relative;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .timeline-card::before {
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 18px;
+        width: 14px;
+        height: 14px;
+        background: white;
+        border-left: 1px solid #f0f0f0;
+        border-bottom: 1px solid #f0f0f0;
+        transform: rotate(45deg);
+        transition: border-color 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-card {
+        border-color: rgba(255, 107, 0, 0.3);
+        box-shadow: 0 6px 20px rgba(255, 107, 0, 0.08);
+        transform: translateX(4px);
+    }
+
+    .timeline-item:hover .timeline-card::before {
+        border-color: rgba(255, 107, 0, 0.3);
+    }
+
+    .timeline-step {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--primary-orange);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 4px;
+    }
+
+    .timeline-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 6px;
+    }
+
+    .timeline-desc {
+        font-size: 0.88rem;
+        color: var(--text-light);
+        line-height: 1.55;
     }
 
     @media (max-width: 600px) {
-        .steps-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px 10px;
-        }
-
-        /* Masque les flèches de connexion entre étapes sur mobile */
-        .steps-grid > div > div:first-child {
-            display: none;
-        }
+        .timeline { padding-left: 0; }
+        .timeline::before { left: 18px; }
+        .timeline-dot { width: 40px; height: 40px; font-size: 1.1rem; }
+        .timeline-item { gap: 16px; padding-bottom: 28px; }
+        .timeline-card { padding: 16px 18px; }
+        .timeline-card::before { top: 12px; }
     }
 
     /* --- CARTES TARIFS --- */
@@ -1609,6 +1947,23 @@
 
 <div class="page-transition"></div>
 
+<!-- ANIMATION D'ENTRÉE -->
+<div class="intro-overlay" id="intro-overlay">
+    <div class="intro-content">
+        <div class="intro-brand" id="intro-brand">
+            <span class="intro-letter">R</span>
+            <span class="intro-letter">y</span>
+            <span class="intro-letter">l</span>
+            <span class="intro-letter">i</span>
+            <span class="intro-letter">a</span>
+        </div>
+        <div class="intro-slogan">
+            <span class="intro-slogan-inner" id="intro-slogan">Le digital au service de votre dynamisme</span>
+        </div>
+        <div class="intro-line" id="intro-line"></div>
+    </div>
+</div>
+
 <div id="progress-container">
     <div id="progress-bar"></div>
 </div>
@@ -1825,53 +2180,6 @@
             </div>
         </div>
 
-        <div class="container">
-            <h3 class="section-title">Comment ça marche ?</h3>
-            <div style="background:white; padding:20px; border-radius:8px; border-bottom:3px solid #FF6B00; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
-                <div class="steps-grid">
-
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative;">
-                        <div style="position:absolute; top:28px; left:50%; width:100%; height:2px; background:linear-gradient(90deg,#FF6B00,#ffd5b0); z-index:0;"></div>
-                        <div style="width:56px; height:56px; border-radius:50%; background:#FF6B00; color:white; font-size:1.4rem; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; box-shadow:0 4px 15px rgba(255,107,0,0.3);">💬</div>
-                        <div style="margin-top:16px; padding:0 10px; text-align:center;">
-                            <p style="font-size:0.85rem; font-weight:700; color:#FF6B00; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Étape 1</p>
-                            <p style="font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:6px;">Remplissez un formulaire</p>
-                            <p style="font-size:0.85rem; color:#444; line-height:1.5;">Dites-nous tout : on s'occupe du reste.</p>
-                        </div>
-                    </div>
-
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative;">
-                        <div style="position:absolute; top:28px; left:50%; width:100%; height:2px; background:linear-gradient(90deg,#FF6B00,#ffd5b0); z-index:0;"></div>
-                        <div style="width:56px; height:56px; border-radius:50%; background:#FF6B00; color:white; font-size:1.4rem; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; box-shadow:0 4px 15px rgba(255,107,0,0.3);">🎯</div>
-                        <div style="margin-top:16px; padding:0 10px; text-align:center;">
-                            <p style="font-size:0.85rem; font-weight:700; color:#FF6B00; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Étape 2</p>
-                            <p style="font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:6px;">Analyse & proposition</p>
-                            <p style="font-size:0.85rem; color:#444; line-height:1.5;">Pas de solution toute faite : on construit la vôtre.</p>
-                        </div>
-                    </div>
-
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative;">
-                        <div style="position:absolute; top:28px; left:50%; width:100%; height:2px; background:linear-gradient(90deg,#FF6B00,#ffd5b0); z-index:0;"></div>
-                        <div style="width:56px; height:56px; border-radius:50%; background:#FF6B00; color:white; font-size:1.4rem; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; box-shadow:0 4px 15px rgba(255,107,0,0.3);">⚙️</div>
-                        <div style="margin-top:16px; padding:0 10px; text-align:center;">
-                            <p style="font-size:0.85rem; font-weight:700; color:#FF6B00; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Étape 3</p>
-                            <p style="font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:6px;">Création & développement</p>
-                            <p style="font-size:0.85rem; color:#444; line-height:1.5;">On donne vie à votre projet, brique par brique, avec vous.</p>
-                        </div>
-                    </div>
-
-                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; position:relative;">
-                        <div style="width:56px; height:56px; border-radius:50%; background:#FF6B00; color:white; font-size:1.4rem; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; box-shadow:0 4px 15px rgba(255,107,0,0.3);">🚀</div>
-                        <div style="margin-top:16px; padding:0 10px; text-align:center;">
-                            <p style="font-size:0.85rem; font-weight:700; color:#FF6B00; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Étape 4</p>
-                            <p style="font-size:1rem; font-weight:700; color:#1a1a1a; margin-bottom:6px;">Intégration & suivi</p>
-                            <p style="font-size:0.85rem; color:#444; line-height:1.5;">Lancement, ajustements, évolutions : on est là sur la durée.</p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
     </div>
 
 
@@ -2742,6 +3050,129 @@
     });
     </script>
 
+    <!-- SCRIPT ANIMATION D'ENTRÉE — PIXEL TRAIL SUR LE R -->
+    <script>
+    (function() {
+        var overlay  = document.getElementById('intro-overlay');
+        if (!overlay) return;
+
+        var letters  = overlay.querySelectorAll('.intro-letter');
+        var slogan   = document.getElementById('intro-slogan');
+        var line     = document.getElementById('intro-line');
+        var header   = document.querySelector('header');
+        var mainHome = document.getElementById('main-home');
+
+        document.body.style.overflow = 'hidden';
+
+        // Palette dégradé du logo : or → orange primaire → orange foncé
+        var PALETTE = [
+            ['#FFB800', '#FF9500'],
+            ['#FF7A00', '#FF6B00'],
+            ['#E55000', '#CC4000']
+        ];
+
+        function spawnPixelTrail() {
+            var rEl   = letters[0];
+            var rect  = rEl.getBoundingClientRect();
+            var oRect = overlay.getBoundingClientRect();
+
+            var rx = rect.left  - oRect.left;
+            var ry = rect.top   - oRect.top;
+            var rw = rect.width;
+            var rh = rect.height;
+
+            // Jambe diagonale du R : de (55%, 48%) à (95%, 95%) de la boîte de la lettre
+            var legX1 = rx + rw * 0.55,  legY1 = ry + rh * 0.48;
+            var legX2 = rx + rw * 0.95,  legY2 = ry + rh * 0.95;
+
+            // 2 vagues : première vague 16px, deuxième 10px décalée de 220ms
+            [0, 220].forEach(function(burstDelay, burst) {
+                var count = burst === 0 ? 16 : 10;
+
+                for (var i = 0; i < count; i++) {
+                    (function() {
+                        var t  = Math.random(); // position le long de la jambe
+
+                        // Origine : le long de la jambe avec un léger jitter
+                        var ox = legX1 + (legX2 - legX1) * t + (Math.random() - 0.5) * rw * 0.11;
+                        var oy = legY1 + (legY2 - legY1) * t + (Math.random() - 0.5) * rh * 0.09;
+
+                        // Hiérarchie de tailles : grands / moyens / petits
+                        var r2 = Math.random();
+                        var size = r2 < 0.22 ? 16 + Math.random() * 10
+                                 : r2 < 0.58 ?  8 + Math.random() * 7
+                                 :               3 + Math.random() * 4;
+
+                        // Cône de direction : bas-droit dominant (18° à 135°)
+                        var angle = Math.PI * 0.10 + Math.random() * Math.PI * 0.68;
+                        var dist  = 28 + Math.random() * 65;
+                        var dx = Math.cos(angle) * dist;
+                        var dy = Math.sin(angle) * dist;
+
+                        // Couleur selon la position sur la jambe
+                        var pal   = PALETTE[Math.min(Math.floor(t * 3), 2)];
+                        var color = pal[Math.floor(Math.random() * 2)];
+
+                        // Rotation légère
+                        var rot = Math.round((Math.random() - 0.5) * 80);
+
+                        var del = burstDelay + Math.round(Math.random() * 160);
+                        var dur = size > 14 ? 620 + Math.round(Math.random() * 200)
+                                : size > 7  ? 460 + Math.round(Math.random() * 180)
+                                :             300 + Math.round(Math.random() * 130);
+
+                        var px = document.createElement('div');
+                        px.className = 'r-pixel';
+                        px.style.cssText = [
+                            'left:'      + (ox - size / 2) + 'px',
+                            'top:'       + (oy - size / 2) + 'px',
+                            'width:'     + size + 'px',
+                            'height:'    + size + 'px',
+                            '--dx:'      + dx   + 'px',
+                            '--dy:'      + dy   + 'px',
+                            '--rot:'     + rot  + 'deg',
+                            '--del:'     + del  + 'ms',
+                            '--dur:'     + dur  + 'ms',
+                            'background:'+ color
+                        ].join(';');
+
+                        overlay.appendChild(px);
+                        setTimeout(function() {
+                            if (px.parentNode) px.parentNode.removeChild(px);
+                        }, del + dur + 60);
+                    })();
+                }
+            });
+        }
+
+        // Lettres en stagger, pixels déclenchés quand le R a fini sa transition
+        setTimeout(function() {
+            letters.forEach(function(l, i) {
+                setTimeout(function() { l.classList.add('is-visible'); }, i * 90);
+            });
+            setTimeout(spawnPixelTrail, 950); // R complètement posé (transition 0.8s + buffer)
+        }, 300);
+
+        // Slogan
+        setTimeout(function() { slogan.classList.add('is-visible'); }, 1400);
+
+        // Ligne décorative
+        setTimeout(function() { line.classList.add('is-visible'); }, 1650);
+
+        // Sortie
+        setTimeout(function() {
+            overlay.classList.add('is-leaving');
+            setTimeout(function() { if (header)   header.classList.add('intro-revealed');   }, 400);
+            setTimeout(function() { if (mainHome) mainHome.classList.add('intro-revealed'); }, 560);
+            setTimeout(function() {
+                overlay.classList.add('is-done');
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }, 1200);
+        }, 3000);
+    })();
+    </script>
+
     <script>
     const canvas = document.getElementById('particles-canvas');
     const ctx = canvas.getContext('2d');
@@ -2949,6 +3380,81 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => { initPills(); initBars(); });
+    </script>
+
+    <!-- LENIS SMOOTH SCROLL + ANIMATIONS GLOBALES -->
+    <script>
+    (function() {
+        // --- REVEAL AU SCROLL (IntersectionObserver) ---
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    var delay = parseInt(entry.target.dataset.revealDelay) || 0;
+                    setTimeout(function() {
+                        entry.target.classList.add('is-revealed');
+                    }, delay);
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        function initReveals() {
+            // Section titles
+            document.querySelectorAll('.section-title').forEach(function(el) {
+                el.classList.add('reveal-left');
+                revealObserver.observe(el);
+            });
+
+            // Feature banners
+            document.querySelectorAll('.feature-banner').forEach(function(el) {
+                el.classList.add('reveal-scale');
+                revealObserver.observe(el);
+            });
+
+            // Footer columns
+            document.querySelectorAll('.footer-col').forEach(function(el, i) {
+                el.dataset.revealDelay = i * 100;
+                revealObserver.observe(el);
+            });
+
+            // Steps icons
+            document.querySelectorAll('.steps-grid > div').forEach(function(el, i) {
+                var icon = el.querySelector('div[style*="border-radius:50%"]');
+                if (icon) {
+                    icon.classList.add('step-icon-pulse');
+                    icon.dataset.revealDelay = i * 150;
+                    revealObserver.observe(icon);
+                }
+            });
+        }
+
+        // --- PRICING CARDS 3D TILT ---
+        function initTilt() {
+            document.querySelectorAll('.price-card').forEach(function(card) {
+                card.addEventListener('mousemove', function(e) {
+                    var rect = card.getBoundingClientRect();
+                    var x = (e.clientX - rect.left) / rect.width - 0.5;
+                    var y = (e.clientY - rect.top) / rect.height - 0.5;
+                    card.style.transform = 'perspective(800px) rotateY(' + (x * 6) + 'deg) rotateX(' + (-y * 6) + 'deg) scale(1.02)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    card.style.transform = '';
+                });
+            });
+        }
+
+        // --- INIT ---
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                initReveals();
+                initTilt();
+            });
+        } else {
+            initReveals();
+            initTilt();
+        }
+    })();
     </script>
 
     <!-- =========================================================
