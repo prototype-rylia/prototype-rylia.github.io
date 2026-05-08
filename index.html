@@ -151,8 +151,8 @@
         .contact-btn:hover { background-color: var(--dark-orange); }
 
         /* --- GESTION DES VUES --- */
-        .view { display: none; }
-        .active { display: block; }
+        .view { display: none !important; }
+        .view.active { display: block !important; }
 
         /* --- SECTION CONCEPT --- */
         .concept-section {
@@ -636,7 +636,8 @@
         @media (max-width: 680px) {
             .demo-grid {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: center;
+                padding: 8px 16px 16px 16px;
             }
             .demo-right-space {
                 width: 100%;
@@ -800,6 +801,31 @@
             margin-bottom: 32px;
         }
         .contact-sidebar-block:last-child { margin-bottom: 0; }
+
+        /* Mascotte contact mobile dans le launcher */
+        .mascotte-contact-mobile { display: none; }
+        .mascotte-contact-mobile img {
+            width: 100%;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+            image-rendering: -webkit-optimize-contrast;
+        }
+        @media (max-width: 768px) {
+            body[data-view="contact-view"] .mascotte-wrapper,
+            body[data-view="contact-view"] #mascotte-bubble { display: none !important; }
+            body[data-view="contact-view"] .mascotte-contact-mobile {
+                display: block;
+                width: 90px;
+            }
+            body[data-view="contact-view"] #contact-view .detail-page {
+                padding-bottom: 110px;
+            }
+            /* Masquer la mascotte accroche sur toutes les pages détail */
+            body[data-view^="detail"] .mascotte-launcher {
+                display: none !important;
+            }
+        }
         .contact-sidebar-label {
             font-size: 0.7rem;
             font-weight: 700;
@@ -1191,6 +1217,9 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 90vw;
+        max-width: 640px;
+        text-align: center;
     }
 
     .intro-brand .intro-letter {
@@ -1229,13 +1258,15 @@
     /* Slogan sous le nom */
     .intro-slogan {
         font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        font-size: clamp(0.85rem, 2vw, 1.15rem);
+        font-size: clamp(0.7rem, 3.2vw, 1.15rem);
         color: #999;
         font-weight: 400;
-        letter-spacing: 2px;
+        letter-spacing: clamp(0.5px, 0.4vw, 2px);
         text-transform: uppercase;
         margin-top: 8px;
         overflow: hidden;
+        width: 100%;
+        text-align: center;
     }
 
     .intro-slogan-inner {
@@ -2059,9 +2090,9 @@
         background: white;
         border: 1.5px solid var(--primary-orange);
         border-radius: 16px 16px 4px 16px;
-        padding: 14px 18px 14px 16px;
-        width: max-content;
-        max-width: 220px;
+        padding: 14px 20px 16px 16px;
+        width: 250px;
+        max-width: calc(100vw - 32px);
         box-shadow: 0 10px 30px rgba(255, 107, 0, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08);
         position: absolute;
         bottom: var(--bubble-bottom);
@@ -2090,10 +2121,24 @@
     }
 
     .mascotte-bubble-text {
-        font-size: 0.85rem;
+        font-size: 0.88rem;
         color: var(--text-light);
-        line-height: 1.45;
+        line-height: 1.5;
         margin: 0;
+        min-height: 3.5em;
+    }
+    .typing-cursor {
+        display: inline-block;
+        width: 2px;
+        height: 0.9em;
+        background: var(--text-light);
+        margin-left: 1px;
+        vertical-align: text-bottom;
+        animation: cursorBlink 0.65s step-end infinite;
+    }
+    @keyframes cursorBlink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
     }
 
     .mascotte-bubble-close {
@@ -2433,7 +2478,7 @@
                     <div class="price-feature"><div class="price-check">✓</div>Filtres & allergènes</div>
                     <div class="price-feature"><div class="price-check">✓</div>QR Code inclus</div>
                     <div class="price-feature"><div class="price-check">✓</div>Mises à jour illimitées</div>
-                    <div class="price-cta"><button onclick="showView('contact-view')">Nous contacter</button></div>
+                    <div class="price-cta"><button onclick="showView('detail-carte')">Découvrir</button></div>
                 </div>
             </div>
         </div>
@@ -3211,6 +3256,7 @@
 
     <script>
         let navigationHistory = [];
+        document.body.dataset.view = 'main-home';
 
         function showView(viewId) {
             const targetEl = document.getElementById(viewId);
@@ -3229,6 +3275,7 @@
                 if (currentView) currentView.classList.remove('active', 'is-leaving');
                 targetEl.classList.add('active');
                 backBtn.style.display = (viewId === 'main-home') ? 'none' : 'flex';
+                document.body.dataset.view = viewId;
                 window.scrollTo(0, 0);
             };
 
@@ -3970,6 +4017,11 @@
             </p>
         </div>
 
+        <!-- Mascotte contact (mobile uniquement sur page contact) -->
+        <div class="mascotte-contact-mobile" aria-hidden="true">
+            <img src="mascotte-contact.png" alt="" draggable="false">
+        </div>
+
         <!-- Mascotte cliquable -->
         <button
             type="button"
@@ -4006,18 +4058,48 @@
 
         if (!button || !bubble) return;
 
-        /* --- Ouverture / fermeture de la bulle --- */
+        const textEl = bubble.querySelector('.mascotte-bubble-text');
+        const fullText = textEl ? textEl.textContent.trim() : '';
         let isOpen = false;
         let autoCloseTimer = null;
+        let typingTimer = null;
+        let typingIndex = 0;
+        let scrollYOnOpen = 0;
+
+        function startTyping() {
+            clearTimeout(typingTimer);
+            typingIndex = 0;
+            if (!textEl) return;
+            textEl.innerHTML = '<span class="typing-cursor"></span>';
+            function typeNext() {
+                if (typingIndex < fullText.length) {
+                    var cursor = textEl.querySelector('.typing-cursor');
+                    if (cursor) cursor.insertAdjacentText('beforebegin', fullText[typingIndex]);
+                    typingIndex++;
+                    typingTimer = setTimeout(typeNext, 32);
+                } else {
+                    var cursor = textEl.querySelector('.typing-cursor');
+                    if (cursor) cursor.remove();
+                }
+            }
+            typingTimer = setTimeout(typeNext, 280);
+        }
+
+        function stopTyping() {
+            clearTimeout(typingTimer);
+            if (textEl) textEl.textContent = fullText;
+        }
 
         function openBubble() {
             isOpen = true;
+            scrollYOnOpen = window.scrollY;
             bubble.classList.add('is-open');
             bubble.setAttribute('aria-hidden', 'false');
             button.setAttribute('aria-expanded', 'true');
             if (dot) dot.style.display = 'none';
             clearTimeout(autoCloseTimer);
-            autoCloseTimer = setTimeout(closeBubble, 6000);
+            startTyping();
+            autoCloseTimer = setTimeout(closeBubble, 9000);
         }
 
         function closeBubble() {
@@ -4026,7 +4108,15 @@
             bubble.setAttribute('aria-hidden', 'true');
             button.setAttribute('aria-expanded', 'false');
             clearTimeout(autoCloseTimer);
+            stopTyping();
         }
+
+        function onUserScroll() {
+            if (isOpen && Math.abs(window.scrollY - scrollYOnOpen) > 40) closeBubble();
+        }
+        window.addEventListener('scroll', onUserScroll, { passive: true });
+        window.addEventListener('wheel', function() { if (isOpen) closeBubble(); }, { passive: true });
+        document.addEventListener('touchmove', function() { if (isOpen) closeBubble(); }, { passive: true });
 
         button.addEventListener('click', function(e) {
             e.stopPropagation();
