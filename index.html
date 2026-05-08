@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
     <title>Rylia</title>
     <link rel="icon" type="image/png" href="logo-rylia.png">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -546,11 +547,101 @@
         /* --- STYLE DÉMO DOUBLE MOCKUP --- */
         .demo-grid {
             display: flex;
-            flex-wrap: wrap; 
-            justify-content: center; 
-            gap: 40px; 
-            margin-top: 25px; 
+            gap: 52px;
+            margin-top: 25px;
             margin-bottom: 10px;
+            align-items: center;
+            padding: 8px 40px 16px 48px;
+        }
+        .demo-right-space {
+            flex: 1;
+            min-height: 540px;
+            display: flex;
+            align-items: center;
+        }
+        .demo-steps {
+            width: 100%;
+        }
+        .demo-steps-eyebrow {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary-orange);
+            margin-bottom: 6px;
+        }
+        .demo-steps-heading {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 28px;
+        }
+        .demo-steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .demo-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            position: relative;
+        }
+        .demo-step-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .demo-step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .demo-step-line {
+            width: 2px;
+            flex: 1;
+            min-height: 28px;
+            background: linear-gradient(to bottom, rgba(255,107,0,0.25), rgba(255,107,0,0.05));
+            margin: 4px 0;
+        }
+        .demo-step:last-child .demo-step-line { display: none; }
+        .demo-step-body {
+            padding-bottom: 28px;
+        }
+        .demo-step:last-child .demo-step-body { padding-bottom: 0; }
+        .demo-step-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            margin-top: 4px;
+        }
+        .demo-step-desc {
+            font-size: 0.83rem;
+            color: var(--text-light);
+            line-height: 1.55;
+        }
+        @media (max-width: 680px) {
+            .demo-right-space { min-height: auto; }
+        }
+        @media (max-width: 680px) {
+            .demo-grid {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .demo-right-space {
+                width: 100%;
+                min-height: 160px;
+            }
         }
 
         .phone-mockup {
@@ -679,6 +770,127 @@
             accent-color: var(--primary-orange);
         }
 
+        /* --- LAYOUT CONTACT 2 COLONNES --- */
+        #contact-view .detail-page {
+            max-width: 1180px;
+        }
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 36px;
+            align-items: start;
+            margin-top: 28px;
+        }
+        .contact-sidebar {
+            position: sticky;
+            top: 96px;
+        }
+        .contact-mascot-wrap {
+            width: 230px;
+            margin: 24px auto 0 auto;
+        }
+        .contact-mascot-wrap img {
+            width: 100%;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+            image-rendering: -webkit-optimize-contrast;
+        }
+        .contact-sidebar-block {
+            margin-bottom: 32px;
+        }
+        .contact-sidebar-block:last-child { margin-bottom: 0; }
+        .contact-sidebar-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary-orange);
+            margin-bottom: 10px;
+        }
+        .contact-sidebar-title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.25;
+            margin-bottom: 12px;
+        }
+        .contact-sidebar-pitch {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        .sidebar-reassurance {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .sidebar-reassurance-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        .sidebar-reassurance-item::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 1px;
+            background: var(--primary-orange);
+            flex-shrink: 0;
+        }
+        .sidebar-stats {
+            display: flex;
+            gap: 20px;
+        }
+        .sidebar-stat {
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-stat-num {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--primary-orange);
+            line-height: 1;
+        }
+        .sidebar-stat-label {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+        .sidebar-coords {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .sidebar-coord-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .sidebar-coord-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        .sidebar-coord-value {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        @media (max-width: 768px) {
+            .contact-sidebar { display: none; }
+            .contact-layout {
+                grid-template-columns: 1fr;
+                margin-top: 0;
+            }
+        }
+
         .btn-submit {
             background-color: var(--primary-orange);
             color: white;
@@ -732,25 +944,54 @@
         .btn-demo-link {
             display: block;
             width: fit-content;
-            margin: 20px auto; /* Centre le bouton avec de l'espace autour */
+            margin: 20px auto;
             padding: 9.6px 32px;
-            background-color: var(--primary-orange);
-            color: white;
+            background: transparent;
+            color: var(--primary-orange);
             text-decoration: none;
             font-weight: bold;
             font-size: 1.1rem;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            border: 2px solid var(--primary-orange);
             text-align: center;
-            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.04em;
         }
-
-        .btn-demo-link:hover {
-            background-color: var(--dark-orange);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.3);
-            color: white;
+        .btn-demo-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.25s ease;
         }
+        .btn-demo-link:hover .btn-demo-canvas { opacity: 1; }
+        .btn-demo-text {
+            position: relative;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .btn-pixel-hover {
+            display: inline-block;
+            background: white;
+            color: var(--primary-orange);
+            border: 1.5px solid var(--primary-orange);
+            padding: 12px 26px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        .btn-pixel-hover:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(255,107,0,0.25); }
+        .btn-pixel-hover .btn-demo-canvas { opacity: 0; transition: opacity 0.25s ease; }
+        .btn-pixel-hover:hover .btn-demo-canvas { opacity: 1; }
 
                 /* --- AJUSTEMENTS POUR MOBILE --- */
         @media (max-width: 600px) {
@@ -898,15 +1139,12 @@
         /* Le rideau de transition */
     .page-transition {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background-color: var(--bg-light); /* Utilise la couleur de fond de ton site */
-        z-index: 99999; /* Toujours au-dessus de tout */
-        transition: opacity 0.4s ease-in-out; /* Durée de l'animation */
-        pointer-events: none; /* Empêche de bloquer les clics en temps normal */
-        opacity: 1; /* Au chargement, le rideau est opaque */
+        inset: 0;
+        background-color: var(--bg-light);
+        z-index: 99999;
+        transition: opacity 0.4s ease-in-out;
+        pointer-events: none;
+        opacity: 1;
     }
 
     /* Classe pour cacher le rideau (fade in de la page) */
@@ -925,8 +1163,7 @@
        ====================================================== */
     .intro-overlay {
         position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100vh;
+        inset: 0;
         background: #fff;
         z-index: 100000;
         display: flex;
@@ -1476,21 +1713,19 @@
         opacity: 0.28 !important;
     }
 
-    /* --- TRANSITIONS DE VUES (fade + slide vertical) --- */
+    /* --- TRANSITIONS DE VUES --- */
     .view.active {
-        animation: viewEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation: viewEnter 0.42s ease forwards;
     }
     .view.is-leaving {
-        animation: viewLeave 0.28s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+        opacity: 0;
+        filter: blur(4px);
         pointer-events: none;
+        transition: opacity 0.2s ease, filter 0.2s ease;
     }
     @keyframes viewEnter {
-        from { opacity: 0; transform: translateY(24px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes viewLeave {
-        from { opacity: 1; transform: translateY(0); }
-        to   { opacity: 0; transform: translateY(-12px); }
+        from { opacity: 0; filter: blur(4px); }
+        to   { opacity: 1; filter: blur(0px); }
     }
 
     /* --- VAGUES SVG (uniquement sur la page contact) --- */
@@ -1635,7 +1870,7 @@
         text-align: center;
     }
     .dashboard-link-btn button {
-        background: white;
+        background: transparent;
         color: var(--primary-orange);
         border: 1.5px solid var(--primary-orange);
         padding: 11px 22px;
@@ -1644,15 +1879,16 @@
         font-size: 0.92rem;
         cursor: pointer;
         font-family: inherit;
-        box-shadow: 0 2px 10px rgba(255, 107, 0, 0.1);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .dashboard-link-btn button:hover {
         transform: translateY(-2px);
-        background: var(--primary-orange);
-        color: white;
         box-shadow: 0 6px 18px rgba(255, 107, 0, 0.25);
     }
+    .dashboard-link-btn button .btn-demo-canvas { opacity: 0; transition: opacity 0.25s ease; }
+    .dashboard-link-btn button:hover .btn-demo-canvas { opacity: 1; }
 
     /* =========================================================
        MASCOTTE LAUNCHER (pose "accroché" au bord)
@@ -1709,7 +1945,7 @@
         position: fixed;
         bottom: var(--mascot-bottom-offset);
         right:  var(--mascot-right-offset);
-        z-index: 9998;
+        z-index: 999;
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -1932,6 +2168,11 @@
         outline-offset: 4px;
         border-radius: 12px;
     }
+    .mascotte-wrapper {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        user-select: none;
+    }
 
     /* Respect du prefers-reduced-motion */
     @media (prefers-reduced-motion: reduce) {
@@ -1942,6 +2183,22 @@
     }
 
     </style>
+    <script>
+    // Scroll restoration : refresh → top, back/forward → position mémorisée
+    history.scrollRestoration = 'manual';
+    window.addEventListener('pageshow', function(e) {
+        var navType = (performance.getEntriesByType('navigation')[0] || {}).type;
+        if (e.persisted || navType === 'back_forward') {
+            var saved = sessionStorage.getItem('_scrollY');
+            if (saved !== null) window.scrollTo(0, parseInt(saved, 10));
+        } else {
+            window.scrollTo(0, 0);
+        }
+    });
+    window.addEventListener('pagehide', function() {
+        sessionStorage.setItem('_scrollY', window.scrollY);
+    });
+    </script>
 </head>
 <body>
 
@@ -2029,8 +2286,9 @@
         </div>
 
         <div style="position: relative; z-index: 1;">
-            <button onclick="showView('contact-view')" style="background: white; color: var(--primary-orange); border: 1.5px solid var(--primary-orange); padding: 12px 26px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 2px 10px rgba(255,107,0,0.1); transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease; font-family: inherit;" onmouseover="this.style.transform='translateY(-2px)'; this.style.background='var(--primary-orange)'; this.style.color='white'; this.style.boxShadow='0 6px 18px rgba(255,107,0,0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.background='white'; this.style.color='var(--primary-orange)'; this.style.boxShadow='0 2px 10px rgba(255,107,0,0.1)';">
-                Parlez-nous de votre projet →
+            <button onclick="showView('contact-view')" class="btn-pixel-hover">
+                <canvas class="btn-demo-canvas"></canvas>
+                <span class="btn-demo-text">Parlez-nous de votre projet</span>
             </button>
         </div>
     </div>
@@ -2202,16 +2460,48 @@
                         </div>
                         <p class="mockup-caption">Le client parcourt la carte</p>
                     </div>
-                    <div>
-                        <div class="phone-mockup">
-                            <div class="phone-notch"></div>
-                            <img src="screen-carte.jpg" alt="Aperçu des détails">
+                    <div class="demo-right-space">
+                        <div class="demo-steps">
+                            <div class="demo-steps-eyebrow">Côté client</div>
+                            <div class="demo-steps-heading">Comment ça marche</div>
+                            <div class="demo-steps-list">
+                                <div class="demo-step">
+                                    <div class="demo-step-left">
+                                        <div class="demo-step-num">1</div>
+                                        <div class="demo-step-line"></div>
+                                    </div>
+                                    <div class="demo-step-body">
+                                        <div class="demo-step-title">Il scanne le QR code</div>
+                                        <div class="demo-step-desc">Accessible instantanément depuis son téléphone, sans app à installer ni compte à créer.</div>
+                                    </div>
+                                </div>
+                                <div class="demo-step">
+                                    <div class="demo-step-left">
+                                        <div class="demo-step-num">2</div>
+                                        <div class="demo-step-line"></div>
+                                    </div>
+                                    <div class="demo-step-body">
+                                        <div class="demo-step-title">Il filtre et navigue</div>
+                                        <div class="demo-step-desc">Il trie par envies, allergènes ou disponibilité en un geste. Photos, descriptions, prix : tout est là.</div>
+                                    </div>
+                                </div>
+                                <div class="demo-step">
+                                    <div class="demo-step-left">
+                                        <div class="demo-step-num">3</div>
+                                        <div class="demo-step-line"></div>
+                                    </div>
+                                    <div class="demo-step-body">
+                                        <div class="demo-step-title">Il choisit en confiance</div>
+                                        <div class="demo-step-desc">Le client commande avec envie. Vous, vous mettez à jour la carte en quelques secondes depuis le dashboard.</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p class="mockup-caption">Accueil de la carte</p>
                     </div>
                 </div>
                 <a href="https://rylia.fr/carte" target="_blank" class="btn-demo-link">
-                    CLIQUEZ ICI</a>
+                    <canvas class="btn-demo-canvas"></canvas>
+                    <span class="btn-demo-text">CLIQUEZ ICI</span></a>
             </div>
 
             <div class="detail-section">
@@ -2274,7 +2564,10 @@
                         <p class="mockup-caption" style="margin-top: 12px;">Interface de gestion commerçant</p>
 
                         <div class="dashboard-link-btn">
-                            <button onclick="showView('detail-dashboard')">📊 Découvrir le tableau de bord en détail →</button>
+                            <button onclick="showView('detail-dashboard')">
+                                <canvas class="btn-demo-canvas"></canvas>
+                                <span class="btn-demo-text">📊 Découvrir le tableau de bord en détail</span>
+                            </button>
                         </div>
                     </div>
             </div>
@@ -2324,16 +2617,48 @@
                         </div>
                         <p class="mockup-caption">Le client scanne et joue</p>
                     </div>
-                    <div>
-                        <div class="phone-mockup">
-                            <div class="phone-notch"></div>
-                            <img src="screen-roue.jpg" alt="Résultat du gain">
+                    <div class="demo-right-space">
+                        <div class="demo-steps">
+                            <div class="demo-steps-eyebrow">Côté client</div>
+                            <div class="demo-steps-heading">Comment ça marche</div>
+                            <div class="demo-steps-list">
+                                <div class="demo-step">
+                                    <div class="demo-step-left">
+                                        <div class="demo-step-num">1</div>
+                                        <div class="demo-step-line"></div>
+                                    </div>
+                                    <div class="demo-step-body">
+                                        <div class="demo-step-title">Il laisse un avis Google</div>
+                                        <div class="demo-step-desc">En fin de repas, il scanne le QR code et dépose son avis directement depuis son téléphone.</div>
+                                    </div>
+                                </div>
+                                <div class="demo-step">
+                                    <div class="demo-step-left">
+                                        <div class="demo-step-num">2</div>
+                                        <div class="demo-step-line"></div>
+                                    </div>
+                                    <div class="demo-step-body">
+                                        <div class="demo-step-title">Il fait tourner la roue</div>
+                                        <div class="demo-step-desc">Un gain tiré au sort parmi les lots que vous avez configurés. Le jeu se débloque après l'avis.</div>
+                                    </div>
+                                </div>
+                                <div class="demo-step">
+                                    <div class="demo-step-left">
+                                        <div class="demo-step-num">3</div>
+                                        <div class="demo-step-line"></div>
+                                    </div>
+                                    <div class="demo-step-body">
+                                        <div class="demo-step-title">Il repart avec un coupon</div>
+                                        <div class="demo-step-desc">Un bon à utiliser lors de sa prochaine visite. Un avis gagné, une visite gagnée.</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p class="mockup-caption">Le client récupère son coupon</p>
                     </div>
                 </div>
                 <a href="https://rylia.fr/roue" target="_blank" class="btn-demo-link">
-                    CLIQUEZ ICI</a>
+                    <canvas class="btn-demo-canvas"></canvas>
+                    <span class="btn-demo-text">CLIQUEZ ICI</span></a>
             </div>
 
             <div class="detail-section">
@@ -2396,7 +2721,10 @@
                         <p class="mockup-caption" style="margin-top: 12px;">Interface de gestion commerçant</p>
 
                         <div class="dashboard-link-btn">
-                            <button onclick="showView('detail-dashboard')">📊 Découvrir le tableau de bord en détail →</button>
+                            <button onclick="showView('detail-dashboard')">
+                                <canvas class="btn-demo-canvas"></canvas>
+                                <span class="btn-demo-text">📊 Découvrir le tableau de bord en détail</span>
+                            </button>
                         </div>
                     </div>
             </div>
@@ -2449,18 +2777,50 @@
                                 Votre navigateur ne supporte pas la vidéo.
                             </video>
                         </div>
-                        <p class="mockup-caption">Espace client & commerçant</p>
+                        <p class="mockup-caption">Espace client</p>
                     </div>
-                    <div>
-                        <div class="phone-mockup">
-                            <div class="phone-notch"></div>
-                            <img src="screen-fidelite.jpg" alt="Aperçu de l'espace fidélité">
+                    <div class="demo-right-space">
+                        <div class="demo-steps">
+                            <div class="demo-steps-eyebrow">Côté client</div>
+                            <div class="demo-steps-heading">Comment ça marche</div>
+                            <div class="demo-steps-list">
+                                <div class="demo-step">
+                                    <div class="demo-step-left">
+                                        <div class="demo-step-num">1</div>
+                                        <div class="demo-step-line"></div>
+                                    </div>
+                                    <div class="demo-step-body">
+                                        <div class="demo-step-title">Il s'inscrit en un scan</div>
+                                        <div class="demo-step-desc">Pas d'app, pas de compte compliqué. Un QR code au comptoir et son programme est activé.</div>
+                                    </div>
+                                </div>
+                                <div class="demo-step">
+                                    <div class="demo-step-left">
+                                        <div class="demo-step-num">2</div>
+                                        <div class="demo-step-line"></div>
+                                    </div>
+                                    <div class="demo-step-body">
+                                        <div class="demo-step-title">Il cumule ses points</div>
+                                        <div class="demo-step-desc">À chaque visite, vous scannez et les points sont crédités en 2 secondes. Il suit son niveau en temps réel.</div>
+                                    </div>
+                                </div>
+                                <div class="demo-step">
+                                    <div class="demo-step-left">
+                                        <div class="demo-step-num">3</div>
+                                        <div class="demo-step-line"></div>
+                                    </div>
+                                    <div class="demo-step-body">
+                                        <div class="demo-step-title">Il profite de ses récompenses</div>
+                                        <div class="demo-step-desc">Il échange ses points contre les avantages que vous avez définis. Une vraie raison de revenir.</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p class="mockup-caption">Accueil espace client</p>
                     </div>
                 </div>
                 <a href="https://rylia.fr/fidelite" target="_blank" class="btn-demo-link">
-                    CLIQUEZ ICI</a>
+                    <canvas class="btn-demo-canvas"></canvas>
+                    <span class="btn-demo-text">CLIQUEZ ICI</span></a>
             </div>
 
             <div class="detail-section">
@@ -2523,7 +2883,10 @@
                         <p class="mockup-caption" style="margin-top: 12px;">Interface de gestion commerçant</p>
 
                         <div class="dashboard-link-btn">
-                            <button onclick="showView('detail-dashboard')">📊 Découvrir le tableau de bord en détail →</button>
+                            <button onclick="showView('detail-dashboard')">
+                                <canvas class="btn-demo-canvas"></canvas>
+                                <span class="btn-demo-text">📊 Découvrir le tableau de bord en détail</span>
+                            </button>
                         </div>
                     </div>
             </div>
@@ -2696,6 +3059,48 @@
         <div class="detail-page" style="position:relative; z-index:1;">
             <p style="margin-top:20px; text-align:center;">Une question sur nos solutions ? Envie de digitaliser votre commerce ?<br>Notre équipe est à votre écoute.</p>
 
+            <div class="contact-layout">
+
+                <!-- COLONNE GAUCHE — masquée sur mobile -->
+                <aside class="contact-sidebar">
+                    <div class="contact-sidebar-block">
+                        <div class="contact-sidebar-label">On vous répond vite</div>
+                        <div class="contact-sidebar-title">Parlons de votre projet</div>
+                        <p class="contact-sidebar-pitch">Dites-nous ce que vous cherchez, on s'occupe du reste.</p>
+                    </div>
+
+                    <div class="contact-sidebar-block">
+                        <div class="contact-sidebar-label">Nos engagements</div>
+                        <div class="sidebar-reassurance">
+                            <div class="sidebar-reassurance-item">Réponse sous 24h</div>
+                            <div class="sidebar-reassurance-item">Sans engagement contractuel</div>
+                            <div class="sidebar-reassurance-item">Accompagnement personnalisé</div>
+                            <div class="sidebar-reassurance-item">Aucun frais caché</div>
+                        </div>
+                    </div>
+
+                    <div class="contact-sidebar-block">
+                        <div class="contact-sidebar-label">Contact direct</div>
+                        <div class="sidebar-coords">
+                            <div class="sidebar-coord-item">
+                                <span class="sidebar-coord-label">Email</span>
+                                <span class="sidebar-coord-value">contact@rylia.fr</span>
+                            </div>
+                            <div class="sidebar-coord-item">
+                                <span class="sidebar-coord-label">Téléphone</span>
+                                <span class="sidebar-coord-value">06 96 69 90 87</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-mascot-wrap">
+                        <img src="mascotte-contact.png" alt="">
+                    </div>
+                </aside>
+
+                <!-- COLONNE DROITE — formulaire -->
+                <div>
+
             <div class="detail-section">
                 <h2>Envoyez-nous un message</h2>
                 <form action="https://formspree.io/f/xvzbqkwl" method="POST" id="contactForm">
@@ -2755,19 +3160,8 @@
                 </div>
             </div>
 
-            <div class="detail-section">
-                <h2>Nos coordonnées</h2>
-                <div style="margin-top: 20px; padding: 0 22px 22px 22px;">
-                    <div class="contact-info-item">
-                        <img src="logo-mail.jpg" alt="Email" class="icon-contact-img">
-                        <span>contact@rylia.fr</span>
-                    </div>
-                    <div class="contact-info-item">
-                        <img src="logo-telephone.jpg" alt="Téléphone" class="icon-contact-img">
-                        <span><em>06 96 69 90 87</em></span>
-                    </div>
-                </div>
-            </div>
+                </div> <!-- fin colonne droite -->
+            </div> <!-- fin contact-layout -->
         </div>
     </div>
 
@@ -2805,7 +3199,7 @@
                 <h4>Contact</h4>
                 <ul>
                     <li>Email : contact@rylia.fr</li>
-                    <li>Téléphone : <em>06 69 96 90 87</em><br></li>
+                    <li>Téléphone : 06 69 96 90 87<br></li>
                 </ul>
             </div>
         </div>
@@ -2843,8 +3237,12 @@
                 return;
             }
 
-            currentView.classList.add('is-leaving');
-            setTimeout(finishSwitch, 280);
+            if (window.pixelTransition) {
+                window.pixelTransition(finishSwitch);
+            } else {
+                currentView.classList.add('is-leaving');
+                setTimeout(finishSwitch, 280);
+            }
         }
 
         function goBack() {
@@ -2877,8 +3275,12 @@
                 return;
             }
 
-            currentView.classList.add('is-leaving');
-            setTimeout(finishSwitch, 280);
+            if (window.pixelTransition) {
+                window.pixelTransition(finishSwitch);
+            } else {
+                currentView.classList.add('is-leaving');
+                setTimeout(finishSwitch, 280);
+            }
         }
 
         window.addEventListener('DOMContentLoaded', (event) => {
@@ -3063,6 +3465,9 @@
         var mainHome = document.getElementById('main-home');
 
         document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        function blockTouch(e) { e.preventDefault(); }
+        document.addEventListener('touchmove', blockTouch, { passive: false });
 
         // Palette dégradé du logo
         var PALETTE = ['#FFB800','#FF9500','#FF7A00','#FF6B00','#FF8C3A','#E55000'];
@@ -3231,56 +3636,74 @@
                 overlay.classList.add('is-done');
                 overlay.style.display = 'none';
                 document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                document.removeEventListener('touchmove', blockTouch);
             }, 1300);
         }, 2750);
     })();
     </script>
 
     <script>
-    const canvas = document.getElementById('particles-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-
-    function resizeCanvas() {
-        const section = canvas.parentElement;
-        canvas.width = section.offsetWidth;
-        canvas.height = section.offsetHeight;
-    }
-
-    function createParticles() {
-        particles = [];
-        const count = Math.floor((canvas.width * canvas.height) / 18000);
-        for (let i = 0; i < count; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                r: Math.random() * 3 + 1,
-                dx: (Math.random() - 0.5) * 0.4,
-                dy: (Math.random() - 0.5) * 0.4,
-                opacity: Math.random() * 0.4 + 0.1
-            });
+    (function() {
+        var PIXEL_PALETTE = ['#FFB800','#FF9500','#FF7A00','#FF6B00','#FF8C3A','#E55000'];
+        function hexToRgb(hex) {
+            var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+            return [r,g,b];
         }
-    }
 
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 107, 0, ${p.opacity})`;
-            ctx.fill();
-            p.x += p.dx;
-            p.y += p.dy;
-            if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-            if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-        });
-        requestAnimationFrame(draw);
-    }
+        var canvas = document.getElementById('particles-canvas');
+        var ctx = canvas.getContext('2d');
+        var pixels = [];
 
-    window.addEventListener('resize', () => { resizeCanvas(); createParticles(); });
-    resizeCanvas();
-    createParticles();
-    draw();
+        function resizeCanvas() {
+            var section = canvas.parentElement;
+            canvas.width = section.offsetWidth;
+            canvas.height = section.offsetHeight;
+        }
+
+        function createPixels() {
+            pixels = [];
+            var count = Math.floor((canvas.width * canvas.height) / 16000);
+            for (var i = 0; i < count; i++) {
+                var col = PIXEL_PALETTE[Math.floor(Math.random() * PIXEL_PALETTE.length)];
+                var rgb = hexToRgb(col);
+                pixels.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.floor(Math.random() * 5) + 3,
+                    dx: (Math.random() - 0.5) * 0.35,
+                    dy: (Math.random() - 0.5) * 0.35,
+                    opacity: Math.random() * 0.35 + 0.08,
+                    opDir: Math.random() > 0.5 ? 1 : -1,
+                    opSpeed: Math.random() * 0.003 + 0.001,
+                    rgb: rgb
+                });
+            }
+        }
+
+        function drawPixels() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pixels.forEach(function(p) {
+                p.opacity += p.opDir * p.opSpeed;
+                if (p.opacity >= 0.43) { p.opacity = 0.43; p.opDir = -1; }
+                if (p.opacity <= 0.05) { p.opacity = 0.05; p.opDir = 1; }
+                ctx.fillStyle = 'rgba(' + p.rgb[0] + ',' + p.rgb[1] + ',' + p.rgb[2] + ',' + p.opacity + ')';
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+                p.x += p.dx;
+                p.y += p.dy;
+                if (p.x < -p.size) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = -p.size;
+                if (p.y < -p.size) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = -p.size;
+            });
+            requestAnimationFrame(drawPixels);
+        }
+
+        window.addEventListener('resize', function() { resizeCanvas(); createPixels(); });
+        resizeCanvas();
+        createPixels();
+        drawPixels();
+    })();
     </script>
 
 
@@ -3307,19 +3730,27 @@
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             }
 
+            var PIXEL_PAL = ['#FFB800','#FF9500','#FF7A00','#FF6B00','#FF8C3A','#E55000'];
+            function hexToRgb(hex) {
+                return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)];
+            }
+
             function createParticles() {
                 particles = [];
                 if (cssWidth === 0 || cssHeight === 0) return;
-                // Densité raisonnable : ~1 particule pour 14000 px²
                 const count = Math.floor((cssWidth * cssHeight) / 14000);
                 for (let i = 0; i < count; i++) {
+                    const col = PIXEL_PAL[Math.floor(Math.random() * PIXEL_PAL.length)];
                     particles.push({
                         x: Math.random() * cssWidth,
                         y: Math.random() * cssHeight,
-                        r: Math.random() * 2 + 1,           // rayon 1 à 3 (toujours rond)
+                        size: Math.floor(Math.random() * 5) + 3,
                         dx: (Math.random() - 0.5) * 0.35,
                         dy: (Math.random() - 0.5) * 0.35,
-                        opacity: Math.random() * 0.35 + 0.1
+                        opacity: Math.random() * 0.35 + 0.08,
+                        opDir: Math.random() > 0.5 ? 1 : -1,
+                        opSpeed: Math.random() * 0.003 + 0.001,
+                        rgb: hexToRgb(col)
                     });
                 }
             }
@@ -3328,14 +3759,17 @@
                 if (cssWidth > 0 && cssHeight > 0) {
                     ctx.clearRect(0, 0, cssWidth, cssHeight);
                     particles.forEach(p => {
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                        ctx.fillStyle = `rgba(255, 107, 0, ${p.opacity})`;
-                        ctx.fill();
+                        p.opacity += p.opDir * p.opSpeed;
+                        if (p.opacity >= 0.43) { p.opacity = 0.43; p.opDir = -1; }
+                        if (p.opacity <= 0.05) { p.opacity = 0.05; p.opDir = 1; }
+                        ctx.fillStyle = `rgba(${p.rgb[0]},${p.rgb[1]},${p.rgb[2]},${p.opacity})`;
+                        ctx.fillRect(p.x, p.y, p.size, p.size);
                         p.x += p.dx;
                         p.y += p.dy;
-                        if (p.x < 0 || p.x > cssWidth) p.dx *= -1;
-                        if (p.y < 0 || p.y > cssHeight) p.dy *= -1;
+                        if (p.x < -p.size) p.x = cssWidth;
+                        if (p.x > cssWidth) p.x = -p.size;
+                        if (p.y < -p.size) p.y = cssHeight;
+                        if (p.y > cssHeight) p.y = -p.size;
                     });
                 }
                 requestAnimationFrame(draw);
@@ -3723,6 +4157,168 @@
                 };
             }
         }
+    })();
+    </script>
+
+    <!-- PIXEL TRANSITION (bande qui traverse) -->
+    <script>
+    (function() {
+        var PALETTE = ['#FFB800','#FF9500','#FF7A00','#FF6B00','#FF8C3A','#E55000'];
+        var animating = false;
+
+        function spawnPx(waveX, H) {
+            var r1   = Math.random();
+            var size = r1 < 0.20 ? 14 + Math.random() * 10
+                     : r1 < 0.58 ?  7 + Math.random() * 6
+                     :               3 + Math.random() * 4;
+
+            var px  = waveX - size / 2 + (Math.random() - 0.5) * 24;
+            var py  = Math.random() * H - size / 2;
+            var dx  = 14 + Math.random() * 36;
+            var dy  = (Math.random() - 0.5) * 28;
+            var rot = Math.round((Math.random() - 0.5) * 60);
+            var dur = size > 12 ? 500 + Math.round(Math.random() * 200)
+                    : size > 6  ? 360 + Math.round(Math.random() * 180)
+                    :              240 + Math.round(Math.random() * 140);
+            var color = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+
+            var el = document.createElement('div');
+            el.style.cssText = [
+                'position:fixed',
+                'left:'       + px   + 'px',
+                'top:'        + py   + 'px',
+                'width:'      + size + 'px',
+                'height:'     + size + 'px',
+                'border-radius:2px',
+                'pointer-events:none',
+                'z-index:9998',
+                'opacity:0',
+                'background:'  + color,
+                '--dx:'        + dx  + 'px',
+                '--dy:'        + dy  + 'px',
+                '--rot:'       + rot + 'deg',
+                '--del:0ms',
+                '--dur:'       + dur + 'ms',
+                'animation:pixelDrift var(--dur,500ms) cubic-bezier(0.2,0,0.8,1) var(--del,0ms) forwards'
+            ].join(';');
+            document.body.appendChild(el);
+            setTimeout(function() { if (el.parentNode) el.remove(); }, dur + 60);
+        }
+
+        window.pixelTransition = function(callback) {
+            if (animating) { callback(); return; }
+            animating  = true;
+
+            var W       = window.innerWidth;
+            var H       = window.innerHeight;
+            var DUR     = 430;
+            var start   = performance.now();
+            var last    = 0;
+            var cbFired = false;
+
+            function tick(now) {
+                var elapsed  = now - start;
+                var progress = Math.min(elapsed / DUR, 1);
+                /* ease in-out quad — même courbe que l'intro */
+                var eased = progress < 0.5
+                    ? 2 * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                var waveX = eased * W;
+
+                if (now - last >= 22) {
+                    last = now;
+                    spawnPx(waveX, H);
+                    spawnPx(waveX, H);
+                }
+
+                if (waveX >= W / 2 && !cbFired) {
+                    cbFired = true;
+                    callback();
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                } else {
+                    animating = false;
+                }
+            }
+
+            requestAnimationFrame(tick);
+        };
+    })();
+    </script>
+
+    <script>
+    (function() {
+        var PALETTE = ['#FFB800','#FF9500','#FF7A00','#FF6B00','#FF8C3A','#E55000'];
+        function hexRgb(h) {
+            return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+        }
+
+        document.querySelectorAll('.btn-demo-link, .btn-pixel-hover, .dashboard-link-btn button').forEach(function(btn) {
+            var cvs = btn.querySelector('.btn-demo-canvas');
+            if (!cvs) return;
+            var ctx = cvs.getContext('2d');
+            var pixels = [];
+            var rafId = null;
+            var running = false;
+
+            function init() {
+                var dpr = window.devicePixelRatio || 1;
+                var W = btn.offsetWidth;
+                var H = btn.offsetHeight;
+                cvs.width  = W * dpr;
+                cvs.height = H * dpr;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                pixels = [];
+                var count = Math.floor((W * H) / 420);
+                for (var i = 0; i < count; i++) {
+                    var col = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+                    var sz  = Math.floor(Math.random() * 4) + 4;
+                    pixels.push({
+                        x: Math.random() * W, y: Math.random() * H,
+                        size: sz,
+                        dx: (Math.random() - 0.5) * 0.7,
+                        dy: (Math.random() - 0.5) * 0.7,
+                        opacity: Math.random() * 0.3 + 0.45,
+                        opDir: Math.random() > 0.5 ? 1 : -1,
+                        opSpeed: Math.random() * 0.008 + 0.003,
+                        rgb: hexRgb(col)
+                    });
+                }
+            }
+
+            function loop() {
+                if (!running) return;
+                var W = btn.offsetWidth;
+                var H = btn.offsetHeight;
+                ctx.clearRect(0, 0, W, H);
+                pixels.forEach(function(p) {
+                    p.opacity += p.opDir * p.opSpeed;
+                    if (p.opacity >= 0.78) { p.opacity = 0.78; p.opDir = -1; }
+                    if (p.opacity <= 0.38) { p.opacity = 0.38; p.opDir =  1; }
+                    ctx.fillStyle = 'rgba('+p.rgb[0]+','+p.rgb[1]+','+p.rgb[2]+','+p.opacity+')';
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                    p.x += p.dx; p.y += p.dy;
+                    if (p.x < -p.size) p.x = W;
+                    if (p.x > W)       p.x = -p.size;
+                    if (p.y < -p.size) p.y = H;
+                    if (p.y > H)       p.y = -p.size;
+                });
+                rafId = requestAnimationFrame(loop);
+            }
+
+            btn.addEventListener('mouseenter', function() {
+                if (pixels.length === 0) init();
+                running = true;
+                loop();
+            });
+            btn.addEventListener('mouseleave', function() {
+                running = false;
+                if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+                ctx.clearRect(0, 0, cvs.width, cvs.height);
+            });
+        });
     })();
     </script>
 
