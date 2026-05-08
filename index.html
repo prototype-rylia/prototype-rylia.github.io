@@ -816,7 +816,7 @@
             body[data-view="contact-view"] #mascotte-bubble { display: none !important; }
             body[data-view="contact-view"] .mascotte-contact-mobile {
                 display: block;
-                width: 90px;
+                width: var(--mascot-width, 220px);
             }
             body[data-view="contact-view"] #contact-view .detail-page {
                 padding-bottom: 110px;
@@ -824,6 +824,10 @@
             /* Masquer la mascotte accroche sur toutes les pages détail */
             body[data-view^="detail"] .mascotte-launcher {
                 display: none !important;
+            }
+            /* Espace sous le contenu accueil pour la mascotte */
+            body[data-view="main-home"] #main-home {
+                padding-bottom: 110px;
             }
         }
         .contact-sidebar-label {
