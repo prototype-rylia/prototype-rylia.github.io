@@ -4190,13 +4190,17 @@
 
             // Vérifie si on doit basculer d'état. Léger, rapide, ne fait
             // RIEN si on n'est pas à un moment de bascule.
+            function isMobile() {
+                return window.innerWidth <= 768;
+            }
             function isMobileContact() {
-                return window.innerWidth <= 768 && document.body.dataset.view === 'contact-view';
+                return isMobile() && document.body.dataset.view === 'contact-view';
             }
 
             function checkState() {
                 scrollPending = false;
                 if (isMobileContact()) { if (!isStuck) enterStuck(); else launcher.style.bottom = computeStuckBottom() + 'px'; return; }
+                if (isMobile()) { if (isStuck) leaveStuck(); return; }
                 const footerTop = footer.getBoundingClientRect().top;
                 const viewportH = window.innerHeight;
 
