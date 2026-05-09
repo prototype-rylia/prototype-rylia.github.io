@@ -814,11 +814,11 @@
         @media (max-width: 768px) {
             /* Mascotte accroche plus petite et collée en bas à droite */
             .mascotte-launcher {
-                --mascot-width: 110px;
-                --mascot-bottom-offset: -45px;
-                --mascot-right-offset: 8px;
-                --bubble-bottom: 120px;
-                --bubble-shift-x: 80px;
+                --mascot-width: 80px;
+                --mascot-bottom-offset: -22px;
+                --mascot-right-offset: 4px;
+                --bubble-bottom: 95px;
+                --bubble-shift-x: 60px;
                 animation: none;
                 opacity: 1;
             }
@@ -4200,7 +4200,6 @@
             function checkState() {
                 scrollPending = false;
                 if (isMobileContact()) { if (!isStuck) enterStuck(); else launcher.style.bottom = computeStuckBottom() + 'px'; return; }
-                if (isMobile()) { if (isStuck) leaveStuck(); return; }
                 const footerTop = footer.getBoundingClientRect().top;
                 const viewportH = window.innerHeight;
 
@@ -4230,6 +4229,10 @@
 
             window.addEventListener('scroll', onScroll, { passive: true });
             window.addEventListener('resize', refreshStuckPosition);
+            window.addEventListener('load', refreshStuckPosition);
+            // Recalcul tardif après chargement images/polices (mobile : layout pas stable de suite)
+            setTimeout(refreshStuckPosition, 500);
+            setTimeout(refreshStuckPosition, 1500);
 
             // État initial
             checkState();
