@@ -815,12 +815,14 @@
             /* Mascotte accroche plus petite et collée en bas à droite */
             .mascotte-launcher {
                 --mascot-width: 130px;
-                --mascot-bottom-offset: 800px;
+                --mascot-bottom-offset: 0px;
                 --mascot-right-offset: 8px;
                 --bubble-bottom: 150px;
                 --bubble-shift-x: 75px;
+                --mascot-y-shift: -40px;        /* ← MONTER LA MASCOTTE : valeur négative (ex: -40px) */
                 animation: none;
                 opacity: 1;
+                transform: translateY(var(--mascot-y-shift));
             }
             .mascotte-launcher .mascotte-wrapper { width: 130px !important; }
             .mascotte-launcher .mascotte-img { width: 100% !important; height: auto !important; }
