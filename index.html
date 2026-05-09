@@ -1019,20 +1019,19 @@
         }
         .btn-pixel-hover {
             display: inline-block;
-            background: white;
+            background: transparent;
             color: var(--primary-orange);
             border: 1.5px solid var(--primary-orange);
-            padding: 12px 26px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 5px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: inherit;
             cursor: pointer;
             font-family: inherit;
             position: relative;
             overflow: hidden;
-            transition: box-shadow 0.2s ease, transform 0.2s ease;
+            transition: box-shadow 0.2s ease;
         }
-        .btn-pixel-hover:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(255,107,0,0.25); }
         .btn-pixel-hover .btn-demo-canvas { opacity: 0; transition: opacity 0.25s ease; }
         .btn-pixel-hover:hover .btn-demo-canvas { opacity: 1; }
 
@@ -1416,11 +1415,6 @@
         box-shadow: 0 12px 40px rgba(255, 107, 0, 0.1) !important;
     }
 
-    /* Pricing cards — tilt 3D au hover */
-    .price-card {
-        transform-style: preserve-3d;
-        perspective: 800px;
-    }
 
     /* Steps — icônes pulsent au reveal */
     .step-icon-pulse {
@@ -1629,13 +1623,11 @@
         display: flex;
         flex-direction: column;
         position: relative;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
     .price-card:hover {
         border-color: var(--primary-orange);
         box-shadow: 0 6px 20px rgba(255, 107, 0, 0.1);
-        transform: scale(1.02);
     }
     .price-card.featured {
         border: 2px solid var(--primary-orange);
@@ -2348,10 +2340,7 @@
         </div>
 
         <div style="position: relative; z-index: 1;">
-            <button onclick="showView('contact-view')" class="btn-pixel-hover">
-                <canvas class="btn-demo-canvas"></canvas>
-                <span class="btn-demo-text">Parlez-nous de votre projet</span>
-            </button>
+            <button onclick="showView('contact-view')" style="background: white; color: var(--primary-orange); border: 1.5px solid var(--primary-orange); padding: 12px 26px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; box-shadow: 0 2px 10px rgba(255,107,0,0.1); transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease; font-family: inherit;" onmouseover="this.style.transform='translateY(-2px)'; this.style.background='var(--primary-orange)'; this.style.color='white'; this.style.boxShadow='0 6px 18px rgba(255,107,0,0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.background='white'; this.style.color='var(--primary-orange)'; this.style.boxShadow='0 2px 10px rgba(255,107,0,0.1)';">Parlez-nous de votre projet</button>
         </div>
     </div>
 </div>
@@ -3990,31 +3979,13 @@
             });
         }
 
-        // --- PRICING CARDS 3D TILT ---
-        function initTilt() {
-            document.querySelectorAll('.price-card').forEach(function(card) {
-                card.addEventListener('mousemove', function(e) {
-                    var rect = card.getBoundingClientRect();
-                    var x = (e.clientX - rect.left) / rect.width - 0.5;
-                    var y = (e.clientY - rect.top) / rect.height - 0.5;
-                    card.style.transform = 'perspective(800px) rotateY(' + (x * 6) + 'deg) rotateX(' + (-y * 6) + 'deg) scale(1.02)';
-                });
-
-                card.addEventListener('mouseleave', function() {
-                    card.style.transform = '';
-                });
-            });
-        }
-
         // --- INIT ---
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 initReveals();
-                initTilt();
             });
         } else {
             initReveals();
-            initTilt();
         }
     })();
     </script>
