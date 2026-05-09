@@ -812,6 +812,14 @@
             image-rendering: -webkit-optimize-contrast;
         }
         @media (max-width: 768px) {
+            /* Mascotte accroche plus petite et collée en bas à droite */
+            .mascotte-launcher {
+                --mascot-width: 110px;
+                --mascot-bottom-offset: -45px;
+                --mascot-right-offset: 8px;
+                --bubble-bottom: 120px;
+                --bubble-shift-x: 80px;
+            }
             body[data-view="contact-view"] .mascotte-wrapper,
             body[data-view="contact-view"] #mascotte-bubble { display: none !important; }
             body[data-view="contact-view"] .mascotte-contact-mobile {
@@ -3316,6 +3324,7 @@
             const finishSwitch = () => {
                 if (currentView) currentView.classList.remove('active', 'is-leaving');
                 targetEl.classList.add('active');
+                document.body.dataset.view = previous.id;
                 if (previous.id === 'main-home' || navigationHistory.length === 0) {
                     backBtn.style.display = 'none';
                 } else {
