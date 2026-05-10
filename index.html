@@ -815,7 +815,7 @@
             /* Mascotte accroche plus petite et collée en bas à droite */
             .mascotte-launcher {
                 --mascot-width: 130px !important;
-                --mascot-bottom-offset: 5px !important;                                             
+                --mascot-bottom-offset: -25px !important;
                 --mascot-right-offset: 8px !important;
                 --bubble-bottom: 150px !important;
                 --bubble-shift-x: 75px !important;
@@ -1018,6 +1018,11 @@
             position: relative;
             z-index: 1;
             pointer-events: none;
+            text-shadow:
+                0 0 4px #fff,
+                0 0 4px #fff,
+                0 0 8px #fff,
+                0 0 12px #fff;
         }
         .btn-pixel-hover {
             display: inline-block;
