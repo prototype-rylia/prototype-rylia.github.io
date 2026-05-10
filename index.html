@@ -1053,10 +1053,17 @@
             z-index: 1;
             pointer-events: none;
             text-shadow:
-                0 0 4px #fff,
-                0 0 4px #fff,
-                0 0 8px #fff,
-                0 0 12px #fff;
+                -2px -2px 0 #fff,
+                 2px -2px 0 #fff,
+                -2px  2px 0 #fff,
+                 2px  2px 0 #fff,
+                -2px  0   0 #fff,
+                 2px  0   0 #fff,
+                 0   -2px 0 #fff,
+                 0    2px 0 #fff,
+                 0    0   3px #fff;
+            -webkit-text-stroke: 0.5px #fff;
+            paint-order: stroke fill;
         }
         .btn-pixel-hover {
             display: inline-block;
@@ -1646,6 +1653,210 @@
         .timeline-item { gap: 16px; padding-bottom: 28px; }
         .timeline-card { padding: 16px 18px; }
         .timeline-card::before { top: 12px; }
+    }
+
+    /* --- PACKS / OFFRES GROUPÉES --- */
+    .packs-section { margin-top: 18px; }
+    .packs-intro {
+        text-align: center;
+        color: var(--text-light);
+        font-size: 0.95rem;
+        max-width: 620px;
+        margin: 0 auto 28px;
+        line-height: 1.55;
+    }
+    .packs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 22px;
+        padding: 14px 0 10px;
+    }
+    .pack-card {
+        background: white;
+        border: 1.5px solid #e8e8e8;
+        border-radius: 16px;
+        padding: 28px 24px 24px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .pack-card:hover {
+        border-color: var(--primary-orange);
+        box-shadow: 0 14px 36px rgba(255, 107, 0, 0.14);
+        transform: translateY(-4px);
+    }
+    .pack-card.featured {
+        border: 2px solid var(--primary-orange);
+        background: linear-gradient(180deg, #fff8f4 0%, #ffffff 35%);
+    }
+    .pack-badge {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: var(--primary-orange);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 5px 11px;
+        border-radius: 20px;
+    }
+    .pack-glyph {
+        font-size: 2.4rem;
+        margin-bottom: 10px;
+        line-height: 1;
+    }
+    .pack-name {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        margin-bottom: 4px;
+    }
+    .pack-tagline {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        margin-bottom: 18px;
+        line-height: 1.45;
+    }
+    .pack-price {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+    .pack-price-amount {
+        font-size: 1.9rem;
+        font-weight: 800;
+        color: var(--primary-orange);
+        line-height: 1;
+    }
+    .pack-price-period {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        font-weight: 500;
+    }
+    .pack-price-old {
+        text-decoration: line-through;
+        color: #b5b5b5;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    .pack-install-note {
+        font-size: 0.78rem;
+        color: var(--text-light);
+        font-style: italic;
+        margin-top: -10px;
+        margin-bottom: 16px;
+    }
+    .pack-divider {
+        border: none;
+        border-top: 1px dashed #e0e0e0;
+        margin: 4px 0 16px;
+    }
+    .pack-includes-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--primary-orange);
+        margin-bottom: 12px;
+    }
+    .pack-features {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+    .pack-features li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 0.9rem;
+        color: var(--text-dark);
+        line-height: 1.4;
+    }
+    .pack-check {
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #fff3e8;
+        color: var(--primary-orange);
+        font-weight: 700;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+    }
+    .pack-choice-wrap {
+        background: #fff8f4;
+        border: 1px dashed rgba(255, 107, 0, 0.35);
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-bottom: 14px;
+    }
+    .pack-choice-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--primary-orange);
+        margin-bottom: 8px;
+        display: block;
+    }
+    .pack-choice-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .pack-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: white;
+        border: 1px solid rgba(255, 107, 0, 0.35);
+        color: var(--text-dark);
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 5px 10px;
+        border-radius: 14px;
+    }
+    .pack-chip-emoji { font-size: 0.95rem; }
+    .pack-cta {
+        margin-top: auto;
+        background: transparent;
+        color: var(--primary-orange);
+        border: 1.5px solid var(--primary-orange);
+        border-radius: 8px;
+        padding: 11px 18px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.25s ease, color 0.25s ease;
+    }
+    .pack-cta:hover {
+        background: var(--primary-orange);
+        color: white;
+    }
+    .pack-card.featured .pack-cta {
+        background: var(--primary-orange);
+        color: white;
+    }
+    .pack-card.featured .pack-cta:hover {
+        background: var(--dark-orange);
+        border-color: var(--dark-orange);
+    }
+    @media (max-width: 600px) {
+        .pack-card { padding: 24px 20px 22px; }
+        .pack-name { font-size: 1.2rem; }
+        .pack-price-amount { font-size: 1.7rem; }
     }
 
     /* --- CARTES TARIFS --- */
@@ -2492,8 +2703,8 @@
                 <div class="price-card" onclick="showView('detail-fidelite')" style="cursor:pointer;" data-aos="fade-up" data-aos-delay="300">
                     <div class="price-icon">🎁</div>
                     <p class="price-name">Web fidélité</p>
-                    <p class="price-amount">39,90€ <span>/ mois</span></p>
-                    <p class="price-sub">+ 215€ de mise en place</p>
+                    <p class="price-amount">34,90€ <span>/ mois</span></p>
+                    <p class="price-sub">+ 245€ de mise en place</p>
                     <hr class="price-divider">
                     <div class="price-feature"><div class="price-check">✓</div>Programme de points</div>
                     <div class="price-feature"><div class="price-check">✓</div>Récompenses sur-mesure</div>
@@ -2506,7 +2717,7 @@
                     <div class="price-icon">⭐</div>
                     <p class="price-name">Roue d'avis</p>
                     <p class="price-amount">34,90€ <span>/ mois</span></p>
-                    <p class="price-sub">+ 215€ de mise en place</p>
+                    <p class="price-sub">+ 245€ de mise en place</p>
                     <hr class="price-divider">
                     <div class="price-feature"><div class="price-check">✓</div>Roue personnalisable</div>
                     <div class="price-feature"><div class="price-check">✓</div>Envoi automatique par mail</div>
@@ -2519,7 +2730,7 @@
                     <div class="price-icon">🍽️</div>
                     <p class="price-name">Carte digitale</p>
                     <p class="price-amount">34,90€ <span>/ mois</span></p>
-                    <p class="price-sub">+ 215€ de mise en place</p>
+                    <p class="price-sub">+ 245€ de mise en place</p>
                     <hr class="price-divider">
                     <div class="price-feature"><div class="price-check">✓</div>Menu visuel personnalisé</div>
                     <div class="price-feature"><div class="price-check">✓</div>Filtres & allergènes</div>
@@ -2527,6 +2738,92 @@
                     <div class="price-feature"><div class="price-check">✓</div>Mises à jour illimitées</div>
                     <div class="price-cta"><button onclick="showView('detail-carte')">Découvrir</button></div>
                 </div>
+            </div>
+        </div>
+
+        <div class="container packs-section">
+            <h3 class="section-title">Nos packs</h3>
+            <div class="packs-grid">
+
+                <div class="pack-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="pack-glyph">🌐</div>
+                    <h4 class="pack-name">Pack Essentiel</h4>
+                    <p class="pack-tagline">Un site web + la solution digitale de votre choix pour démarrer en douceur.</p>
+                    <div class="pack-price">
+                        <span class="pack-price-old">à partir de 74,80€</span>
+                        <span class="pack-price-amount">69,90€</span>
+                        <span class="pack-price-period">/ mois</span>
+                    </div>
+                    <p class="pack-install-note">+ Frais d'installation sur devis</p>
+                    <hr class="pack-divider">
+                    <div class="pack-includes-label">Ce pack inclut</div>
+                    <ul class="pack-features">
+                        <li><span class="pack-check">✓</span>Site Internet sur-mesure</li>
+                        <li><span class="pack-check">✓</span><strong>1 solution digitale</strong> à choisir</li>
+                        <li><span class="pack-check">✓</span>Dashboard centralisé</li>
+                        <li><span class="pack-check">✓</span>Économisez près de 5€ / mois</li>
+                    </ul>
+                    <div class="pack-choice-wrap">
+                        <span class="pack-choice-label">1 module À choisir parmi</span>
+                        <div class="pack-choice-chips">
+                            <span class="pack-chip"><span class="pack-chip-emoji">🍽️</span>Carte digitale</span>
+                            <span class="pack-chip"><span class="pack-chip-emoji">⭐</span>Roue d'avis</span>
+                            <span class="pack-chip"><span class="pack-chip-emoji">🎁</span>Fidélité</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pack-card featured" data-aos="fade-up" data-aos-delay="100">
+                    <div class="pack-badge">★ Le plus populaire</div>
+                    <div class="pack-glyph">⭐</div>
+                    <h4 class="pack-name">Pack Performance</h4>
+                    <p class="pack-tagline">Site web + 2 solutions de votre choix pour composer l'offre qui vous ressemble.</p>
+                    <div class="pack-price">
+                        <span class="pack-price-old">à partir de 109,70€</span>
+                        <span class="pack-price-amount">99,90€</span>
+                        <span class="pack-price-period">/ mois</span>
+                    </div>
+                    <p class="pack-install-note">+ Frais d'installation sur devis</p>
+                    <hr class="pack-divider">
+                    <div class="pack-includes-label">Ce pack inclut</div>
+                    <ul class="pack-features">
+                        <li><span class="pack-check">✓</span>Site Internet sur-mesure</li>
+                        <li><span class="pack-check">✓</span><strong>2 solutions digitales</strong> à choisir</li>
+                        <li><span class="pack-check">✓</span>Dashboard centralisé</li>
+                        <li><span class="pack-check">✓</span>Économisez près de 10€ / mois</li>
+                    </ul>
+                    <div class="pack-choice-wrap">
+                        <span class="pack-choice-label">2 modules à choisir parmi</span>
+                        <div class="pack-choice-chips">
+                            <span class="pack-chip"><span class="pack-chip-emoji">🍽️</span>Carte digitale</span>
+                            <span class="pack-chip"><span class="pack-chip-emoji">⭐</span>Roue d'avis</span>
+                            <span class="pack-chip"><span class="pack-chip-emoji">🎁</span>Fidélité</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pack-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="pack-glyph">💎</div>
+                    <h4 class="pack-name">Pack Intégral</h4>
+                    <p class="pack-tagline">L'écosystème Rylia complet : tous les outils pour digitaliser et booster votre commerce.</p>
+                    <div class="pack-price">
+                        <span class="pack-price-old">144,60€</span>
+                        <span class="pack-price-amount">129,90€</span>
+                        <span class="pack-price-period">/ mois</span>
+                    </div>
+                    <p class="pack-install-note">+ Frais d'installation sur devis</p>
+                    <hr class="pack-divider">
+                    <div class="pack-includes-label">Ce pack inclut</div>
+                    <ul class="pack-features">
+                        <li><span class="pack-check">✓</span>Site Internet sur-mesure</li>
+                        <li><span class="pack-check">✓</span>Carte digitale</li>
+                        <li><span class="pack-check">✓</span>Roue d'avis 5 étoiles</li>
+                        <li><span class="pack-check">✓</span>Web Fidélité</li>
+                        <li><span class="pack-check">✓</span>Dashboard complet & statistiques</li>
+                        <li><span class="pack-check">✓</span>Économisez près de 15€ / mois</li>
+                    </ul>
+                </div>
+
             </div>
         </div>
 
