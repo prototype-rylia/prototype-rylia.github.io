@@ -667,6 +667,29 @@
             display: block;
         }
 
+        /* Shimmer de chargement sur les téléphones de démonstration */
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(110deg, rgba(50,50,50,0) 30%, rgba(120,120,120,0.55) 50%, rgba(50,50,50,0) 70%),
+                #1a1a1a;
+            background-size: 200% 100%, 100% 100%;
+            background-repeat: no-repeat;
+            animation: phoneShimmer 1.4s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .phone-mockup.is-loaded::before {
+            opacity: 0;
+        }
+        @keyframes phoneShimmer {
+            0%   { background-position: 100% 0, 0 0; }
+            100% { background-position: -100% 0, 0 0; }
+        }
+
         .phone-notch {
             position: absolute;
             top: 0;
@@ -2616,7 +2639,7 @@
 
                             <!-- VIDÉO DU DASHBOARD - À COMPLÉTER -->
                             <div class="video-player">
-                                <video preload="none" playsinline muted>
+                                <video preload="metadata" playsinline muted>
                                     <source src="dashboard-carte.mp4#t=0.1" type="video/mp4">
                                 </video>
                                 <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
@@ -2773,7 +2796,7 @@
 
                             <!-- VIDÉO DU DASHBOARD -->
                             <div class="video-player">
-                                <video preload="none" playsinline muted>
+                                <video preload="metadata" playsinline muted>
                                     <source src="dashboard-roue.mp4#t=0.1" type="video/mp4">
                                 </video>
                                 <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
@@ -2935,7 +2958,7 @@
 
                             <!-- VIDÉO DU DASHBOARD -->
                             <div class="video-player">
-                                <video preload="none" playsinline muted>
+                                <video preload="metadata" playsinline muted>
                                     <source src="dashboard-fidelite.mp4#t=0.1" type="video/mp4">
                                 </video>
                                 <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
@@ -3009,7 +3032,7 @@
                         </div>
                         <!-- VIDÉO DE PRÉSENTATION DU DASHBOARD -->
                         <div class="video-player">
-                            <video preload="none" playsinline muted>
+                            <video preload="metadata" playsinline muted>
                                 <source src="dashboard-presentation.mp4#t=0.1" type="video/mp4">
                             </video>
                             <button class="play-button" aria-label="Lire la vidéo de présentation"></button>
@@ -3479,7 +3502,21 @@
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (winScroll / height) * 100;
             document.getElementById("progress-bar").style.width = scrolled + "%";
-        });    
+        });
+
+    // --- SHIMMER DE CHARGEMENT POUR LES VIDÉOS DES TÉLÉPHONES ---
+        document.querySelectorAll('.phone-mockup video').forEach(function(video) {
+            var mockup = video.closest('.phone-mockup');
+            if (!mockup) return;
+            function markLoaded() { mockup.classList.add('is-loaded'); }
+            if (video.readyState >= 3) {
+                markLoaded();
+            } else {
+                video.addEventListener('canplay', markLoaded, { once: true });
+                video.addEventListener('loadeddata', markLoaded, { once: true });
+                video.addEventListener('playing', markLoaded, { once: true });
+            }
+        });
     </script>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
