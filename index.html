@@ -822,8 +822,16 @@
                 animation: none;
                 opacity: 1;
             }
-            .mascotte-launcher .mascotte-wrapper { width: 130px !important; }
-            .mascotte-launcher .mascotte-img { width: 100% !important; height: auto !important; }
+            .mascotte-launcher .mascotte-wrapper {
+                width: 130px !important;
+                height: 194px !important;
+                display: block !important;
+            }
+            .mascotte-launcher .mascotte-img {
+                width: 130px !important;
+                height: 194px !important;
+                object-fit: contain !important;
+            }
             body[data-view="contact-view"] .mascotte-wrapper,
             body[data-view="contact-view"] #mascotte-bubble { display: none !important; }
             body[data-view="contact-view"] .mascotte-contact-mobile {
