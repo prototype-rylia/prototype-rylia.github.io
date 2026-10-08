@@ -104,7 +104,7 @@
   };
 
   // Choix manuel (clic, clavier, balayage) : l'onglet choisi reste affiché, sa barre
-  // repart 3,5 s plus tard (délai CSS posé par data-resume), puis le défilement reprend
+  // repart 4 s plus tard (délai CSS posé par data-resume), puis le défilement reprend
   const chooseManually = (index, moveFocus) => {
     const next = (index + tabs.length) % tabs.length;
     root.setAttribute("data-resume", "");

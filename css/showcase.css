@@ -395,6 +395,10 @@
   transition-duration: 600ms;
 }
 .showcase-ui-idle .showcase-controls { transform: translateY(-8px); }
+/* Safari garde visible un élément animé même quand son parent passe en transparence :
+   la surbrillance d'« Activer le son » s'arrête donc pendant que l'interface est cachée */
+.showcase-ui-idle .showcase-sound[aria-pressed="false"],
+.showcase-ui-idle .showcase-sound[aria-pressed="false"]::after { animation: none; }
 .showcase-ui-idle .showcase-timeline { transform: translateY(8px); }
 .showcase-ui-idle .showcase-controls:has(:focus-visible),
 .showcase-ui-idle .showcase-timeline:has(:focus-visible) {

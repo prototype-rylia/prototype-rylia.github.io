@@ -1,6 +1,6 @@
 /* ---------- Piliers : onglets + téléphone ---------- */
 .pillars {
-  --pillars-duration: 6s;
+  --pillars-duration: 8s;
   --pillars-phone-w: 300px;
   --pillars-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   display: grid;
@@ -180,29 +180,25 @@
   from { transform: scaleY(0); }
   to { transform: scaleY(1); }
 }
-/* Après un choix manuel, la barre attend 3,5 s avant de repartir */
-.pillars[data-autoplay][data-resume] .pillars-tab[aria-selected="true"] .pillars-progress-fill { animation-delay: 3.5s; }
+/* Après un choix manuel, la barre attend 4 s avant de repartir */
+.pillars[data-autoplay][data-resume] .pillars-tab[aria-selected="true"] .pillars-progress-fill { animation-delay: 4s; }
 
-/* ---------- Ordinateur : piliers regroupés dans un panneau, barre verticale ---------- */
+/* ---------- Ordinateur : un pilier par carte fine, barre verticale ---------- */
 @media (min-width: 901px) {
-  /* Les onglets non choisis restent dans le panneau au lieu de flotter dans le vide */
-  .pillars-list {
-    gap: 4px;
-    padding: 6px;
-    border: 1px solid var(--border);
-    border-radius: calc(var(--radius) + 6px);
-    background: rgba(228, 228, 231, 0.35);
-    box-shadow: inset 0 1px 2px rgba(24, 24, 27, 0.04);
+  .pillars-list { gap: 10px; }
+  /* Les onglets non choisis gardent une carte à bord fin au lieu de flotter dans le vide */
+  .pillars-tab:not([aria-selected="true"]) {
+    border-color: var(--border);
+    background: rgba(255, 255, 255, 0.55);
   }
-  /* Filet entre deux onglets non choisis */
-  .pillars-tab:not([aria-selected="true"]) + .pillars-tab:not([aria-selected="true"])::before {
-    content: "";
-    position: absolute;
-    top: -3px;
-    left: 20px;
-    right: 20px;
-    height: 1px;
-    background: var(--border);
+  .pillars-tab:not([aria-selected="true"]):hover { border-color: var(--border-strong); }
+  /* Carte choisie : blanche, avec un léger halo orange */
+  .pillars-tab[aria-selected="true"] {
+    border-color: var(--orange-100);
+    box-shadow:
+      0 0 0 3px rgba(249, 115, 22, 0.07),
+      0 1px 2px rgba(24, 24, 27, 0.04),
+      0 18px 36px -14px rgba(24, 24, 27, 0.14);
   }
   /* Icône neutre tant que l'onglet n'est pas choisi */
   .pillars-tab:not([aria-selected="true"]) .pillars-icon {
