@@ -176,6 +176,61 @@
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
 }
+@keyframes pillars-progress-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+/* Après un choix manuel, la barre attend 3,5 s avant de repartir */
+.pillars[data-autoplay][data-resume] .pillars-tab[aria-selected="true"] .pillars-progress-fill { animation-delay: 3.5s; }
+
+/* ---------- Ordinateur : piliers regroupés dans un panneau, barre verticale ---------- */
+@media (min-width: 901px) {
+  /* Les onglets non choisis restent dans le panneau au lieu de flotter dans le vide */
+  .pillars-list {
+    gap: 4px;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) + 6px);
+    background: rgba(228, 228, 231, 0.35);
+    box-shadow: inset 0 1px 2px rgba(24, 24, 27, 0.04);
+  }
+  /* Filet entre deux onglets non choisis */
+  .pillars-tab:not([aria-selected="true"]) + .pillars-tab:not([aria-selected="true"])::before {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: var(--border);
+  }
+  /* Icône neutre tant que l'onglet n'est pas choisi */
+  .pillars-tab:not([aria-selected="true"]) .pillars-icon {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--gray-500);
+  }
+  .pillars-icon { transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease, box-shadow 300ms ease, transform 400ms var(--pillars-ease); }
+
+  /* Barre de progression verticale, le long du bord droit de la carte choisie */
+  .pillars-tab { padding-right: 44px; }
+  .pillars-progress {
+    position: absolute;
+    top: 20px;
+    right: 18px;
+    bottom: 20px;
+    width: 3px;
+    height: auto;
+    margin: 0;
+  }
+  .pillars-progress-fill {
+    width: 100%;
+    background: linear-gradient(180deg, var(--orange-400), var(--accent));
+    transform: scaleY(0);
+    transform-origin: center top;
+  }
+  .pillars[data-autoplay] .pillars-tab[aria-selected="true"] .pillars-progress-fill { animation-name: pillars-progress-y; }
+}
 
 /* ---------- Téléphone ---------- */
 .pillars-device {
@@ -1281,44 +1336,114 @@
   .pillars { gap: 48px; }
 }
 
+/* Carte de texte du mobile : absente sur ordinateur */
+.pillars-detail { display: none; }
+
+/* ---------- Mobile : onglets en ligne, téléphone, texte en carte posée dessus ---------- */
 @media (max-width: 900px) {
   .pillars {
-    --pillars-phone-w: 280px;
+    --pillars-phone-w: 230px;
     grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
+    gap: 20px;
+    margin-top: 40px;
   }
-  /* Carrousel horizontal : une carte par pilier, la suivante dépasse pour inviter au balayage */
+
+  /* Les 3 onglets côte à côte dans un panneau, l'onglet choisi ressort en blanc */
   .pillars-list {
     flex-direction: row;
-    gap: 12px;
-    margin-inline: -24px;
-    padding: 4px 24px 14px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: 24px;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: rgba(228, 228, 231, 0.35);
+    box-shadow: inset 0 1px 2px rgba(24, 24, 27, 0.04);
   }
-  .pillars-list::-webkit-scrollbar { display: none; }
   .pillars-tab {
-    flex: 0 0 min(82%, 420px);
-    scroll-snap-align: center; /* 1re carte calée à gauche, Fidélité au centre, dernière à droite */
-    border-color: var(--border);
-    background: rgba(255, 255, 255, 0.6);
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 10px 4px 14px;
+    border-radius: 12px;
+    text-align: center;
   }
-  /* Toutes les cartes sont dépliées : pas de saut de hauteur pendant le balayage */
-  .pillars-body { grid-template-rows: 1fr; }
-  .pillars-body-inner { opacity: 1; }
-  .pillars-tab:not([aria-selected="true"]) .pillars-body-inner { opacity: 0.6; }
-  .pillars-tab:not([aria-selected="true"]) .pillars-progress { opacity: 0; }
-  .pillars-device { padding-block: 0 8px; }
+  .pillars-tab-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .pillars-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease, box-shadow 300ms ease;
+  }
+  .pillars-icon svg { width: 17px; height: 17px; }
+  .pillars-tab:not([aria-selected="true"]) .pillars-icon {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--gray-500);
+  }
+  .pillars-title { font-size: 0.9rem; }
+
+  /* Le texte passe dans la carte sous les onglets ; il ne reste que la barre de progression */
+  .pillars[data-js] .pillars-tab .pillars-desc,
+  .pillars[data-js] .pillars-tab .pillars-points { display: none; }
+  .pillars-body { width: 100%; }
+  .pillars-progress {
+    position: absolute;
+    left: 24%;
+    right: 24%;
+    bottom: 6px;
+    margin: 0;
+  }
+
+  .pillars-device {
+    padding-block: 4px 0;
+    touch-action: pan-y; /* laisse passer le balayage horizontal vers le script */
+  }
+
+  .pillars-detail {
+    position: relative;
+    z-index: 4;
+    display: grid;
+    margin: -150px 6px 0;
+    padding: 18px 18px 20px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 1px 2px rgba(24, 24, 27, 0.04), 0 18px 40px -16px rgba(24, 24, 27, 0.25);
+    touch-action: pan-y;
+  }
+  /* Les 3 textes sont superposés : la carte garde la hauteur du plus long, sans saut */
+  .pillars-detail-item {
+    grid-area: 1 / 1;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity 250ms ease, transform 350ms var(--pillars-ease), visibility 0s linear 350ms;
+  }
+  .pillars-detail-item[data-state="active"] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity 400ms ease 120ms, transform 500ms var(--pillars-ease) 120ms, visibility 0s;
+  }
+  .pillars-detail-title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--text);
+  }
+  .pillars-detail .pillars-desc { padding-top: 6px; }
 }
 
 @media (max-width: 480px) {
-  .pillars-tab { padding: 16px; }
-  .pillars-tab-inner { column-gap: 14px; }
+  .pillars-title { font-size: 0.85rem; }
 }
-
 @media (prefers-reduced-motion: reduce) {
   .pillars-progress { display: none; }
   .pillars-screen,
