@@ -8,38 +8,33 @@
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let current = Math.max(0, tabs.findIndex((tab) => tab.getAttribute("aria-selected") === "true"));
-  let hovering = false;
-  let focused = false;
   let visible = false;
   let stopped = false;
 
-  // Sur mobile, les onglets forment un carrousel horizontal (balayage au doigt)
+  // Sur mobile, les onglets passent en ligne au-dessus du téléphone
   const list = root.querySelector(".pillars-list");
-  const carousel = window.matchMedia("(max-width: 900px)");
-  let programmaticScroll = false;
-  let programmaticTimer;
-  let scrollTimer;
+  const mobile = window.matchMedia("(max-width: 900px)");
 
   root.setAttribute("data-js", "");
 
-  // Centre de l'élément, en pixels depuis le bord gauche de l'écran
-  const centerOf = (el) => {
-    const rect = el.getBoundingClientRect();
-    return rect.left + rect.width / 2;
-  };
-
-  // Centre l'onglet actif dans le carrousel, sans faire défiler la page. Le navigateur
-  // bloque aux extrémités : la 1re carte reste à gauche, la dernière à droite.
-  const scrollToTab = (index) => {
-    if (!list || !carousel.matches) return;
-    programmaticScroll = true;
-    clearTimeout(programmaticTimer);
-    programmaticTimer = setTimeout(() => { programmaticScroll = false; }, 700);
-    list.scrollTo({
-      left: list.scrollLeft + centerOf(tabs[index]) - centerOf(list),
-      behavior: reducedMotion.matches ? "auto" : "smooth",
-    });
-  };
+  // Mobile : le texte du pilier choisi s'affiche dans une carte posée sur le bas du téléphone.
+  // C'est une copie visuelle du texte des onglets (déjà lu par les lecteurs d'écran), d'où aria-hidden.
+  const detail = document.createElement("div");
+  detail.className = "pillars-detail";
+  detail.setAttribute("aria-hidden", "true");
+  const detailItems = tabs.map((tab, i) => {
+    const item = document.createElement("div");
+    item.className = "pillars-detail-item";
+    if (i === current) item.setAttribute("data-state", "active");
+    const title = document.createElement("p");
+    title.className = "pillars-detail-title";
+    title.textContent = tab.querySelector(".pillars-title").textContent;
+    item.appendChild(title);
+    tab.querySelectorAll(".pillars-desc, .pillars-points").forEach((el) => item.appendChild(el.cloneNode(true)));
+    detail.appendChild(item);
+    return item;
+  });
+  root.appendChild(detail);
 
   // Chiffres qui défilent (1 248 €, 64…) quand un écran apparaît dans le téléphone
   const numberFormat = new Intl.NumberFormat("fr-FR");
@@ -90,21 +85,39 @@
         tab.tabIndex = isActive ? 0 : -1;
       });
       setState(panels, next, current);
+      setState(detailItems, next, current);
       current = next;
-      scrollToTab(next);
       countUp(panels[next]);
     }
     if (moveFocus) tabs[next].focus({ preventScroll: true });
   };
 
+  // Pause seulement hors écran ou onglet du navigateur caché (plus au survol ni au focus)
   const syncPause = () => {
-    root.toggleAttribute("data-paused", hovering || focused || !visible || document.hidden);
+    root.toggleAttribute("data-paused", !visible || document.hidden);
   };
 
   const stop = () => {
     if (stopped) return;
     stopped = true;
     root.removeAttribute("data-autoplay");
+  };
+
+  // Choix manuel (clic, clavier, balayage) : l'onglet choisi reste affiché, sa barre
+  // repart 3,5 s plus tard (délai CSS posé par data-resume), puis le défilement reprend
+  const chooseManually = (index, moveFocus) => {
+    const next = (index + tabs.length) % tabs.length;
+    root.setAttribute("data-resume", "");
+    if (next === current) {
+      // Même onglet : on relance sa barre depuis le début
+      const fill = tabs[current].querySelector(".pillars-progress-fill");
+      if (fill) {
+        fill.style.animation = "none";
+        void fill.offsetWidth;
+        fill.style.animation = "";
+      }
+    }
+    select(next, moveFocus);
   };
 
   if (reducedMotion.matches) {
@@ -121,42 +134,39 @@
 
   // La barre de progression CSS sert d'horloge : sa fin déclenche l'onglet suivant.
   root.addEventListener("animationend", (event) => {
-    if (stopped || event.animationName !== "pillars-progress") return;
+    if (stopped || !event.animationName.startsWith("pillars-progress")) return;
+    root.removeAttribute("data-resume");
     select(current + 1, false);
   });
 
   tabs.forEach((tab, i) => {
-    tab.addEventListener("click", () => {
-      stop();
-      select(i, false);
-    });
+    tab.addEventListener("click", () => chooseManually(i, false));
   });
 
-  // Balayage du carrousel : la carte la plus proche du centre devient l'onglet actif
-  if (list) {
-    list.addEventListener("scroll", () => {
-      if (!carousel.matches || programmaticScroll) return;
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        const middle = centerOf(list);
-        let closest = current;
-        let best = Infinity;
-        tabs.forEach((tab, i) => {
-          const distance = Math.abs(centerOf(tab) - middle);
-          if (distance < best) { best = distance; closest = i; }
-        });
-        if (closest !== current) {
-          stop();
-          select(closest, false);
-        }
-      }, 120);
-    }, { passive: true });
+  // Mobile : un balayage horizontal sur le téléphone ou la carte passe au pilier voisin
+  let swipeStart = null;
+  [root.querySelector(".pillars-device"), detail].forEach((zone) => {
+    if (!zone) return;
+    zone.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse" || !mobile.matches) return;
+      swipeStart = { x: event.clientX, y: event.clientY };
+    });
+    zone.addEventListener("pointerup", (event) => {
+      if (!swipeStart) return;
+      const dx = event.clientX - swipeStart.x;
+      const dy = event.clientY - swipeStart.y;
+      swipeStart = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) chooseManually(current + (dx < 0 ? 1 : -1), false);
+    });
+    zone.addEventListener("pointercancel", () => { swipeStart = null; });
+  });
 
+  if (list) {
     const syncOrientation = () => {
-      list.setAttribute("aria-orientation", carousel.matches ? "horizontal" : "vertical");
+      list.setAttribute("aria-orientation", mobile.matches ? "horizontal" : "vertical");
     };
     syncOrientation();
-    if (carousel.addEventListener) carousel.addEventListener("change", syncOrientation);
+    if (mobile.addEventListener) mobile.addEventListener("change", syncOrientation);
   }
 
   root.addEventListener("keydown", (event) => {
@@ -184,29 +194,9 @@
     }
 
     event.preventDefault();
-    stop();
-    select(next, true);
+    chooseManually(next, true);
   });
 
-  root.addEventListener("pointerenter", (event) => {
-    if (event.pointerType !== "mouse") return;
-    hovering = true;
-    syncPause();
-  });
-  root.addEventListener("pointerleave", (event) => {
-    if (event.pointerType !== "mouse") return;
-    hovering = false;
-    syncPause();
-  });
-  root.addEventListener("focusin", () => {
-    focused = true;
-    syncPause();
-  });
-  root.addEventListener("focusout", (event) => {
-    if (root.contains(event.relatedTarget)) return;
-    focused = false;
-    syncPause();
-  });
   document.addEventListener("visibilitychange", syncPause);
 
   const device = root.querySelector(".pillars-device") || root;
