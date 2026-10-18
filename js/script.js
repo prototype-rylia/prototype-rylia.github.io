@@ -27,6 +27,74 @@ nav.querySelectorAll(".nav__link").forEach((link) => {
   });
 });
 
+// Menu : le lien de la section en cours est souligné ;
+// sur les sections Offre et Contact, le bouton « Nous contacter » s'efface
+const spyHeader = document.getElementById("header");
+const spySections = [
+  ["accueil", "#accueil"],
+  ["application", "#application"],
+  ["abonnement", "#application"],
+  ["offre", "#application"],
+  ["contact", "#contact"],
+]
+  .map(([id, href]) => [document.getElementById(id), href])
+  .filter(([section]) => section);
+if (spySections.length) {
+  const navLinks = Array.from(nav.querySelectorAll(".nav__link"));
+  let current = null;
+  let ticking = false;
+  const spy = () => {
+    ticking = false;
+    // Dernière section dont le haut a passé le tiers de l'écran
+    const line = window.innerHeight * 0.35;
+    let section = spySections[0];
+    spySections.forEach((entry) => { if (entry[0].getBoundingClientRect().top <= line) section = entry; });
+    // Tout en bas de la page, c'est forcément le contact
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) section = spySections[spySections.length - 1];
+    const key = section[0].id;
+    if (key === current) return;
+    current = key;
+    navLinks.forEach((link) => {
+      const on = link.getAttribute("href") === section[1];
+      link.classList.toggle("is-current", on);
+      if (on) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+    if (spyHeader) spyHeader.classList.toggle("is-on-contact", key === "contact" || key === "offre");
+  };
+  const onScroll = () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(spy); }
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  spy();
+}
+
+// Offre : le « -50 % » du titre compte de 0 à 50 quand la section arrive à l'écran
+const offerPercent = document.querySelector(".offer__title .text-accent");
+if (offerPercent && "IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const target = 50;
+  const show = (n) => { offerPercent.innerHTML = `-${n}&nbsp;%`; };
+  let frame = 0;
+  const count = () => {
+    cancelAnimationFrame(frame);
+    const start = performance.now();
+    const step = (now) => {
+      const p = Math.min(1, (now - start) / 1100);
+      show(Math.round(target * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) frame = requestAnimationFrame(step);
+    };
+    show(0);
+    frame = requestAnimationFrame(step);
+  };
+  new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) count();
+      else { cancelAnimationFrame(frame); show(target); }
+    });
+  }, { threshold: 0.6 }).observe(offerPercent);
+}
+
 // Suggestions d'adresse (API Adresse - data.gouv.fr, gratuite, sans clé)
 const addressInput = document.getElementById("address");
 const addressSuggestions = document.getElementById("address-suggestions");
@@ -443,6 +511,8 @@ if (contactForm) {
       // On revient librement sur une étape faite, sans pouvoir sauter en avant
       btn.disabled = i > currentStep;
     });
+    // La barre orange du haut de la carte se remplit à chaque étape
+    contactForm.style.setProperty("--form-progress", (currentStep + 1) / steps.length);
     const isLast = currentStep === steps.length - 1;
     backBtn.hidden = currentStep === 0;
     nextBtn.hidden = isLast;
@@ -544,13 +614,17 @@ if (contactForm) {
     if (sendError) sendError.classList.remove("is-visible");
     setSending(true);
     try {
+      // Demande venue de l'offre : inscription automatique (js/offer.js), notée dans l'email reçu
+      const offre = window.RyliaOffre ? await window.RyliaOffre.inscrire(contactForm) : null;
       const response = await fetch(contactForm.action, {
         method: "POST",
         body: new FormData(contactForm),
         headers: { Accept: "application/json" },
       });
       if (!response.ok) throw new Error("Envoi refusé");
-      window.location.href = "merci.html";
+      window.location.href = offre && offre.statut === "inscrit"
+        ? `merci.html?place=${offre.place}&sur=${offre.total}`
+        : "merci.html";
     } catch (error) {
       setSending(false);
       if (sendError) sendError.classList.add("is-visible");
@@ -596,19 +670,6 @@ if (contactForm) {
         }
       });
     });
-  });
-}
-
-// Mur d'avis : déplier / replier
-const reviews = document.getElementById("reviews");
-const reviewsToggle = document.getElementById("reviews-toggle");
-
-if (reviews && reviewsToggle) {
-  reviewsToggle.addEventListener("click", () => {
-    const expanded = reviews.classList.toggle("is-expanded");
-    reviewsToggle.setAttribute("aria-expanded", String(expanded));
-    reviewsToggle.textContent = expanded ? "Voir moins d'avis" : "Voir plus d'avis";
-    if (!expanded) reviews.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
 
@@ -697,25 +758,10 @@ document.querySelectorAll(".reveal--stagger").forEach((list) => {
 if ("IntersectionObserver" in window) {
   const observer = new IntersectionObserver(
     (entries) => {
-      // Les éléments qui entrent ensemble (cartes d'avis…) apparaissent l'un après l'autre,
-      // dans l'ordre de lecture, avec ~60ms d'écart
-      const shown = entries
-        .filter((entry) => entry.isIntersecting)
-        .map((entry) => entry.target)
-        .sort((a, b) => {
-          const ra = a.getBoundingClientRect();
-          const rb = b.getBoundingClientRect();
-          return Math.abs(ra.top - rb.top) > 8 ? ra.top - rb.top : ra.left - rb.left;
-        });
-
-      shown.forEach((el, i) => {
-        if (i > 0 && el.classList.contains("review")) {
-          el.style.setProperty("--reveal-delay", `${Math.min(i, 8) * 60}ms`);
-          // Une fois apparu, le délai ne doit plus ralentir les effets de survol
-          setTimeout(() => el.style.removeProperty("--reveal-delay"), Math.min(i, 8) * 60 + 600);
-        }
-        el.classList.add("is-visible");
-        observer.unobserve(el);
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
       });
     },
     { threshold: 0.15 }
@@ -724,4 +770,246 @@ if ("IntersectionObserver" in window) {
   revealEls.forEach((el) => observer.observe(el));
 } else {
   revealEls.forEach((el) => el.classList.add("is-visible"));
+}
+
+// Abonnement : le sélecteur d'engagement change le billet.
+// Le billet se déchire sur les pointillés : l'ancienne partie haute s'envole,
+// la nouvelle arrive et se recolle, puis le tampon de remise tombe.
+const plans = document.querySelector("[data-plans]");
+if (plans) {
+  const options = Array.from(plans.querySelectorAll(".plans__option"));
+  const switcher = plans.querySelector(".plans__switch");
+  const thumb = plans.querySelector(".plans__thumb");
+  const ticket = plans.querySelector(".plans__ticket");
+  const card = plans.querySelector(".plans__card");
+  const tear = card.querySelector(".plans__tear");
+  const stamp = card.querySelector("[data-plan-stamp]");
+  const field = (name) => card.querySelector(`[data-plan-${name}]`);
+  const canAnimate = () => !prefersReducedMotion.matches && typeof card.animate === "function";
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  let run = 0;
+
+  // Les encoches du billet suivent la ligne de pointillés
+  const tearY = () => tear.offsetTop;
+  const placeNotches = () => card.style.setProperty("--tear-y", `${tearY()}px`);
+
+  // Pastille blanche du sélecteur : glisse sous l'option choisie
+  const checked = () => options.find((o) => o.getAttribute("aria-checked") === "true") || options[0];
+  const moveThumb = (option, animate) => {
+    thumb.style.transition = animate ? "" : "none";
+    thumb.style.width = `${option.offsetWidth}px`;
+    thumb.style.transform = `translateX(${option.offsetLeft}px)`;
+  };
+  switcher.classList.add("has-thumb");
+
+  // Bord en dents de scie à la hauteur y, partagé par les deux morceaux
+  const zigzag = (y, w) => {
+    const points = [];
+    for (let x = -30, i = 0; x <= w + 40; x += 10, i++) points.push(`${x}px ${y + (i % 2 ? 4 : -4)}px`);
+    return points;
+  };
+  const topClip = (y, w) => `polygon(-40px -40px, ${w + 40}px -40px, ${zigzag(y, w).reverse().join(", ")})`;
+  const bottomClip = (y, w, h) => `polygon(${zigzag(y, w).join(", ")}, ${w + 40}px ${h + 40}px, -40px ${h + 40}px)`;
+
+  // Copie de la partie haute du billet, posée exactement par-dessus
+  const piece = (y) => {
+    const copy = card.cloneNode(true);
+    copy.removeAttribute("aria-live");
+    copy.setAttribute("aria-hidden", "true");
+    copy.inert = true;
+    copy.classList.add("plans__card--piece");
+    copy.style.clipPath = topClip(y, card.offsetWidth);
+    ticket.appendChild(copy);
+    return copy;
+  };
+
+  const fill = (option) => {
+    field("name").textContent = option.dataset.name;
+    field("note").textContent = option.dataset.note;
+    field("price").textContent = option.dataset.price;
+    // Économie par rapport au sans engagement ; la place reste réservée pour que le billet garde sa taille
+    const saving = field("saving");
+    saving.innerHTML = option.dataset.saving || "&nbsp;";
+    saving.classList.toggle("is-empty", !option.dataset.saving);
+    field("was").hidden = !option.dataset.saving;
+    stamp.innerHTML = option.dataset.stamp;
+  };
+
+  const dropStamp = async (id) => {
+    stamp.style.opacity = "";
+    await stamp.animate(
+      [
+        { transform: "rotate(-12deg) scale(2.4)", opacity: 0 },
+        { transform: "rotate(-12deg) scale(0.92)", opacity: 1, offset: 0.7 },
+        { transform: "rotate(-12deg) scale(1)", opacity: 1 },
+      ],
+      { duration: 420, easing: "ease-out" }
+    ).finished.catch(() => {});
+    if (id !== run) return;
+    card.animate([{ transform: "none" }, { transform: "translateY(2px)" }, { transform: "none" }], { duration: 180 });
+  };
+
+  const animateChange = async (option) => {
+    const id = ++run;
+    ticket.querySelectorAll(".plans__card--piece").forEach((p) => p.remove());
+    stamp.getAnimations().forEach((a) => a.cancel());
+    const w = card.offsetWidth;
+
+    // 1. Le billet se déchire : la partie haute s'arrache et s'envole
+    const oldY = tearY();
+    const old = piece(oldY);
+    card.style.clipPath = bottomClip(oldY, w, card.offsetHeight);
+    old.animate(
+      [
+        { transform: "none", opacity: 1 },
+        { transform: "translate(-6px, -4px) rotate(-1.5deg)", opacity: 1, offset: 0.25 },
+        { transform: "translate(-36px, -80px) rotate(-9deg)", opacity: 0 },
+      ],
+      { duration: 520, easing: "cubic-bezier(0.5, 0, 0.75, 0.4)", fill: "forwards" }
+    ).finished.then(() => old.remove(), () => old.remove());
+    card.animate([{ transform: "none" }, { transform: "translateY(3px)" }, { transform: "none" }], { duration: 220 });
+    await wait(280);
+    if (id !== run) return;
+
+    // 2. La nouvelle partie haute arrive d'en haut et se recolle sur les pointillés
+    fill(option);
+    stamp.style.opacity = "0";
+    placeNotches();
+    const newY = tearY();
+    card.style.clipPath = bottomClip(newY, w, card.offsetHeight);
+    const fresh = piece(newY);
+    await fresh.animate(
+      [
+        { transform: "translateY(-44px) rotate(1.5deg)", opacity: 0 },
+        { transform: "translateY(3px)", opacity: 1, offset: 0.72 },
+        { transform: "none", opacity: 1 },
+      ],
+      { duration: 500, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "forwards" }
+    ).finished.catch(() => {});
+    if (id !== run) return;
+    card.style.clipPath = "";
+    fresh.remove();
+
+    // 3. Le tampon tombe une fois le papier en place
+    if (option.dataset.stamp) dropStamp(id);
+  };
+
+  const choose = (option, moveFocus) => {
+    if (option.getAttribute("aria-checked") === "true") return;
+    options.forEach((o) => {
+      const on = o === option;
+      o.setAttribute("aria-checked", String(on));
+      o.tabIndex = on ? 0 : -1;
+    });
+    moveThumb(option, !prefersReducedMotion.matches);
+    if (canAnimate()) animateChange(option);
+    else {
+      fill(option);
+      placeNotches();
+      stamp.style.opacity = "";
+    }
+    if (moveFocus) option.focus();
+  };
+
+  options.forEach((option, i) => {
+    option.tabIndex = option.getAttribute("aria-checked") === "true" ? 0 : -1;
+    option.addEventListener("click", () => choose(option, false));
+    option.addEventListener("keydown", (event) => {
+      const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+      if (!step) return;
+      event.preventDefault();
+      choose(options[(i + step + options.length) % options.length], true);
+    });
+  });
+
+  // Placement initial, puis à chaque changement de taille (polices chargées, rotation, etc.)
+  const layout = () => {
+    moveThumb(checked(), false);
+    if (!card.style.clipPath) placeNotches();
+  };
+  layout();
+  if ("ResizeObserver" in window) new ResizeObserver(layout).observe(plans);
+  else window.addEventListener("resize", layout);
+}
+
+// Mode focus du formulaire : sur ordinateur, il vient au centre de l'écran et la page se floute ;
+// sur mobile, il passe en plein écran. Sortie : bouton Quitter, Échap, clic à côté, ou défilement.
+const focusForm = document.getElementById("contact-form");
+if (focusForm) {
+  const root = document.documentElement;
+  const phone = window.matchMedia("(max-width: 900px)");
+  const backdrop = document.createElement("div");
+  backdrop.className = "form-focus-backdrop";
+  backdrop.setAttribute("aria-hidden", "true");
+  document.body.appendChild(backdrop);
+
+  const quit = document.createElement("button");
+  quit.type = "button";
+  quit.className = "form-focus-quit";
+  quit.innerHTML = 'Quitter<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+  // Dans la barre du bas du formulaire, à l'opposé de « Suivant »
+  const formNav = focusForm.querySelector(".form-nav");
+  if (formNav) formNav.prepend(quit);
+  else focusForm.appendChild(quit);
+
+  let active = false;
+  let placeholder = null;
+  let savedScroll = 0;
+  let anchor = 0;
+  let closest = Infinity;
+
+  const open = () => {
+    if (active) return;
+    active = true;
+    if (phone.matches) {
+      // Plein écran : une cale garde la place du formulaire pour que la page ne saute pas
+      savedScroll = window.scrollY;
+      const style = getComputedStyle(focusForm);
+      placeholder = document.createElement("div");
+      placeholder.style.height = `${focusForm.offsetHeight}px`;
+      placeholder.style.order = style.order;
+      placeholder.style.marginTop = style.marginTop;
+      focusForm.after(placeholder);
+      root.classList.add("is-form-fullscreen");
+    } else {
+      const rect = focusForm.getBoundingClientRect();
+      anchor = Math.max(0, window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2);
+      closest = Infinity;
+      window.scrollTo({ top: anchor, behavior: prefersReducedMotion.matches ? "auto" : "smooth" });
+    }
+    root.classList.add("is-form-focus");
+  };
+
+  const close = () => {
+    if (!active) return;
+    active = false;
+    root.classList.remove("is-form-focus", "is-form-fullscreen");
+    if (placeholder) {
+      placeholder.remove();
+      placeholder = null;
+      window.scrollTo(0, savedScroll);
+    }
+  };
+
+  focusForm.addEventListener("focusin", (event) => {
+    if (event.target.matches("input:not([type='hidden']), textarea, select")) open();
+  });
+  quit.addEventListener("click", () => {
+    close();
+    if (document.activeElement) document.activeElement.blur();
+  });
+  backdrop.addEventListener("click", close);
+  document.addEventListener("keydown", (event) => {
+    // Échap ferme d'abord une liste de suggestions ouverte
+    if (event.key !== "Escape" || !active || focusForm.querySelector("[aria-expanded='true']")) return;
+    close();
+  });
+  // Sur ordinateur, s'éloigner du formulaire en faisant défiler la page quitte le mode focus
+  window.addEventListener("scroll", () => {
+    if (!active || phone.matches) return;
+    const distance = Math.abs(window.scrollY - anchor);
+    closest = Math.min(closest, distance);
+    if (distance > closest + 240) close();
+  }, { passive: true });
+  if (phone.addEventListener) phone.addEventListener("change", close);
 }

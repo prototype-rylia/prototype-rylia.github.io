@@ -79,7 +79,8 @@
       toggleBtn.setAttribute("aria-label", userPaused ? "Lire la vidéo" : "Mettre la vidéo en pause");
     }
     if (playBtn) {
-      playBtn.hidden = failed || !userPaused;
+      // À la fin, pas de bouton « Revoir » : c'est le bouton d'appel qui prend la place
+      playBtn.hidden = failed || !userPaused || video.ended;
       playBtn.setAttribute("aria-label", video.ended ? "Revoir la vidéo depuis le début" : "Lire la vidéo de présentation");
     }
   }
@@ -162,20 +163,87 @@
   });
   video.addEventListener("pause", updateProgress);
 
-  // Fin de la présentation : on reste en pause et on propose de la revoir
+  // Fin de la présentation (ordinateur) : le vrai bouton « Commencer dès maintenant »,
+  // sous la vidéo, monte se poser exactement sur le bouton dessiné dans la dernière image.
+  // Sur mobile, il reste sous la vidéo.
+  var heroCta = document.querySelector(".hero__cta .btn--cta");
+  var wideScreen = window.matchMedia ? window.matchMedia("(min-width: 769px)") : null;
+  // Position et largeur du bouton dessiné, en proportion de l'image (centre x, centre y, largeur)
+  var CTA_SPOT = { x: 0.4995, y: 0.6766, w: 0.336 };
+  var ctaLayer = null;
+  var ctaTimer = 0;
+
+  function placeCta() {
+    if (!ctaLayer) return;
+    var link = ctaLayer.firstChild;
+    var area = screen.getBoundingClientRect();
+    var base = root.getBoundingClientRect();
+    var scale = (area.width * CTA_SPOT.w) / link.offsetWidth;
+    ctaLayer.style.left = area.left - base.left + area.width * CTA_SPOT.x + "px";
+    ctaLayer.style.top = area.top - base.top + area.height * CTA_SPOT.y + "px";
+    ctaLayer.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+  }
+
+  function showCta() {
+    if (ctaLayer || !heroCta || !wideScreen || !wideScreen.matches) return;
+    ctaLayer = document.createElement("div");
+    ctaLayer.className = "showcase-cta";
+    var link = heroCta.cloneNode(true);
+    ctaLayer.appendChild(link);
+    root.appendChild(ctaLayer);
+    var from = heroCta.getBoundingClientRect();
+    placeCta();
+    var to = link.getBoundingClientRect();
+    // La place sous la vidéo reste réservée pour que la page ne bouge pas
+    heroCta.style.visibility = "hidden";
+    var pulse = function () { if (ctaLayer) ctaLayer.classList.add("is-pulsing"); };
+    if (reduceMotion || !ctaLayer.animate || !to.width) {
+      pulse();
+      return;
+    }
+    var end = ctaLayer.style.transform;
+    var dx = from.left + from.width / 2 - (to.left + to.width / 2);
+    var dy = from.top + from.height / 2 - (to.top + to.height / 2);
+    var k = from.width / to.width;
+    ctaLayer.animate(
+      [
+        { transform: "translate(" + dx + "px, " + dy + "px) " + end + " scale(" + k + ")" },
+        { transform: end }
+      ],
+      { duration: 700, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
+    );
+    ctaTimer = setTimeout(pulse, 700);
+  }
+
+  function hideCta() {
+    clearTimeout(ctaTimer);
+    if (!ctaLayer) return;
+    ctaLayer.parentNode.removeChild(ctaLayer);
+    ctaLayer = null;
+    heroCta.style.visibility = "";
+  }
+
+  window.addEventListener("resize", function () {
+    if (wideScreen && !wideScreen.matches) hideCta();
+    else placeCta();
+  });
+
   video.addEventListener("ended", function () {
     userPaused = true;
     root.classList.add("showcase-is-ended");
     updateUI();
     updateProgress();
+    showCta();
   });
   video.addEventListener("play", function () {
     root.classList.remove("showcase-is-ended");
+    hideCta();
   });
   // Revenir en arrière dans la barre après la fin retire l'état « terminé »
   video.addEventListener("seeked", function () {
     if (!video.ended) {
       root.classList.remove("showcase-is-ended");
+      hideCta();
       updateUI();
     }
   });
