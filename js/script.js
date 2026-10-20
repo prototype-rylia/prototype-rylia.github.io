@@ -659,8 +659,8 @@ if (contactForm) {
     }
   });
 
-  // « Je ne sais pas encore » exclut les autres choix, et inversement
-  const featureBoxes = Array.from(contactForm.querySelectorAll("input[name='features[]']"));
+  // Une case marquée data-exclusive exclut les autres choix, et inversement
+  const featureBoxes = Array.from(contactForm.querySelectorAll("input[name='demande[]']"));
   featureBoxes.forEach((box) => {
     box.addEventListener("change", () => {
       if (!box.checked) return;

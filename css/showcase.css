@@ -511,7 +511,7 @@
   margin-left: 3px;
 }
 
-/* Fin de la vidéo (ordinateur) : le vrai bouton « Commencer dès maintenant » se pose
+/* Fin de la vidéo : le vrai bouton « Commencer dès maintenant » se pose
    sur le bouton dessiné dans la dernière image ; un halo qui pulse montre qu'il est cliquable */
 .showcase-replay-icon,
 .showcase-replay-label { display: none; }
@@ -530,6 +530,7 @@
   opacity: 0;
   pointer-events: none;
 }
+.showcase-cta[hidden] { display: none; }
 .showcase-cta.is-pulsing::before { animation: showcase-cta-ring 1.8s ease-out infinite; }
 @keyframes showcase-cta-ring {
   0% { opacity: 0.75; transform: scale(1); }

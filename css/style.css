@@ -546,7 +546,6 @@ body {
   flex-wrap: wrap;
   margin-top: 32px;
 }
-.hero__cta { position: relative; }
 
 /* ---------- Sections ---------- */
 .section { padding-block: 104px; }

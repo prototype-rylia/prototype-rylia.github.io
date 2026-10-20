@@ -199,39 +199,34 @@ const OFFRE = {
     }
   }
 
-  // Les demandes envoyées depuis l'offre sont signalées dans l'email reçu
-  const form = document.getElementById("contact-form");
-  const flagRequest = () => {
-    if (!form) return;
-    let field = form.querySelector('input[name="offre"]');
+  // Champ « offre » de l'email reçu (l'objet du mail ne change jamais)
+  const noteField = (contactForm) => {
+    let field = contactForm.querySelector('input[name="offre"]');
     if (!field) {
       field = document.createElement("input");
       field.type = "hidden";
       field.name = "offre";
-      form.prepend(field);
+      contactForm.prepend(field);
     }
-    const ended = section && section.classList.contains("is-ended");
-    field.value = ended ? `${OFFRE.nom} (terminée : être prévenu de la prochaine)` : OFFRE.nom;
+    return field;
+  };
+
+  // Offre terminée : une demande venant du bandeau ou de la section est signalée « être prévenu »
+  const form = document.getElementById("contact-form");
+  const flagRequest = () => {
+    if (!form || stateOf(current).status === "active") return;
+    noteField(form).value = `${OFFRE.nom} (terminée : être prévenu de la prochaine)`;
   };
   document.querySelectorAll("[data-offer-cta], a.offer-bar").forEach((link) => link.addEventListener("click", flagRequest));
 
-  // Appelé par le formulaire juste avant l'envoi (js/script.js) : si la demande vient de l'offre
-  // et que l'offre est ouverte, la personne est inscrite et l'email reçu le précise.
+  // Appelé par le formulaire juste avant l'envoi (js/script.js) : tant que l'offre est ouverte,
+  // toute demande est inscrite, quel que soit le bouton utilisé. Le résultat est noté dans le champ « offre ».
   window.RyliaOffre = {
     inscrire: async (contactForm) => {
-      const field = contactForm.querySelector('input[name="offre"]');
-      if (!field) return null;
-      const subject = contactForm.querySelector('input[name="_subject"]');
-      const setNote = (note, subjectTag) => {
-        field.value = note;
-        if (subject) subject.value = `Nouvelle demande · ${subjectTag} · Rylia`;
-      };
-      if (stateOf(current).status !== "active") {
-        setNote(field.value, "Offre terminée");
-        return null;
-      }
+      if (stateOf(current).status !== "active") return null;
+      const field = noteField(contactForm);
       if (!hasSupabase) {
-        setNote(`${OFFRE.nom} : demande d'inscription (à confirmer)`, "OFFRE -50 %");
+        field.value = `${OFFRE.nom} : demande d'inscription (à confirmer)`;
         return null;
       }
       const value = (name) => (contactForm.elements[name] ? contactForm.elements[name].value.trim() : "");
@@ -243,17 +238,16 @@ const OFFRE = {
           p_telephone: value("phone_full") || value("phone"),
         });
         const notes = {
-          inscrit: [`INSCRIT · place ${result.place} sur ${result.total} (${OFFRE.nom})`, `OFFRE -50 % · place ${result.place}/${result.total}`],
-          deja_inscrit: [`Déjà inscrit à l'offre avec cet email (${OFFRE.nom})`, "OFFRE -50 % · déjà inscrit"],
-          complet: [`Offre complète au moment de l'envoi : non inscrit (${OFFRE.nom})`, "Offre complète"],
-          termine: [`Offre terminée au moment de l'envoi : non inscrit (${OFFRE.nom})`, "Offre terminée"],
+          inscrit: `INSCRIT · place ${result.place} sur ${result.total} (${OFFRE.nom})`,
+          deja_inscrit: `Déjà inscrit à l'offre avec cet email (${OFFRE.nom})`,
+          complet: `Offre complète au moment de l'envoi : non inscrit (${OFFRE.nom})`,
+          termine: `Offre terminée au moment de l'envoi : non inscrit (${OFFRE.nom})`,
         };
-        const [note, tag] = notes[result.statut] || [`Inscription refusée (${result.statut}) : à vérifier (${OFFRE.nom})`, "OFFRE -50 % · à vérifier"];
-        setNote(note, tag);
+        field.value = notes[result.statut] || `Inscription refusée (${result.statut}) : à vérifier (${OFFRE.nom})`;
         return result;
       } catch (error) {
         // Supabase injoignable : la demande part quand même, marquée à vérifier
-        setNote(`Inscription automatique impossible : à inscrire à la main (${OFFRE.nom})`, "OFFRE -50 % · à vérifier");
+        field.value = `Inscription automatique impossible : à inscrire à la main (${OFFRE.nom})`;
         return null;
       }
     },

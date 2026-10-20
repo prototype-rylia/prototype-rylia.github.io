@@ -34,6 +34,7 @@
   var idleTimer = 0;
   var pointerInside = false;
   var tapWasIdle = false;
+  var hushUntil = 0; // juste après « Activer le son », la souris ne rouvre pas tout de suite la barre
 
   function setIdle(idle) {
     root.classList.toggle("showcase-ui-idle", idle);
@@ -132,7 +133,8 @@
   }
 
   function markLoaded() {
-    if (failed) return;
+    // Une seule fois : un retour au début peut redéclencher « loadeddata »
+    if (failed || root.classList.contains("showcase-is-loaded")) return;
     root.classList.add("showcase-is-loaded");
     showControls();
     // Les contrôles se montrent à l'arrivée, puis s'effacent si la souris n'est pas sur la vidéo
@@ -163,19 +165,16 @@
   });
   video.addEventListener("pause", updateProgress);
 
-  // Fin de la présentation (ordinateur) : le vrai bouton « Commencer dès maintenant »,
-  // sous la vidéo, monte se poser exactement sur le bouton dessiné dans la dernière image.
-  // Sur mobile, il reste sous la vidéo.
-  var heroCta = document.querySelector(".hero__cta .btn--cta");
-  var wideScreen = window.matchMedia ? window.matchMedia("(min-width: 769px)") : null;
+  // Fin de la présentation : le bouton « Commencer dès maintenant » apparaît exactement
+  // sur le bouton dessiné dans la dernière image, avec un halo qui pulse
+  var ctaLayer = root.querySelector(".showcase-cta");
   // Position et largeur du bouton dessiné, en proportion de l'image (centre x, centre y, largeur)
   var CTA_SPOT = { x: 0.4995, y: 0.6766, w: 0.336 };
-  var ctaLayer = null;
   var ctaTimer = 0;
 
   function placeCta() {
-    if (!ctaLayer) return;
-    var link = ctaLayer.firstChild;
+    if (!ctaLayer || ctaLayer.hidden) return;
+    var link = ctaLayer.firstElementChild;
     var area = screen.getBoundingClientRect();
     var base = root.getBoundingClientRect();
     var scale = (area.width * CTA_SPOT.w) / link.offsetWidth;
@@ -185,48 +184,34 @@
   }
 
   function showCta() {
-    if (ctaLayer || !heroCta || !wideScreen || !wideScreen.matches) return;
-    ctaLayer = document.createElement("div");
-    ctaLayer.className = "showcase-cta";
-    var link = heroCta.cloneNode(true);
-    ctaLayer.appendChild(link);
-    root.appendChild(ctaLayer);
-    var from = heroCta.getBoundingClientRect();
+    if (!ctaLayer || !ctaLayer.hidden) return;
+    ctaLayer.hidden = false;
     placeCta();
-    var to = link.getBoundingClientRect();
-    // La place sous la vidéo reste réservée pour que la page ne bouge pas
-    heroCta.style.visibility = "hidden";
-    var pulse = function () { if (ctaLayer) ctaLayer.classList.add("is-pulsing"); };
-    if (reduceMotion || !ctaLayer.animate || !to.width) {
+    var pulse = function () { ctaLayer.classList.add("is-pulsing"); };
+    if (reduceMotion || !ctaLayer.animate) {
       pulse();
       return;
     }
     var end = ctaLayer.style.transform;
-    var dx = from.left + from.width / 2 - (to.left + to.width / 2);
-    var dy = from.top + from.height / 2 - (to.top + to.height / 2);
-    var k = from.width / to.width;
     ctaLayer.animate(
       [
-        { transform: "translate(" + dx + "px, " + dy + "px) " + end + " scale(" + k + ")" },
-        { transform: end }
+        { opacity: 0, transform: end + " scale(0.85)" },
+        { opacity: 1, transform: end + " scale(1.04)", offset: 0.6 },
+        { opacity: 1, transform: end }
       ],
-      { duration: 700, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
+      { duration: 500, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
     );
-    ctaTimer = setTimeout(pulse, 700);
+    ctaTimer = setTimeout(pulse, 500);
   }
 
   function hideCta() {
     clearTimeout(ctaTimer);
     if (!ctaLayer) return;
-    ctaLayer.parentNode.removeChild(ctaLayer);
-    ctaLayer = null;
-    heroCta.style.visibility = "";
+    ctaLayer.hidden = true;
+    ctaLayer.classList.remove("is-pulsing");
   }
 
-  window.addEventListener("resize", function () {
-    if (wideScreen && !wideScreen.matches) hideCta();
-    else placeCta();
-  });
+  window.addEventListener("resize", placeCta);
 
   video.addEventListener("ended", function () {
     userPaused = true;
@@ -275,12 +260,13 @@
 
   // Première fois que le son est activé : la présentation repart de zéro, avec le son
   function startWithSound() {
-    if (soundStarted || video.muted) return;
+    if (soundStarted || video.muted) return false;
     soundStarted = true;
     video.currentTime = 0;
     updateProgress();
     if (userPaused) setPaused(false);
     else sync();
+    return true;
   }
 
   if (soundBtn) {
@@ -289,7 +275,11 @@
       // Réactiver le son avec un volume à zéro ne s'entendrait pas : on remonte au maximum
       if (!video.muted && video.volume === 0) video.volume = 1;
       updateSound();
-      startWithSound();
+      // La vidéo repart du début : on referme la barre pour la laisser voir en entier
+      if (startWithSound()) {
+        hideUI();
+        hushUntil = Date.now() + 1500;
+      }
     });
   }
 
@@ -326,11 +316,14 @@
     });
   }
 
-  // Souris : l'interface suit la présence du pointeur sur la vidéo
+  // Souris : l'interface apparaît quand la souris bouge sur la vidéo et s'efface après 3 s d'immobilité,
+  // sauf si la souris est posée sur les commandes
   screen.addEventListener("pointermove", function (event) {
     if (event.pointerType !== "mouse") return;
-    if (!pointerInside || root.classList.contains("showcase-ui-idle")) wakeUI(false);
     pointerInside = true;
+    if (Date.now() < hushUntil) return;
+    var onControls = event.target && event.target.closest && event.target.closest(".showcase-controls, .showcase-timeline");
+    wakeUI(!onControls);
   });
   screen.addEventListener("pointerleave", function (event) {
     if (event.pointerType !== "mouse") return;

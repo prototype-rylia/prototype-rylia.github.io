@@ -28,9 +28,9 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="preload" href="fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/style.css?v=24" />
-  <link rel="stylesheet" href="css/showcase.css?v=24" />
-  <link rel="stylesheet" href="css/pillars.css?v=24" />
+  <link rel="stylesheet" href="css/style.css?v=29" />
+  <link rel="stylesheet" href="css/showcase.css?v=29" />
+  <link rel="stylesheet" href="css/pillars.css?v=29" />
 </head>
 <body>
 
@@ -123,11 +123,9 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="container hero__cta">
-        <div class="hero__actions reveal">
-          <a href="#contact" class="btn btn--primary btn--cta btn--arrow">
+        <!-- Fin de la vidéo : le bouton se pose sur celui dessiné dans la dernière image (placé par js/showcase.js) -->
+        <div class="showcase-cta" hidden>
+            <a href="#contact" class="btn btn--primary btn--cta btn--arrow">
             <span class="btn__roll"><span>Commencer dès maintenant</span><span aria-hidden="true">Commencer dès maintenant</span></span>
             <span class="btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
           </a>
@@ -721,12 +719,11 @@
             <fieldset class="form-step" data-step="2">
               <legend class="form-step__title">Votre projet</legend>
               <div class="field">
-                <span class="field__label" id="features-label">Fonctionnalités souhaitées <span class="field__optional">facultatif</span></span>
+                <span class="sr-only" id="features-label">Type de demande</span>
                 <div class="chips" role="group" aria-labelledby="features-label">
-                  <label class="chip"><input type="checkbox" name="features[]" value="Commande" /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Commande</span></label>
-                  <label class="chip"><input type="checkbox" name="features[]" value="Fidélité" /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Fidélité</span></label>
-                  <label class="chip"><input type="checkbox" name="features[]" value="Gestion" /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Gestion</span></label>
-                  <label class="chip"><input type="checkbox" name="features[]" value="Je ne sais pas encore" data-exclusive /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Je ne sais pas encore</span></label>
+                  <label class="chip"><input type="checkbox" name="demande[]" value="Application" /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Application</span></label>
+                  <label class="chip"><input type="checkbox" name="demande[]" value="Site web" /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Site web</span></label>
+                  <label class="chip"><input type="checkbox" name="demande[]" value="Autre demande" /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Autre demande</span></label>
                 </div>
               </div>
               <div class="field">
@@ -812,9 +809,9 @@
     </div>
   </footer>
 
-  <script src="js/script.js?v=24"></script>
-  <script src="js/showcase.js?v=24" defer></script>
-  <script src="js/pillars.js?v=24" defer></script>
-  <script src="js/offer.js?v=24"></script>
+  <script src="js/script.js?v=29"></script>
+  <script src="js/showcase.js?v=29" defer></script>
+  <script src="js/pillars.js?v=29" defer></script>
+  <script src="js/offer.js?v=29"></script>
 </body>
 </html>
