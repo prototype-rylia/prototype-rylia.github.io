@@ -74,11 +74,6 @@ const OFFRE = {
     return { status: "gone" };
   };
 
-  const setCta = (link, label) => {
-    if (!link) return;
-    link.querySelectorAll(".btn__roll > span").forEach((span) => { span.textContent = label; });
-  };
-
   const render = (state) => {
     clearTimeout(timer);
     if (state.status === "gone") { remove(); return; }
@@ -102,11 +97,11 @@ const OFFRE = {
       : `terminée le ${dateFormat.format(state.endedAt - 1000)}`;
     if (bar) {
       bar.classList.add("is-ended");
-      bar.setAttribute("href", "#contact");
       bar.querySelector("[data-offer-bar-title]").textContent = state.full ? "Offre complète" : "Offre terminée";
       setAll('[data-offer-left="bar"]', (el) => { el.textContent = raison; });
       setAll("[data-offer-countdown]", (el) => el.remove());
-      bar.querySelector("[data-offer-bar-cta]").textContent = "Être prévenu de la prochaine";
+      // Plus de bouton « être prévenu » : l'offre terminée est seulement annoncée
+      bar.querySelectorAll(".offer-bar__cta").forEach((el) => el.remove());
     }
     if (section) {
       section.classList.add("is-ended");
@@ -116,7 +111,7 @@ const OFFRE = {
       setAll('[data-offer-left="card"]', (el) => {
         el.textContent = state.full ? `Merci aux ${total} restaurants inscrits` : `${prises} ${plural(prises, "restaurant inscrit", "restaurants inscrits")}`;
       });
-      setCta(section.querySelector("[data-offer-cta]"), "Être prévenu de la prochaine offre");
+      section.querySelectorAll("[data-offer-cta]").forEach((el) => el.remove());
     }
     const hideIn = state.endedAt + OFFRE.joursAffichageApresFin * DAY - Date.now();
     if (hideIn < 2147483647) timer = setTimeout(remove, hideIn);
@@ -210,14 +205,6 @@ const OFFRE = {
     }
     return field;
   };
-
-  // Offre terminée : une demande venant du bandeau ou de la section est signalée « être prévenu »
-  const form = document.getElementById("contact-form");
-  const flagRequest = () => {
-    if (!form || stateOf(current).status === "active") return;
-    noteField(form).value = `${OFFRE.nom} (terminée : être prévenu de la prochaine)`;
-  };
-  document.querySelectorAll("[data-offer-cta], a.offer-bar").forEach((link) => link.addEventListener("click", flagRequest));
 
   // Appelé par le formulaire juste avant l'envoi (js/script.js) : tant que l'offre est ouverte,
   // toute demande est inscrite, quel que soit le bouton utilisé. Le résultat est noté dans le champ « offre ».

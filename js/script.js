@@ -28,13 +28,12 @@ nav.querySelectorAll(".nav__link").forEach((link) => {
 });
 
 // Menu : le lien de la section en cours est souligné ;
-// sur les sections Offre et Contact, le bouton « Nous contacter » s'efface
+// sur la section Contact, le bouton « Nous contacter » s'efface
 const spyHeader = document.getElementById("header");
 const spySections = [
   ["accueil", "#accueil"],
   ["application", "#application"],
   ["abonnement", "#application"],
-  ["offre", "#application"],
   ["contact", "#contact"],
 ]
   .map(([id, href]) => [document.getElementById(id), href])
@@ -60,7 +59,7 @@ if (spySections.length) {
       if (on) link.setAttribute("aria-current", "location");
       else link.removeAttribute("aria-current");
     });
-    if (spyHeader) spyHeader.classList.toggle("is-on-contact", key === "contact" || key === "offre");
+    if (spyHeader) spyHeader.classList.toggle("is-on-contact", key === "contact");
   };
   const onScroll = () => {
     if (!ticking) { ticking = true; requestAnimationFrame(spy); }
@@ -68,31 +67,6 @@ if (spySections.length) {
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
   spy();
-}
-
-// Offre : le « -50 % » du titre compte de 0 à 50 quand la section arrive à l'écran
-const offerPercent = document.querySelector(".offer__title .text-accent");
-if (offerPercent && "IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  const target = 50;
-  const show = (n) => { offerPercent.innerHTML = `-${n}&nbsp;%`; };
-  let frame = 0;
-  const count = () => {
-    cancelAnimationFrame(frame);
-    const start = performance.now();
-    const step = (now) => {
-      const p = Math.min(1, (now - start) / 1100);
-      show(Math.round(target * (1 - Math.pow(1 - p, 3))));
-      if (p < 1) frame = requestAnimationFrame(step);
-    };
-    show(0);
-    frame = requestAnimationFrame(step);
-  };
-  new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) count();
-      else { cancelAnimationFrame(frame); show(target); }
-    });
-  }, { threshold: 0.6 }).observe(offerPercent);
 }
 
 // Suggestions d'adresse (API Adresse - data.gouv.fr, gratuite, sans clé)
@@ -614,17 +588,13 @@ if (contactForm) {
     if (sendError) sendError.classList.remove("is-visible");
     setSending(true);
     try {
-      // Demande venue de l'offre : inscription automatique (js/offer.js), notée dans l'email reçu
-      const offre = window.RyliaOffre ? await window.RyliaOffre.inscrire(contactForm) : null;
       const response = await fetch(contactForm.action, {
         method: "POST",
         body: new FormData(contactForm),
         headers: { Accept: "application/json" },
       });
       if (!response.ok) throw new Error("Envoi refusé");
-      window.location.href = offre && offre.statut === "inscrit"
-        ? `merci.html?place=${offre.place}&sur=${offre.total}`
-        : "merci.html";
+      window.location.href = "merci.html";
     } catch (error) {
       setSending(false);
       if (sendError) sendError.classList.add("is-visible");
