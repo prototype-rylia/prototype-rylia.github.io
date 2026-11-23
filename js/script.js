@@ -32,8 +32,6 @@ nav.querySelectorAll(".nav__link").forEach((link) => {
 const spyHeader = document.getElementById("header");
 const spySections = [
   ["accueil", "#accueil"],
-  ["application", "#application"],
-  ["abonnement", "#application"],
   ["contact", "#contact"],
 ]
   .map(([id, href]) => [document.getElementById(id), href])
@@ -67,118 +65,6 @@ if (spySections.length) {
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
   spy();
-}
-
-// Suggestions d'adresse (API Adresse - data.gouv.fr, gratuite, sans clé)
-const addressInput = document.getElementById("address");
-const addressSuggestions = document.getElementById("address-suggestions");
-
-if (addressInput && addressSuggestions) {
-  let debounceTimer;
-  let activeIndex = -1;
-  let abortController;
-
-  const closeSuggestions = () => {
-    addressSuggestions.classList.remove("is-open");
-    activeIndex = -1;
-  };
-
-  const renderSuggestions = (features) => {
-    addressSuggestions.innerHTML = "";
-    if (!features.length) {
-      closeSuggestions();
-      return;
-    }
-    features.forEach((feature) => {
-      const li = document.createElement("li");
-      li.setAttribute("role", "option");
-      li.textContent = feature.properties.label;
-      li.addEventListener("click", () => {
-        addressInput.value = feature.properties.label;
-        closeSuggestions();
-      });
-      addressSuggestions.appendChild(li);
-    });
-    addressSuggestions.classList.add("is-open");
-  };
-
-  addressInput.addEventListener("input", () => {
-    const query = addressInput.value.trim();
-    clearTimeout(debounceTimer);
-
-    if (query.length < 2) {
-      if (abortController) abortController.abort();
-      closeSuggestions();
-      return;
-    }
-
-    debounceTimer = setTimeout(async () => {
-      if (abortController) abortController.abort();
-      abortController = new AbortController();
-
-      try {
-        const response = await fetch(
-          `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`,
-          { signal: abortController.signal }
-        );
-        if (!response.ok) throw new Error("Requête échouée");
-        const data = await response.json();
-        renderSuggestions(data.features || []);
-      } catch (error) {
-        if (error.name !== "AbortError") closeSuggestions();
-      }
-    }, 120);
-  });
-
-  addressInput.addEventListener("keydown", (event) => {
-    const items = addressSuggestions.querySelectorAll("li");
-    if (!addressSuggestions.classList.contains("is-open") || !items.length) return;
-
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      activeIndex = (activeIndex + 1) % items.length;
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      activeIndex = (activeIndex - 1 + items.length) % items.length;
-    } else if (event.key === "Enter" && activeIndex >= 0) {
-      event.preventDefault();
-      items[activeIndex].click();
-      return;
-    } else if (event.key === "Enter") {
-      // Aucune suggestion surlignée : on ferme et on laisse passer au champ suivant
-      closeSuggestions();
-      return;
-    } else if (event.key === "Escape") {
-      closeSuggestions();
-      return;
-    } else {
-      return;
-    }
-
-    items.forEach((item, index) => item.classList.toggle("is-active", index === activeIndex));
-  });
-
-  document.addEventListener("click", (event) => {
-    if (!addressInput.contains(event.target) && !addressSuggestions.contains(event.target)) {
-      closeSuggestions();
-    }
-  });
-}
-
-// Le champ "Votre projet" grandit tout seul selon le contenu
-const messageInput = document.getElementById("message");
-
-if (messageInput) {
-  const autoResize = () => {
-    messageInput.style.height = "auto";
-    const maxHeight = parseInt(getComputedStyle(messageInput).maxHeight, 10) || Infinity;
-    const nextHeight = Math.min(messageInput.scrollHeight, maxHeight);
-    messageInput.style.height = `${nextHeight}px`;
-    messageInput.style.overflowY = messageInput.scrollHeight > maxHeight ? "auto" : "hidden";
-  };
-
-  autoResize();
-  messageInput.addEventListener("input", autoResize);
 }
 
 // Validation de l'email à la sortie du champ (pas pendant la saisie)
@@ -238,48 +124,10 @@ function updateFullPhone() {
   phoneFullInput.value = digits ? `+${phonePrefixInput.value} ${digits}` : "";
 }
 
-// Mesure la largeur réelle d'un texte dans la police du champ. Le ch ne convient
-// pas ici : il vaut la largeur d'un chiffre, pas celle des espaces séparateurs.
-// On mesure avec un élément réel (et non un canvas) pour que tabular-nums compte.
-function measureText(text, element) {
-  const style = getComputedStyle(element);
-  const ruler = document.createElement("span");
-
-  ruler.style.cssText = "position:absolute;top:-9999px;left:-9999px;white-space:pre";
-  ["fontStyle", "fontWeight", "fontSize", "fontFamily", "letterSpacing", "fontVariantNumeric"]
-    .forEach((prop) => { ruler.style[prop] = style[prop]; });
-  ruler.textContent = text;
-
-  document.body.appendChild(ruler);
-  const width = ruler.getBoundingClientRect().width;
-  ruler.remove();
-  return width;
-}
-
+// Exemple de numéro affiché dans le champ vide, selon le pays choisi
+const PHONE_EXAMPLES = { "33": "06 12 34 56 78", "32": "470 12 34 56" };
 function updatePhoneWidth(prefix) {
-  const format = PHONE_FORMATS[prefix] || { groups: [2, 2, 2, 2, 2] };
-  const style = getComputedStyle(phoneInput);
-  const fullNumber = format.groups.map((size) => "0".repeat(size)).join(" ");
-  const horizontal =
-    parseFloat(style.paddingLeft) +
-    parseFloat(style.paddingRight) +
-    parseFloat(style.borderLeftWidth) +
-    parseFloat(style.borderRightWidth);
-
-  // La bulle fait exactement la largeur d'un numéro complet (+2px pour le curseur) :
-  // la saisie part de gauche et remplit le bloc, donc elle tombe centrée une fois complète
-  phoneInput.style.width = `${Math.ceil(measureText(fullNumber, phoneInput) + horizontal) + 2}px`;
-  // Fond neutre qui montre le groupement sans afficher de vrais chiffres
-  const placeholderText = format.groups.map((size) => "•".repeat(size)).join(" ");
-  phoneInput.placeholder = placeholderText;
-
-  // Les points sont plus étroits que les chiffres qu'ils représentent : on décale
-  // le texte (curseur compris) de la moitié de cet écart pour que le curseur
-  // démarre pile au début des points affichés, qui restent visuellement centrés.
-  // Le décalage ne s'applique que champ vide (CSS :placeholder-shown), sinon un
-  // numéro complet déborderait de la bulle.
-  const slack = measureText(fullNumber, phoneInput) - measureText(placeholderText, phoneInput);
-  phoneInput.style.setProperty("--phone-indent", `${Math.max(slack, 0) / 2}px`);
+  phoneInput.placeholder = PHONE_EXAMPLES[prefix] || "";
 }
 
 // Validation du téléphone : même logique que l'email (erreur à la sortie du champ)
@@ -294,6 +142,7 @@ function showPhoneError(show) {
   if (!phoneError) return;
   phoneError.textContent = `Numéro incomplet : ${maxDigitsFor(phonePrefixInput.value)} chiffres attendus`;
   phoneInput.classList.toggle("is-invalid", show);
+  phoneInput.closest(".phone-group").classList.toggle("is-invalid", show);
   phoneError.classList.toggle("is-visible", show);
   // Empêche aussi l'envoi du formulaire tant que le numéro est incomplet
   phoneInput.setCustomValidity(show ? phoneError.textContent : "");
@@ -301,11 +150,6 @@ function showPhoneError(show) {
 
 if (phoneInput && phonePrefixInput) {
   updatePhoneWidth(phonePrefixInput.value);
-
-  // Les polices Google arrivent après le script : on remesure une fois chargées
-  if (document.fonts) {
-    document.fonts.ready.then(() => updatePhoneWidth(phonePrefixInput.value));
-  }
 
   phoneInput.addEventListener("input", () => {
     const digits = phoneInput.value.replace(/\D/g, "");
@@ -370,7 +214,7 @@ if (prefixSelect && prefixToggle && prefixList) {
       prefixList.querySelectorAll("li").forEach((li) => li.setAttribute("aria-selected", "false"));
       option.setAttribute("aria-selected", "true");
 
-      prefixLabel.textContent = `${option.dataset.short} (+${option.dataset.code})`;
+      prefixLabel.textContent = `+${option.dataset.code}`;
       prefixFlag.innerHTML = option.querySelector(".custom-select__flag").innerHTML;
       phonePrefixInput.value = option.dataset.code;
       updatePhoneWidth(phonePrefixInput.value);
@@ -394,7 +238,7 @@ if (prefixSelect && prefixToggle && prefixList) {
   });
 }
 
-// Formulaire en 3 étapes : chaque étape est validée avant de passer à la suivante.
+// Formulaire en 2 étapes : chaque étape est validée avant de passer à la suivante.
 // Sans JS, toutes les étapes restent affichées et la validation native du navigateur s'applique.
 const contactForm = document.getElementById("contact-form");
 
@@ -415,14 +259,16 @@ if (contactForm) {
     name: "Indiquez votre nom",
     email: "Indiquez votre adresse email",
     phone: "Indiquez votre numéro de téléphone",
-    establishment: "Indiquez le nom de votre établissement",
-    address: "Indiquez l'adresse de votre commerce",
   };
   let currentStep = 0;
   let resizeTimer;
 
   // Message d'erreur du champ, ou "" s'il est valide
   const fieldStatus = (field) => {
+    // Choix « email ou téléphone » : un des boutons doit être coché
+    if (field.type === "radio") {
+      return contactForm.querySelector(`input[name="${field.name}"]:checked`) ? "" : "Choisissez un moyen de contact";
+    }
     const value = field.value.trim();
     if (field.required && !value) return EMPTY_MESSAGES[field.id] || "Ce champ est requis";
     if (field === emailInput && !EMAIL_PATTERN.test(value)) return "Adresse email invalide (ex : nom@domaine.fr)";
@@ -453,6 +299,11 @@ if (contactForm) {
     field.addEventListener("blur", () => refreshValid(field));
   });
   if (prefixList && phoneInput) prefixList.addEventListener("click", () => refreshValid(phoneInput));
+  // Un clic sur « Par email » ou « Par téléphone » efface l'erreur du choix
+  const prefFirst = document.getElementById("pref-email");
+  contactForm.querySelectorAll('input[name="contact_prefere"]').forEach((radio) => {
+    radio.addEventListener("change", () => { if (prefFirst) showFieldError(prefFirst, ""); });
+  });
 
   contactForm.addEventListener("animationend", (event) => {
     if (event.animationName === "field-shake") event.target.classList.remove("is-shaking");
@@ -628,19 +479,6 @@ if (contactForm) {
       nextBtn.click();
     }
   });
-
-  // Une case marquée data-exclusive exclut les autres choix, et inversement
-  const featureBoxes = Array.from(contactForm.querySelectorAll("input[name='demande[]']"));
-  featureBoxes.forEach((box) => {
-    box.addEventListener("change", () => {
-      if (!box.checked) return;
-      featureBoxes.forEach((other) => {
-        if (other !== box && (box.hasAttribute("data-exclusive") || other.hasAttribute("data-exclusive"))) {
-          other.checked = false;
-        }
-      });
-    });
-  });
 }
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -675,7 +513,8 @@ onScrollFrame();
 // Liens internes : défilement doux, puis léger fondu de la section à l'arrivée
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
   const hash = link.getAttribute("href");
-  if (hash.length < 2) return;
+  // Les boutons qui ouvrent le formulaire en mode focus ont leur propre logique (plus bas)
+  if (hash.length < 2 || link.hasAttribute("data-open-form")) return;
   const target = document.getElementById(hash.slice(1));
   const section = target && target.closest("main > section");
   if (!section) return;
@@ -742,162 +581,135 @@ if ("IntersectionObserver" in window) {
   revealEls.forEach((el) => el.classList.add("is-visible"));
 }
 
-// Abonnement : le sélecteur d'engagement change le billet.
-// Le billet se déchire sur les pointillés : l'ancienne partie haute s'envole,
-// la nouvelle arrive et se recolle, puis le tampon de remise tombe.
+// Tarifs (à gauche du formulaire) : bascule Application / Site web, puis Restauration / Institut
+// (application seulement), puis la durée dans la carte.
 const plans = document.querySelector("[data-plans]");
-if (plans) {
-  const options = Array.from(plans.querySelectorAll(".plans__option"));
-  const switcher = plans.querySelector(".plans__switch");
-  const thumb = plans.querySelector(".plans__thumb");
-  const ticket = plans.querySelector(".plans__ticket");
-  const card = plans.querySelector(".plans__card");
-  const tear = card.querySelector(".plans__tear");
-  const stamp = card.querySelector("[data-plan-stamp]");
-  const field = (name) => card.querySelector(`[data-plan-${name}]`);
-  const canAnimate = () => !prefersReducedMotion.matches && typeof card.animate === "function";
-  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  let run = 0;
+const plansData = (() => {
+  try { return JSON.parse(document.getElementById("plans-data").textContent); } catch (error) { return null; }
+})();
+if (plans && plansData) {
+  const productSwitch = plans.querySelector(".plans__switch--product");
+  const durationSwitch = plans.querySelector(".plans__switch--duration");
+  const sectorBox = plans.querySelector("[data-plan-sector]");
+  const sectors = Array.from(plans.querySelectorAll(".plans__switch--sector .plans__option"));
+  const products = Array.from(productSwitch.querySelectorAll(".plans__option"));
+  const durations = Array.from(durationSwitch.querySelectorAll(".plans__option"));
+  const head = plans.querySelector("[data-plan-head]");
+  const features = plans.querySelector("[data-plan-features]");
+  const featureIcon = features.querySelector("svg").outerHTML;
+  const field = (name) => plans.querySelector(`[data-plan-${name}]`);
+  const canAnimate = () => !prefersReducedMotion.matches && typeof head.animate === "function";
+  const euros = (n) => `${n.toLocaleString("fr-FR")}&nbsp;€`;
+  let fadeTimer = 0;
 
-  // Les encoches du billet suivent la ligne de pointillés
-  const tearY = () => tear.offsetTop;
-  const placeNotches = () => card.style.setProperty("--tear-y", `${tearY()}px`);
+  const checked = (group) => group.find((o) => o.getAttribute("aria-checked") === "true") || group[0];
+  // Offre affichée : le site web, ou l'application du type de commerce choisi
+  const isSite = () => checked(products).dataset.product === "site";
+  const offer = () => (isSite() ? plansData.site : plansData[checked(sectors).dataset.sector]);
+  const listOf = (product) => product.inclus.map((text) => `<li>${featureIcon}${text}</li>`).join("");
 
-  // Pastille blanche du sélecteur : glisse sous l'option choisie
-  const checked = () => options.find((o) => o.getAttribute("aria-checked") === "true") || options[0];
-  const moveThumb = (option, animate) => {
+  // Remise d'une durée par rapport au sans engagement, en %
+  const discount = (product, i) => Math.round(((product.prix[0] - product.prix[i]) / product.prix[0]) * 100);
+
+  // Nom de la durée, prix et prix barré pour une durée donnée
+  const showPrice = (index) => {
+    const product = offer();
+    field("name").textContent = plansData.durees[index];
+    field("price").textContent = product.prix[index];
+    field("was").innerHTML = euros(product.prix[0]);
+    field("was").hidden = index === 0;
+  };
+
+  const fill = () => {
+    const product = offer();
+    const index = Number(checked(durations).dataset.duration);
+    // Pour le site web, une phrase remplace le choix Restauration / Institut
+    plans.classList.toggle("is-site", isSite());
+    sectorBox.firstElementChild.inert = isSite();
+    sectorBox.lastElementChild.setAttribute("aria-hidden", String(!isSite()));
+    showPrice(index);
+    // Pastilles « -% » en haut à droite de 1 an et 2 ans
+    durations.forEach((option, i) => {
+      const badge = option.querySelector("[data-plan-badge]");
+      if (!badge) return;
+      const percent = discount(product, i);
+      badge.innerHTML = `-${percent}&nbsp;%`;
+      badge.hidden = percent <= 0;
+    });
+    const list = listOf(product);
+    const listChanged = features.dataset.list !== undefined && features.dataset.list !== list;
+    features.dataset.list = list;
+    features.innerHTML = list;
+    return listChanged;
+  };
+
+  // Changement : le prix (et la liste si elle change) s'efface, se met à jour, puis revient
+  const update = () => {
+    if (!canAnimate()) { fill(); return; }
+    clearTimeout(fadeTimer);
+    const productChanged = features.dataset.list !== listOf(offer());
+    plans.classList.toggle("is-site", isSite());
+    const targets = productChanged ? [head, features] : [head];
+    targets.forEach((el) => el.classList.add("is-out"));
+    fadeTimer = setTimeout(() => {
+      fill();
+      targets.forEach((el) => el.classList.remove("is-out"));
+    }, 220);
+  };
+
+  // Pastille orange de la bascule Application / Site web : glisse sous l'option choisie
+  // (option : par défaut celle choisie ; pour la durée, aussi celle survolée)
+  const moveThumb = (group, animate, option = checked(group)) => {
+    const thumb = option.parentElement.querySelector(".plans__thumb");
+    if (!thumb) return;
+    // Le texte passe en blanc sous la pilule noire de la durée
+    if (group === durations) group.forEach((o) => o.classList.toggle("is-lit", o === option));
     thumb.style.transition = animate ? "" : "none";
     thumb.style.width = `${option.offsetWidth}px`;
     thumb.style.transform = `translateX(${option.offsetLeft}px)`;
   };
-  switcher.classList.add("has-thumb");
+  productSwitch.classList.add("has-thumb");
+  sectorBox.firstElementChild.classList.add("has-thumb");
+  durationSwitch.classList.add("has-thumb");
 
-  // Bord en dents de scie à la hauteur y, partagé par les deux morceaux
-  const zigzag = (y, w) => {
-    const points = [];
-    for (let x = -30, i = 0; x <= w + 40; x += 10, i++) points.push(`${x}px ${y + (i % 2 ? 4 : -4)}px`);
-    return points;
-  };
-  const topClip = (y, w) => `polygon(-40px -40px, ${w + 40}px -40px, ${zigzag(y, w).reverse().join(", ")})`;
-  const bottomClip = (y, w, h) => `polygon(${zigzag(y, w).join(", ")}, ${w + 40}px ${h + 40}px, -40px ${h + 40}px)`;
-
-  // Copie de la partie haute du billet, posée exactement par-dessus
-  const piece = (y) => {
-    const copy = card.cloneNode(true);
-    copy.removeAttribute("aria-live");
-    copy.setAttribute("aria-hidden", "true");
-    copy.inert = true;
-    copy.classList.add("plans__card--piece");
-    copy.style.clipPath = topClip(y, card.offsetWidth);
-    ticket.appendChild(copy);
-    return copy;
-  };
-
-  const fill = (option) => {
-    field("name").textContent = option.dataset.name;
-    field("note").textContent = option.dataset.note;
-    field("price").textContent = option.dataset.price;
-    // Économie par rapport au sans engagement ; la place reste réservée pour que le billet garde sa taille
-    const saving = field("saving");
-    saving.innerHTML = option.dataset.saving || "&nbsp;";
-    saving.classList.toggle("is-empty", !option.dataset.saving);
-    field("was").hidden = !option.dataset.saving;
-    stamp.innerHTML = option.dataset.stamp;
-  };
-
-  const dropStamp = async (id) => {
-    stamp.style.opacity = "";
-    await stamp.animate(
-      [
-        { transform: "rotate(-12deg) scale(2.4)", opacity: 0 },
-        { transform: "rotate(-12deg) scale(0.92)", opacity: 1, offset: 0.7 },
-        { transform: "rotate(-12deg) scale(1)", opacity: 1 },
-      ],
-      { duration: 420, easing: "ease-out" }
-    ).finished.catch(() => {});
-    if (id !== run) return;
-    card.animate([{ transform: "none" }, { transform: "translateY(2px)" }, { transform: "none" }], { duration: 180 });
-  };
-
-  const animateChange = async (option) => {
-    const id = ++run;
-    ticket.querySelectorAll(".plans__card--piece").forEach((p) => p.remove());
-    stamp.getAnimations().forEach((a) => a.cancel());
-    const w = card.offsetWidth;
-
-    // 1. Le billet se déchire : la partie haute s'arrache et s'envole
-    const oldY = tearY();
-    const old = piece(oldY);
-    card.style.clipPath = bottomClip(oldY, w, card.offsetHeight);
-    old.animate(
-      [
-        { transform: "none", opacity: 1 },
-        { transform: "translate(-6px, -4px) rotate(-1.5deg)", opacity: 1, offset: 0.25 },
-        { transform: "translate(-36px, -80px) rotate(-9deg)", opacity: 0 },
-      ],
-      { duration: 520, easing: "cubic-bezier(0.5, 0, 0.75, 0.4)", fill: "forwards" }
-    ).finished.then(() => old.remove(), () => old.remove());
-    card.animate([{ transform: "none" }, { transform: "translateY(3px)" }, { transform: "none" }], { duration: 220 });
-    await wait(280);
-    if (id !== run) return;
-
-    // 2. La nouvelle partie haute arrive d'en haut et se recolle sur les pointillés
-    fill(option);
-    stamp.style.opacity = "0";
-    placeNotches();
-    const newY = tearY();
-    card.style.clipPath = bottomClip(newY, w, card.offsetHeight);
-    const fresh = piece(newY);
-    await fresh.animate(
-      [
-        { transform: "translateY(-44px) rotate(1.5deg)", opacity: 0 },
-        { transform: "translateY(3px)", opacity: 1, offset: 0.72 },
-        { transform: "none", opacity: 1 },
-      ],
-      { duration: 500, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "forwards" }
-    ).finished.catch(() => {});
-    if (id !== run) return;
-    card.style.clipPath = "";
-    fresh.remove();
-
-    // 3. Le tampon tombe une fois le papier en place
-    if (option.dataset.stamp) dropStamp(id);
-  };
-
-  const choose = (option, moveFocus) => {
+  const choose = (group, option, moveFocus) => {
     if (option.getAttribute("aria-checked") === "true") return;
-    options.forEach((o) => {
+    group.forEach((o) => {
       const on = o === option;
       o.setAttribute("aria-checked", String(on));
       o.tabIndex = on ? 0 : -1;
     });
-    moveThumb(option, !prefersReducedMotion.matches);
-    if (canAnimate()) animateChange(option);
-    else {
-      fill(option);
-      placeNotches();
-      stamp.style.opacity = "";
-    }
+    moveThumb(group, !prefersReducedMotion.matches);
+    update();
     if (moveFocus) option.focus();
   };
 
-  options.forEach((option, i) => {
-    option.tabIndex = option.getAttribute("aria-checked") === "true" ? 0 : -1;
-    option.addEventListener("click", () => choose(option, false));
-    option.addEventListener("keydown", (event) => {
-      const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
-      if (!step) return;
-      event.preventDefault();
-      choose(options[(i + step + options.length) % options.length], true);
+
+  [products, sectors, durations].forEach((group) => {
+    group.forEach((option, i) => {
+      option.tabIndex = option.getAttribute("aria-checked") === "true" ? 0 : -1;
+      option.addEventListener("click", () => choose(group, option, false));
+      option.addEventListener("keydown", (event) => {
+        const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+        if (!step) return;
+        event.preventDefault();
+        choose(group, group[(i + step + group.length) % group.length], true);
+      });
     });
   });
 
   // Placement initial, puis à chaque changement de taille (polices chargées, rotation, etc.)
+  let lastWidth = 0;
   const layout = () => {
-    moveThumb(checked(), false);
-    if (!card.style.clipPath) placeNotches();
+    if (plans.offsetWidth === lastWidth) return;
+    lastWidth = plans.offsetWidth;
+    moveThumb(products, false);
+    moveThumb(sectors, false);
+    moveThumb(durations, false);
   };
+  fill();
   layout();
+  if (document.fonts) document.fonts.ready.then(() => { lastWidth = 0; layout(); });
   if ("ResizeObserver" in window) new ResizeObserver(layout).observe(plans);
   else window.addEventListener("resize", layout);
 }
@@ -916,6 +728,9 @@ if (focusForm) {
   const quit = document.createElement("button");
   quit.type = "button";
   quit.className = "form-focus-quit";
+  // Hors de l'ordre de tabulation : après le dernier champ, Tab va directement à « Suivant »
+  // (Échap quitte aussi le mode focus au clavier)
+  quit.tabIndex = -1;
   quit.innerHTML = 'Quitter<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
   // Dans la barre du bas du formulaire, à l'opposé de « Suivant »
   const formNav = focusForm.querySelector(".form-nav");
@@ -942,10 +757,16 @@ if (focusForm) {
       focusForm.after(placeholder);
       root.classList.add("is-form-fullscreen");
     } else {
+      // Le formulaire glisse jusqu'au centre de l'écran (hauteur et largeur), quelle que soit sa place dans la page
+      // (en bas de page, le défilement seul ne suffit pas à le centrer)
       const rect = focusForm.getBoundingClientRect();
-      anchor = Math.max(0, window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2);
+      const margin = 20;
+      const top = rect.height > window.innerHeight - margin * 2 ? margin : (window.innerHeight - rect.height) / 2;
+      anchor = window.scrollY;
       closest = Infinity;
-      window.scrollTo({ top: anchor, behavior: prefersReducedMotion.matches ? "auto" : "smooth" });
+      focusForm.style.transition = prefersReducedMotion.matches ? "none" : "translate 480ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease";
+      const left = (document.documentElement.clientWidth - rect.width) / 2;
+      focusForm.style.translate = `${Math.round(left - rect.left)}px ${Math.round(top - rect.top)}px`;
     }
     root.classList.add("is-form-focus");
   };
@@ -954,6 +775,7 @@ if (focusForm) {
     if (!active) return;
     active = false;
     root.classList.remove("is-form-focus", "is-form-fullscreen");
+    focusForm.style.translate = "";
     if (placeholder) {
       placeholder.remove();
       placeholder = null;
@@ -961,14 +783,65 @@ if (focusForm) {
     }
   };
 
+  // Le navigateur pose sa liste de saisie automatique (emails, noms déjà tapés) sous le champ
+  // au moment du focus, puis ne la déplace plus : pendant que le formulaire glisse au centre,
+  // le champ perd le focus et le retrouve une fois arrivé, pour que la liste s'ouvre au bon endroit
+  const SLIDE_MS = 520;
+  const isSliding = () => !phone.matches && !prefersReducedMotion.matches && focusForm.style.translate !== "" && focusForm.style.translate !== "0px 0px" && focusForm.style.translate !== "0px";
+  const focusAfterSlide = (field) => {
+    if (!isSliding()) { field.focus({ preventScroll: true }); return; }
+    setTimeout(() => { if (active) field.focus({ preventScroll: true }); }, SLIDE_MS);
+  };
   focusForm.addEventListener("focusin", (event) => {
-    if (event.target.matches("input:not([type='hidden']), textarea, select")) open();
+    if (!event.target.matches("input:not([type='hidden']), textarea, select")) return;
+    if (active) return;
+    open();
+    if (isSliding()) {
+      event.target.blur();
+      focusAfterSlide(event.target);
+    }
   });
   quit.addEventListener("click", () => {
     close();
     if (document.activeElement) document.activeElement.blur();
   });
   backdrop.addEventListener("click", close);
+  focusForm.addEventListener("transitionend", (event) => {
+    if (event.target === focusForm && event.propertyName === "translate" && !active) focusForm.style.transition = "";
+  });
+
+  // « Nous contacter » : on va au formulaire et il s'ouvre directement en mode focus
+  const firstField = focusForm.querySelector("input:not([type='hidden']):not([tabindex='-1'])");
+  const openFromButton = () => {
+    open();
+    if (firstField) focusAfterSlide(firstField);
+  };
+  document.querySelectorAll("[data-open-form]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+      event.preventDefault();
+      if (active) { openFromButton(); return; }
+      if (phone.matches) { openFromButton(); return; }
+      // Ordinateur : défilement jusqu'au formulaire, puis ouverture une fois arrivé
+      const rect = focusForm.getBoundingClientRect();
+      const target = Math.max(0, window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2);
+      if (Math.abs(target - window.scrollY) < 4 || prefersReducedMotion.matches) {
+        window.scrollTo(0, target);
+        openFromButton();
+        return;
+      }
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        window.removeEventListener("scrollend", finish);
+        openFromButton();
+      };
+      window.addEventListener("scrollend", finish);
+      setTimeout(finish, 1100);
+      window.scrollTo({ top: target, behavior: "smooth" });
+    });
+  });
   document.addEventListener("keydown", (event) => {
     // Échap ferme d'abord une liste de suggestions ouverte
     if (event.key !== "Escape" || !active || focusForm.querySelector("[aria-expanded='true']")) return;

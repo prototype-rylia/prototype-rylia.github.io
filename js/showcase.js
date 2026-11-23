@@ -428,13 +428,15 @@
   updateUI();
   updateProgress();
 
+  // La vidéo ne joue que si au moins la moitié de l'écran vidéo est visible :
+  // en descendant vers la section suivante, elle se met en pause (et le son s'arrête)
   if ("IntersectionObserver" in window) {
     var observer = new IntersectionObserver(function (entries) {
       var entry = entries[entries.length - 1];
-      inView = entry.isIntersecting;
+      inView = entry.isIntersecting && entry.intersectionRatio >= 0.5;
       sync();
-    });
-    observer.observe(stage);
+    }, { threshold: [0, 0.5, 1] });
+    observer.observe(screen);
   } else {
     inView = true;
     sync();

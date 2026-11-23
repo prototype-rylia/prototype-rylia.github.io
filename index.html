@@ -13,14 +13,14 @@
   <meta property="og:site_name" content="Rylia" />
   <meta property="og:url" content="https://rylia.fr/" />
   <meta property="og:title" content="Rylia · Applications mobiles pour restaurateurs" />
-  <meta property="og:description" content="L'application mobile qui fait grandir votre restaurant : commande, fidélité et gestion, sur mesure." />
+  <meta property="og:description" content="L'application mobile qui fait grandir votre commerce : commande, fidélité et gestion, sur mesure." />
   <meta property="og:image" content="https://rylia.fr/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Rylia : l'application mobile qui fait grandir votre restaurant" />
+  <meta property="og:image:alt" content="Rylia : l'application mobile qui fait grandir votre commerce" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Rylia · Applications mobiles pour restaurateurs" />
-  <meta name="twitter:description" content="L'application mobile qui fait grandir votre restaurant : commande, fidélité et gestion, sur mesure." />
+  <meta name="twitter:description" content="L'application mobile qui fait grandir votre commerce : commande, fidélité et gestion, sur mesure." />
   <meta name="twitter:image" content="https://rylia.fr/og-image.png" />
   <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
@@ -28,9 +28,8 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="preload" href="fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/style.css?v=33" />
-  <link rel="stylesheet" href="css/showcase.css?v=33" />
-  <link rel="stylesheet" href="css/pillars.css?v=33" />
+  <link rel="stylesheet" href="css/style.css?v=53" />
+  <link rel="stylesheet" href="css/showcase.css?v=53" />
 </head>
 <body>
 
@@ -43,12 +42,11 @@
 
       <nav class="nav" id="nav">
         <a href="#accueil" class="nav__link"><span class="nav__roll"><span>Accueil</span><span aria-hidden="true">Accueil</span></span></a>
-        <a href="#application" class="nav__link"><span class="nav__roll"><span>L'application</span><span aria-hidden="true">L'application</span></span></a>
-        <a href="#contact" class="nav__link"><span class="nav__roll"><span>Contact</span><span aria-hidden="true">Contact</span></span></a>
+        <a href="#contact" class="nav__link"><span class="nav__roll"><span>Tarifs &amp; contact</span><span aria-hidden="true">Tarifs &amp; contact</span></span></a>
       </nav>
 
       <div class="header__actions">
-        <a href="#contact" class="btn btn--primary btn--glossy btn--arrow">
+        <a href="#contact" class="btn btn--primary btn--glossy btn--arrow" data-open-form>
           <span class="btn__roll"><span>Nous contacter</span><span aria-hidden="true">Nous contacter</span></span>
           <span class="btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
         </a>
@@ -66,7 +64,7 @@
       <div class="container hero__inner">
         <h1 class="hero__title reveal">
           L'application mobile qui fait grandir
-          <span class="text-accent">votre restaurant</span>
+          <span class="hero__accent">votre commerce<span class="hero__spark" aria-hidden="true"></span><span class="hero__spark" aria-hidden="true"></span><span class="hero__spark" aria-hidden="true"></span><span class="hero__spark" aria-hidden="true"></span><span class="hero__spark" aria-hidden="true"></span><span class="hero__spark" aria-hidden="true"></span><span class="hero__spark" aria-hidden="true"></span></span>
         </h1>
       </div>
 
@@ -117,7 +115,7 @@
         </div>
         <!-- Fin de la vidéo : le bouton se pose sur celui dessiné dans la dernière image (placé par js/showcase.js) -->
         <div class="showcase-cta" hidden>
-            <a href="#contact" class="btn btn--primary btn--cta btn--arrow">
+            <a href="#contact" class="btn btn--primary btn--cta btn--arrow" data-open-form>
             <span class="btn__roll"><span>Commencer dès maintenant</span><span aria-hidden="true">Commencer dès maintenant</span></span>
             <span class="btn__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
           </a>
@@ -125,313 +123,69 @@
       </div>
     </section>
 
-    <section class="section section--alt" id="application">
-      <div class="container">
-        <div class="section__head">
-          <h2 class="section__title reveal">Trois piliers, une seule application</h2>
-        </div>
-        <div class="pillars" data-pillars>
-          <div class="pillars-list reveal" role="tablist" aria-label="Les trois piliers de l'application" aria-orientation="vertical">
-
-            <button type="button" class="pillars-tab" role="tab" id="pillars-tab-commande" aria-selected="true" aria-controls="pillars-panel-commande" aria-labelledby="pillars-title-commande" aria-describedby="pillars-desc-commande" tabindex="0">
-              <span class="pillars-tab-inner">
-                <span class="pillars-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 8Z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg></span>
-                <span class="pillars-title" id="pillars-title-commande">Commande</span>
-                <span class="pillars-body">
-                  <span class="pillars-body-inner" id="pillars-desc-commande">
-                    <span class="pillars-desc">Vos clients consultent la carte et commandent depuis leur mobile, sur place ou à emporter.</span>
-                    <span class="pillars-points">
-                      <span class="pillars-point"><span class="pillars-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Carte à jour en quelques clics</span>
-                      <span class="pillars-point"><span class="pillars-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Options, suppléments et remarques</span>
-                      <span class="pillars-point"><span class="pillars-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Moins d'attente au comptoir</span>
-                    </span>
-                    <span class="pillars-progress" aria-hidden="true"><span class="pillars-progress-fill"></span></span>
-                  </span>
-                </span>
-              </span>
-            </button>
-
-            <button type="button" class="pillars-tab" role="tab" id="pillars-tab-fidelite" aria-selected="false" aria-controls="pillars-panel-fidelite" aria-labelledby="pillars-title-fidelite" aria-describedby="pillars-desc-fidelite" tabindex="-1">
-              <span class="pillars-tab-inner">
-                <span class="pillars-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M12 8v13"/><path d="M12 8H8.5a2.25 2.25 0 1 1 0-4.5C11 3.5 12 8 12 8Z"/><path d="M12 8h3.5a2.25 2.25 0 1 0 0-4.5C13 3.5 12 8 12 8Z"/></svg></span>
-                <span class="pillars-title" id="pillars-title-fidelite">Fidélité</span>
-                <span class="pillars-body">
-                  <span class="pillars-body-inner" id="pillars-desc-fidelite">
-                    <span class="pillars-desc">Points et récompenses pour faire revenir vos clients plus souvent.</span>
-                    <span class="pillars-points">
-                      <span class="pillars-point"><span class="pillars-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Carte de fidélité avec QR code</span>
-                      <span class="pillars-point"><span class="pillars-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Récompenses choisies par vous</span>
-                      <span class="pillars-point"><span class="pillars-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Offres du moment par notification</span>
-                    </span>
-                    <span class="pillars-progress" aria-hidden="true"><span class="pillars-progress-fill"></span></span>
-                  </span>
-                </span>
-              </span>
-            </button>
-
-            <button type="button" class="pillars-tab" role="tab" id="pillars-tab-gestion" aria-selected="false" aria-controls="pillars-panel-gestion" aria-labelledby="pillars-title-gestion" aria-describedby="pillars-desc-gestion" tabindex="-1">
-              <span class="pillars-tab-inner">
-                <span class="pillars-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 16v-3"/><path d="M12 16V8"/><path d="M16 16v-5"/></svg></span>
-                <span class="pillars-title" id="pillars-title-gestion">Gestion</span>
-                <span class="pillars-body">
-                  <span class="pillars-body-inner" id="pillars-desc-gestion">
-                    <span class="pillars-desc">Suivez commandes, réservations et activité depuis un tableau de bord simple.</span>
-                    <span class="pillars-points">
-                      <span class="pillars-point"><span class="pillars-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Commandes et réservations au même endroit</span>
-                      <span class="pillars-point"><span class="pillars-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Activité du jour en un coup d'œil</span>
-                      <span class="pillars-point"><span class="pillars-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Accessible sur mobile et ordinateur</span>
-                    </span>
-                    <span class="pillars-progress" aria-hidden="true"><span class="pillars-progress-fill"></span></span>
-                  </span>
-                </span>
-              </span>
-            </button>
-
-          </div>
-
-          <div class="pillars-device reveal">
-            <div class="pillars-phone">
-              <div class="pillars-phone-screen">
-                <div class="pillars-display">
-
-                  <div class="pillars-ui-status" aria-hidden="true">
-                    <span class="pillars-ui-time">12:45</span>
-                    <span class="pillars-ui-sys">
-                      <svg class="pillars-ui-signal" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.6" y="5" width="3" height="6" rx="0.8"/><rect x="9.2" y="2.6" width="3" height="8.4" rx="0.8"/><rect x="13.8" y="0" width="3" height="11" rx="0.8"/></svg>
-                      <svg class="pillars-ui-wifi" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M1.2 3.9a10 10 0 0 1 13.6 0"/><path d="M3.8 6.6a6.2 6.2 0 0 1 8.4 0"/><circle cx="8" cy="9.3" r="1.25" fill="currentColor" stroke="none"/></svg>
-                      <svg class="pillars-ui-battery" viewBox="0 0 27 12" fill="none"><rect x="0.6" y="0.6" width="22.8" height="10.8" rx="3.2" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.2"/><rect x="2.4" y="2.4" width="16.5" height="7.2" rx="1.8" fill="currentColor"/><path d="M25.2 4.2v3.6" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.6" stroke-linecap="round"/></svg>
-                    </span>
-                  </div>
-
-                  <div class="pillars-screen pillars-screen--shot" role="tabpanel" id="pillars-panel-commande" aria-labelledby="pillars-title-commande" tabindex="0" data-state="active">
-                    <!-- Rendu de l'application (export de la maquette, capture 390 x 844 en 3x) -->
-                    <picture class="pillars-shot">
-                      <source srcset="images/app-commande.webp" type="image/webp" />
-                      <img src="images/app-commande.png" alt="Écran de commande de l'application" width="1170" height="2532" loading="lazy" decoding="async" />
-                    </picture>
-
-                    <div class="pillars-ui-notifs" aria-hidden="true">
-                      <div class="pillars-ui-notif">
-                        <span class="pillars-ui-notif-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 4 0V3"/><path d="M9 3v4"/><path d="M9 12v9"/><path d="M17 21V3c-2 1-3.5 3.5-3.5 7 0 1.5.8 2.5 2 2.5H17"/></svg></span>
-                        <span class="pillars-ui-notif-text">
-                          <span class="pillars-ui-notif-meta"><span class="pillars-ui-notif-app">Votre restaurant</span><span>maintenant</span></span>
-                          <span class="pillars-ui-notif-title">Commande confirmée</span>
-                          <span class="pillars-ui-notif-body">Prête dans 15 min · À emporter</span>
-                        </span>
-                      </div>
-                      <div class="pillars-ui-notif">
-                        <span class="pillars-ui-notif-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 4 0V3"/><path d="M9 3v4"/><path d="M9 12v9"/><path d="M17 21V3c-2 1-3.5 3.5-3.5 7 0 1.5.8 2.5 2 2.5H17"/></svg></span>
-                        <span class="pillars-ui-notif-text">
-                          <span class="pillars-ui-notif-meta"><span class="pillars-ui-notif-app">Votre restaurant</span><span>maintenant</span></span>
-                          <span class="pillars-ui-notif-title">Votre commande est prête</span>
-                          <span class="pillars-ui-notif-body">À récupérer au comptoir</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="pillars-screen pillars-screen--shot" role="tabpanel" id="pillars-panel-fidelite" aria-labelledby="pillars-title-fidelite" tabindex="0">
-                    <!-- Rendu de l'application (export de la maquette, capture 390 x 844 en 3x) -->
-                    <picture class="pillars-shot">
-                      <source srcset="images/app-fidelite.webp" type="image/webp" />
-                      <img src="images/app-fidelite.png" alt="Écran Ma fidélité de l'application" width="1170" height="2532" loading="lazy" decoding="async" />
-                    </picture>
-
-                    <div class="pillars-ui-notifs" aria-hidden="true">
-                      <div class="pillars-ui-notif">
-                        <span class="pillars-ui-notif-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 4 0V3"/><path d="M9 3v4"/><path d="M9 12v9"/><path d="M17 21V3c-2 1-3.5 3.5-3.5 7 0 1.5.8 2.5 2 2.5H17"/></svg></span>
-                        <span class="pillars-ui-notif-text">
-                          <span class="pillars-ui-notif-meta"><span class="pillars-ui-notif-app">Votre restaurant</span><span>maintenant</span></span>
-                          <span class="pillars-ui-notif-title">+45 points gagnés</span>
-                          <span class="pillars-ui-notif-body">Merci pour votre commande</span>
-                        </span>
-                      </div>
-                      <div class="pillars-ui-notif">
-                        <span class="pillars-ui-notif-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 4 0V3"/><path d="M9 3v4"/><path d="M9 12v9"/><path d="M17 21V3c-2 1-3.5 3.5-3.5 7 0 1.5.8 2.5 2 2.5H17"/></svg></span>
-                        <span class="pillars-ui-notif-text">
-                          <span class="pillars-ui-notif-meta"><span class="pillars-ui-notif-app">Votre restaurant</span><span>maintenant</span></span>
-                          <span class="pillars-ui-notif-title">Récompense débloquée</span>
-                          <span class="pillars-ui-notif-body">Une boisson vous est offerte</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="pillars-screen" role="tabpanel" id="pillars-panel-gestion" aria-labelledby="pillars-title-gestion" tabindex="0">
-                    <div class="pillars-ui-header">
-                      <div class="pillars-ui-heading">
-                        <span class="pillars-ui-kicker">Tableau de bord</span>
-                        <span class="pillars-ui-title">Aujourd'hui</span>
-                      </div>
-                      <span class="pillars-ui-live"><span class="pillars-ui-live-dot" aria-hidden="true"></span>En direct</span>
-                    </div>
-
-                    <div class="pillars-ui-tiles">
-                      <div class="pillars-ui-card pillars-ui-tile">
-                        <span class="pillars-ui-tile-label">Chiffre d'affaires</span>
-                        <span class="pillars-ui-tile-value" data-count="1248" data-count-suffix="&nbsp;€">1&#8239;248&nbsp;€</span>
-                        <span class="pillars-ui-tag">+8&nbsp;% vs hier</span>
-                      </div>
-                      <div class="pillars-ui-card pillars-ui-tile">
-                        <span class="pillars-ui-tile-label">Commandes</span>
-                        <span class="pillars-ui-tile-value" data-count="64">64</span>
-                        <span class="pillars-ui-tag pillars-ui-tag--muted">12 en cours</span>
-                      </div>
-                    </div>
-
-                    <div class="pillars-ui-card pillars-ui-chart">
-                      <div class="pillars-ui-chart-head">
-                        <span class="pillars-ui-block-title">Commandes</span>
-                        <span class="pillars-ui-chart-meta">7 derniers jours</span>
-                      </div>
-                      <div class="pillars-ui-bars" aria-hidden="true">
-                        <span class="pillars-ui-bar" style="--pillars-h: 42%"><span class="pillars-ui-bar-track"><span class="pillars-ui-bar-fill"></span></span><span class="pillars-ui-bar-label">L</span></span>
-                        <span class="pillars-ui-bar" style="--pillars-h: 55%"><span class="pillars-ui-bar-track"><span class="pillars-ui-bar-fill"></span></span><span class="pillars-ui-bar-label">M</span></span>
-                        <span class="pillars-ui-bar" style="--pillars-h: 48%"><span class="pillars-ui-bar-track"><span class="pillars-ui-bar-fill"></span></span><span class="pillars-ui-bar-label">M</span></span>
-                        <span class="pillars-ui-bar" style="--pillars-h: 66%"><span class="pillars-ui-bar-track"><span class="pillars-ui-bar-fill"></span></span><span class="pillars-ui-bar-label">J</span></span>
-                        <span class="pillars-ui-bar" style="--pillars-h: 90%"><span class="pillars-ui-bar-track"><span class="pillars-ui-bar-fill"></span></span><span class="pillars-ui-bar-label">V</span></span>
-                        <span class="pillars-ui-bar" style="--pillars-h: 100%"><span class="pillars-ui-bar-track"><span class="pillars-ui-bar-fill"></span></span><span class="pillars-ui-bar-label">S</span></span>
-                        <span class="pillars-ui-bar pillars-ui-bar--on" style="--pillars-h: 76%"><span class="pillars-ui-bar-track"><span class="pillars-ui-bar-fill"></span><span class="pillars-ui-bar-tip">64</span></span><span class="pillars-ui-bar-label">D</span></span>
-                      </div>
-                    </div>
-
-                    <div class="pillars-ui-card pillars-ui-block">
-                      <div class="pillars-ui-block-head">
-                        <span class="pillars-ui-block-title">Dernières commandes</span>
-                        <span class="pillars-ui-link">Tout voir</span>
-                      </div>
-                      <div class="pillars-ui-row">
-                        <span class="pillars-ui-row-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 8Z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg></span>
-                        <span class="pillars-ui-row-text">
-                          <span class="pillars-ui-row-title">Commande #1042</span>
-                          <span class="pillars-ui-row-sub">À emporter · 12:40</span>
-                        </span>
-                        <span class="pillars-ui-pill pillars-ui-pill--orange">En préparation</span>
-                      </div>
-                      <div class="pillars-ui-row">
-                        <span class="pillars-ui-row-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v7a2 2 0 0 0 4 0V3"/><path d="M9 3v4"/><path d="M9 12v9"/><path d="M17 21V3c-2 1-3.5 3.5-3.5 7 0 1.5.8 2.5 2 2.5H17"/></svg></span>
-                        <span class="pillars-ui-row-text">
-                          <span class="pillars-ui-row-title">Commande #1041</span>
-                          <span class="pillars-ui-row-sub">Sur place · Table 4</span>
-                        </span>
-                        <span class="pillars-ui-pill pillars-ui-pill--green">Prête</span>
-                      </div>
-                      <div class="pillars-ui-row">
-                        <span class="pillars-ui-row-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a2 2 0 0 1-2 1.9H8.2a2 2 0 0 1-2-1.9L5 8Z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg></span>
-                        <span class="pillars-ui-row-text">
-                          <span class="pillars-ui-row-title">Commande #1040</span>
-                          <span class="pillars-ui-row-sub">À emporter · 12:25</span>
-                        </span>
-                        <span class="pillars-ui-pill pillars-ui-pill--gray">Récupérée</span>
-                      </div>
-                    </div>
-
-                    <div class="pillars-ui-nav" aria-hidden="true">
-                      <span class="pillars-ui-nav-item pillars-ui-nav-item--on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 16v-3"/><path d="M12 16V8"/><path d="M16 16v-5"/></svg>Activité</span>
-                      <span class="pillars-ui-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2Z"/><path d="M9.5 8h5"/><path d="M9.5 12h5"/></svg>Commandes</span>
-                      <span class="pillars-ui-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17"/><path d="M8 3v4"/><path d="M16 3v4"/></svg>Réservations</span>
-                      <span class="pillars-ui-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10"/><path d="M18 7h2"/><path d="M4 17h4"/><path d="M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Réglages</span>
-                    </div>
-
-                    <div class="pillars-ui-notifs" aria-hidden="true">
-                      <div class="pillars-ui-notif">
-                        <span class="pillars-ui-notif-icon pillars-ui-notif-icon--dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17v-4"/><path d="M12 17V7"/><path d="M16 17v-6"/></svg></span>
-                        <span class="pillars-ui-notif-text">
-                          <span class="pillars-ui-notif-meta"><span class="pillars-ui-notif-app">Gestion</span><span>maintenant</span></span>
-                          <span class="pillars-ui-notif-title">Nouvelle commande #1043</span>
-                          <span class="pillars-ui-notif-body">À emporter · 18,50&nbsp;€</span>
-                        </span>
-                      </div>
-                      <div class="pillars-ui-notif">
-                        <span class="pillars-ui-notif-icon pillars-ui-notif-icon--dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17v-4"/><path d="M12 17V7"/><path d="M16 17v-6"/></svg></span>
-                        <span class="pillars-ui-notif-text">
-                          <span class="pillars-ui-notif-meta"><span class="pillars-ui-notif-app">Gestion</span><span>maintenant</span></span>
-                          <span class="pillars-ui-notif-title">Nouvelle réservation</span>
-                          <span class="pillars-ui-notif-body">Table de 4 · ce soir à 20:00</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <span class="pillars-island" aria-hidden="true"></span>
-                  <span class="pillars-home" aria-hidden="true"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Abonnement : prix et textes de chaque engagement dans les attributs data- des trois boutons -->
-    <section class="section section--alt plans" id="abonnement">
-      <div class="container">
-        <div class="section__head">
-          <h2 class="section__title reveal">Un abonnement, à votre rythme</h2>
-          <p class="section__lead reveal">Hébergement, maintenance et support compris. Choisissez la durée qui vous convient.</p>
-        </div>
-
-        <div class="plans__box reveal" data-plans>
-          <div class="plans__switch" role="radiogroup" aria-label="Durée d'engagement">
-            <span class="plans__thumb" aria-hidden="true"></span>
-            <button type="button" class="plans__option" role="radio" aria-checked="false" data-name="Sans engagement" data-price="179" data-saving="" data-stamp="" data-note="Résiliable chaque mois, avec un préavis d'un mois.">Sans engagement</button>
-            <button type="button" class="plans__option" role="radio" aria-checked="true" data-name="Engagement 1 an" data-price="149" data-stamp="-17&nbsp;%" data-saving="Vous économisez 360&nbsp;€ par an (-17&nbsp;%)" data-note="Un tarif réduit en échange d'un engagement de 12 mois.">1 an</button>
-            <button type="button" class="plans__option" role="radio" aria-checked="false" data-name="Engagement 2 ans" data-price="109" data-stamp="-39&nbsp;%" data-saving="Vous économisez 840&nbsp;€ par an (-39&nbsp;%)" data-note="Le tarif le plus bas, pour 24 mois d'engagement.">2 ans</button>
-          </div>
-
-          <div class="plans__ticket">
-          <div class="plans__card" aria-live="polite">
-            <div class="plans__top">
-            <span class="plans__stamp" data-plan-stamp aria-hidden="true">-17&nbsp;%</span>
-            <p class="plans__name" data-plan-name>Engagement 1 an</p>
-            <p class="plans__price"><span class="plans__amount" data-plan-price>149</span>&nbsp;€<span class="plans__period"> / mois</span><s class="plans__was" data-plan-was>179&nbsp;€</s></p>
-            <p class="plans__note" data-plan-note>Un tarif réduit en échange d'un engagement de 12 mois.</p>
-            <p class="plans__saving" data-plan-saving>Vous économisez 360&nbsp;€ par an (-17&nbsp;%)</p>
-            </div>
-            <div class="plans__tear" aria-hidden="true"></div>
-            <ul class="plans__features">
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Votre application à vos couleurs, sur iPhone et Android</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Hébergement et serveurs inclus</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Maintenance et mises à jour iOS et Android</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Support par téléphone et WhatsApp</li>
-            </ul>
-            <p class="plans__setup"><span>Frais d'installation</span><b>90&nbsp;€</b></p>
-            <p class="plans__fees">Payés une seule fois, à la mise en ligne de l'application.<br />Prix nets, TVA non applicable (art. 293 B du CGI).<br />Paiement mensuel, trimestriel ou annuel, au choix.</p>
-          </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="section section--alt contact" id="contact">
       <div class="container contact__inner">
         <div class="contact__intro">
-          <h2 class="section__title reveal">Prêt à digitaliser votre restaurant ?</h2>
-          <ul class="contact__perks reveal reveal--stagger">
-            <li class="contact__perk"><span class="contact__perk-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Prix fixes, sans surprise</li>
-            <li class="contact__perk"><span class="contact__perk-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Une application à l'image de votre restaurant</li>
-            <li class="contact__perk"><span class="contact__perk-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Un accompagnement de A à Z</li>
-          </ul>
-          <div class="contact__channels reveal">
-            <a href="mailto:contact@rylia.fr" class="contact__mail">
-              <span class="contact__mail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></span>
-              <span class="contact__mail-text">
-                <span class="contact__mail-label">Vous préférez l'email ?</span>
-                <span class="contact__mail-address">contact@rylia.fr</span>
-              </span>
-              <span class="contact__mail-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
-            </a>
-            <a href="tel:+33669969087" class="contact__mail">
-              <span class="contact__mail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
-              <span class="contact__mail-text">
-                <span class="contact__mail-label">Vous préférez appeler ?</span>
-                <span class="contact__mail-address">06 69 96 90 87</span>
-              </span>
-              <span class="contact__mail-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
-            </a>
+          <h2 class="section__title reveal">Prêt à digitaliser votre commerce ?</h2>
+
+          <!-- Tarifs : prix et contenus à modifier dans le bloc « plans-data » juste en dessous -->
+          <div class="plans__box reveal" id="tarifs" data-plans>
+            <div class="plans__switch plans__switch--product" role="radiogroup" aria-label="Type de projet">
+              <span class="plans__thumb" aria-hidden="true"></span>
+              <button type="button" class="plans__option" role="radio" aria-checked="true" data-product="app">Application</button>
+              <button type="button" class="plans__option" role="radio" aria-checked="false" data-product="site">Site web</button>
+            </div>
+            <!-- Application : restauration ou institut ; pour le site web, une phrase prend la même place -->
+            <div class="plans__sector" data-plan-sector>
+              <div class="plans__switch plans__switch--sector" role="radiogroup" aria-label="Type de commerce">
+                <span class="plans__thumb" aria-hidden="true"></span>
+                <button type="button" class="plans__option" role="radio" aria-checked="true" data-sector="restauration"><svg class="plans__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v7a2 2 0 0 0 4 0V3"/><path d="M9 3v18"/><path d="M17 21V3c-2 1-3.5 3.5-3.5 7 0 1.5.8 2.5 2 2.5H17"/></svg>Restauration</button>
+                <button type="button" class="plans__option" role="radio" aria-checked="false" data-sector="institut"><svg class="plans__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2h4"/><path d="M12 2v3"/><path d="M14 5h-4v3"/><rect x="7" y="8" width="10" height="14" rx="2.5"/><path d="M10 13h4"/></svg>Institut</button>
+              </div>
+              <p class="plans__sector-note">Un seul tarif pour tous les commerces</p>
+            </div>
+
+            <div class="plans__card">
+              <div class="plans__head" aria-live="polite" data-plan-head>
+                <p class="plans__name" data-plan-name>Engagement 2 ans</p>
+                <p class="plans__price"><span class="plans__amount" data-plan-price>89</span>&nbsp;€<span class="plans__period"> / mois</span><s class="plans__was" data-plan-was>149&nbsp;€</s></p>
+              </div>
+              <div class="plans__switch plans__switch--duration" role="radiogroup" aria-label="Durée d'engagement">
+                <span class="plans__thumb" aria-hidden="true"></span>
+                <button type="button" class="plans__option" role="radio" aria-checked="false" data-duration="0">Sans engagement</button>
+                <button type="button" class="plans__option" role="radio" aria-checked="false" data-duration="1">1 an<span class="plans__badge" data-plan-badge>-27&nbsp;%</span></button>
+                <button type="button" class="plans__option" role="radio" aria-checked="true" data-duration="2">2 ans<span class="plans__badge" data-plan-badge>-40&nbsp;%</span></button>
+              </div>
+              <ul class="plans__features" data-plan-features>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>iPhone &amp; Android</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Hébergement et serveurs inclus</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Maintenance et mises à jour</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Support 7j/7</li>
+              </ul>
+              <p class="plans__fees">Prix nets, TVA non applicable (art. 293 B du CGI).<br />Paiement mensuel, trimestriel ou annuel, au choix.</p>
+            </div>
+            <script type="application/json" id="plans-data">
+            {
+              "durees": ["Sans engagement", "Engagement 1 an", "Engagement 2 ans"],
+              "restauration": {
+                "prix": [149, 109, 89],
+                "inclus": ["iPhone &amp; Android", "Hébergement et serveurs inclus", "Maintenance et mises à jour", "Support 7j/7"]
+              },
+              "institut": {
+                "prix": [59, 49, 39],
+                "inclus": ["iPhone &amp; Android", "Hébergement et serveurs inclus", "Maintenance et mises à jour", "Support 7j/7"]
+              },
+              "site": {
+                "prix": [30, 20, 15],
+                "inclus": ["Ordinateur &amp; mobile", "Hébergement et serveurs inclus", "Maintenance et mises à jour", "Support 7j/7"]
+              }
+            }
+            </script>
           </div>
         </div>
 
+        <div class="contact__side">
         <form class="contact-form reveal" id="contact-form" action="https://formspree.io/f/mbgddapa" method="POST">
           <!-- Objet de l'email reçu, et champ piège invisible : les robots le remplissent, Formspree les ignore -->
           <input type="hidden" name="_subject" value="Nouvelle demande · Rylia" />
@@ -444,11 +198,7 @@
                 <span class="form-steps__line" aria-hidden="true"></span>
               </li>
               <li class="form-steps__item">
-                <button type="button" class="form-steps__btn" data-goto="1"><span class="form-steps__num"><span>2</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span class="form-steps__label">Établissement</span></button>
-                <span class="form-steps__line" aria-hidden="true"></span>
-              </li>
-              <li class="form-steps__item">
-                <button type="button" class="form-steps__btn" data-goto="2"><span class="form-steps__num"><span>3</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span class="form-steps__label">Projet</span></button>
+                <button type="button" class="form-steps__btn" data-goto="1"><span class="form-steps__num"><span>2</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><span class="form-steps__label">Contact</span></button>
               </li>
             </ol>
             <p class="sr-only" id="form-steps-status" aria-live="polite"></p>
@@ -457,10 +207,53 @@
           <div class="form-panels">
             <fieldset class="form-step" data-step="0">
               <legend class="form-step__title">Faisons connaissance</legend>
-              <div class="field">
-                <label for="name">Nom <span class="required-mark" aria-hidden="true">*</span></label>
-                <input type="text" id="name" name="name" required autocomplete="name" placeholder="Nom du responsable" aria-describedby="name-error" />
-                <p class="field-error" id="name-error" role="alert">Indiquez votre nom</p>
+              <div class="field-row">
+                <div class="field">
+                  <label for="name">Nom <span class="required-mark" aria-hidden="true">*</span></label>
+                  <input type="text" id="name" name="name" required autocomplete="name" placeholder="Votre nom" aria-describedby="name-error" />
+                  <p class="field-error" id="name-error" role="alert">Indiquez votre nom</p>
+                </div>
+                <div class="field">
+                  <label for="phone">Téléphone <span class="required-mark" aria-hidden="true">*</span></label>
+                  <div class="phone-group" data-phone-box>
+                    <div class="custom-select" id="phone-prefix-select">
+                      <button type="button" class="custom-select__toggle" id="phone-prefix-toggle" aria-haspopup="listbox" aria-expanded="false" tabindex="-1">
+                        <span class="custom-select__flag" id="phone-prefix-flag" aria-hidden="true">
+                          <svg viewBox="0 0 3 2"><rect width="1" height="2" x="0" fill="#002395"/><rect width="1" height="2" x="1" fill="#fff"/><rect width="1" height="2" x="2" fill="#ed2939"/></svg>
+                        </span>
+                        <span id="phone-prefix-label">+33</span>
+                        <svg class="custom-select__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                      </button>
+                      <ul class="custom-select__list" id="phone-prefix-list" role="listbox" tabindex="-1" hidden>
+                        <li role="option" data-code="33" data-short="FR" aria-selected="true">
+                          <span class="custom-select__flag" aria-hidden="true">
+                            <svg viewBox="0 0 3 2"><rect width="1" height="2" x="0" fill="#002395"/><rect width="1" height="2" x="1" fill="#fff"/><rect width="1" height="2" x="2" fill="#ed2939"/></svg>
+                          </span>
+                          France (+33)
+                        </li>
+                        <li role="option" data-code="32" data-short="BE" aria-selected="false">
+                          <span class="custom-select__flag" aria-hidden="true">
+                            <svg viewBox="0 0 3 2"><rect width="1" height="2" x="0" fill="#000"/><rect width="1" height="2" x="1" fill="#fdda24"/><rect width="1" height="2" x="2" fill="#ef3340"/></svg>
+                          </span>
+                          Belgique (+32)
+                        </li>
+                      </ul>
+                      <input type="hidden" id="phone-prefix" name="phone_prefix" value="33" />
+                    </div>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      inputmode="numeric"
+                      autocomplete="tel-national"
+                      placeholder="06 12 34 56 78"
+                      required
+                      aria-describedby="phone-error"
+                    />
+                  </div>
+                  <p class="field-error" id="phone-error" role="alert">Numéro incomplet</p>
+                  <input type="hidden" id="phone-full" name="phone_full" />
+                </div>
               </div>
 
               <div class="field">
@@ -477,87 +270,16 @@
                 />
                 <p class="field-error" id="email-error" role="alert">Adresse email invalide (ex : nom@domaine.fr)</p>
               </div>
-
-              <div class="field">
-                <label for="phone">Téléphone <span class="required-mark" aria-hidden="true">*</span></label>
-                <div class="phone-group">
-                  <div class="custom-select" id="phone-prefix-select">
-                    <button type="button" class="custom-select__toggle" id="phone-prefix-toggle" aria-haspopup="listbox" aria-expanded="false">
-                      <span class="custom-select__flag" id="phone-prefix-flag" aria-hidden="true">
-                        <svg viewBox="0 0 3 2"><rect width="1" height="2" x="0" fill="#002395"/><rect width="1" height="2" x="1" fill="#fff"/><rect width="1" height="2" x="2" fill="#ed2939"/></svg>
-                      </span>
-                      <span id="phone-prefix-label">FR (+33)</span>
-                      <svg class="custom-select__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-                    </button>
-                    <ul class="custom-select__list" id="phone-prefix-list" role="listbox" tabindex="-1" hidden>
-                      <li role="option" data-code="33" data-short="FR" aria-selected="true">
-                        <span class="custom-select__flag" aria-hidden="true">
-                          <svg viewBox="0 0 3 2"><rect width="1" height="2" x="0" fill="#002395"/><rect width="1" height="2" x="1" fill="#fff"/><rect width="1" height="2" x="2" fill="#ed2939"/></svg>
-                        </span>
-                        France (+33)
-                      </li>
-                      <li role="option" data-code="32" data-short="BE" aria-selected="false">
-                        <span class="custom-select__flag" aria-hidden="true">
-                          <svg viewBox="0 0 3 2"><rect width="1" height="2" x="0" fill="#000"/><rect width="1" height="2" x="1" fill="#fdda24"/><rect width="1" height="2" x="2" fill="#ef3340"/></svg>
-                        </span>
-                        Belgique (+32)
-                      </li>
-                    </ul>
-                    <input type="hidden" id="phone-prefix" name="phone_prefix" value="33" />
-                  </div>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    inputmode="numeric"
-                    autocomplete="tel-national"
-                    required
-                    aria-describedby="phone-error"
-                  />
-                </div>
-                <p class="field-error" id="phone-error" role="alert">Numéro incomplet</p>
-                <input type="hidden" id="phone-full" name="phone_full" />
-              </div>
             </fieldset>
 
             <fieldset class="form-step" data-step="1">
-              <legend class="form-step__title">Votre établissement</legend>
+              <legend class="form-step__title">Comment préférez-vous être recontacté ?</legend>
               <div class="field">
-                <label for="establishment">Nom de l'établissement <span class="required-mark" aria-hidden="true">*</span></label>
-                <input type="text" id="establishment" name="establishment" required autocomplete="organization" placeholder="Nom de votre commerce" aria-describedby="establishment-error" />
-                <p class="field-error" id="establishment-error" role="alert">Indiquez le nom de votre établissement</p>
-              </div>
-              <div class="field">
-                <label for="address">Adresse du commerce <span class="required-mark" aria-hidden="true">*</span></label>
-                <div class="address-field">
-                  <input
-                    type="text"
-                    id="address"
-                    name="address"
-                    required
-                    autocomplete="off"
-                    placeholder="Numéro, rue, code postal, ville"
-                    aria-describedby="address-error"
-                  />
-                  <ul class="address-suggestions" id="address-suggestions" role="listbox"></ul>
+                <div class="chips chips--choice" role="radiogroup" aria-label="Moyen de contact préféré" aria-describedby="pref-email-error">
+                  <label class="chip"><input type="radio" id="pref-email" name="contact_prefere" value="Email" required /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Par email</span></label>
+                  <label class="chip"><input type="radio" id="pref-phone" name="contact_prefere" value="Téléphone" /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Par téléphone</span></label>
                 </div>
-                <p class="field-error" id="address-error" role="alert">Indiquez l'adresse de votre commerce</p>
-              </div>
-            </fieldset>
-
-            <fieldset class="form-step" data-step="2">
-              <legend class="form-step__title">Votre projet</legend>
-              <div class="field">
-                <span class="sr-only" id="features-label">Type de demande</span>
-                <div class="chips" role="group" aria-labelledby="features-label">
-                  <label class="chip"><input type="checkbox" name="demande[]" value="Application" /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Application</span></label>
-                  <label class="chip"><input type="checkbox" name="demande[]" value="Site web" /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Site web</span></label>
-                  <label class="chip"><input type="checkbox" name="demande[]" value="Autre demande" /><span class="chip__box"><svg class="chip__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Autre demande</span></label>
-                </div>
-              </div>
-              <div class="field">
-                <label for="message">Votre projet <span class="field__optional">facultatif</span></label>
-                <textarea id="message" name="message" rows="3" placeholder="Décrivez votre projet en quelques lignes"></textarea>
+                <p class="field-error" id="pref-email-error" role="alert">Choisissez un moyen de contact</p>
               </div>
             </fieldset>
           </div>
@@ -579,6 +301,26 @@
             </button>
           </div>
         </form>
+        <div class="contact__channels reveal">
+          <a href="mailto:contact@rylia.fr" class="contact__mail">
+            <span class="contact__mail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg></span>
+            <span class="contact__mail-text">
+              <span class="contact__mail-label">Vous préférez l'email ?</span>
+              <span class="contact__mail-address">contact@rylia.fr</span>
+            </span>
+            <span class="contact__mail-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </a>
+          <a href="tel:+33669969087" class="contact__mail">
+            <span class="contact__mail-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
+            <span class="contact__mail-text">
+              <span class="contact__mail-label">Vous préférez appeler ?</span>
+              <span class="contact__mail-address">06 69 96 90 87</span>
+            </span>
+            <span class="contact__mail-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </a>
+        </div>
+        </div>
+      </div>
       </div>
     </section>
   </main>
@@ -588,15 +330,14 @@
       <div class="footer__top">
         <div class="footer__brand">
           <a href="#accueil" class="logo"><img src="logo.png" alt="" class="logo__mark" width="30" height="30" /><span>Rylia<span class="logo__dot">.</span></span></a>
-          <p class="footer__tagline">Applications mobiles sur mesure pour les restaurateurs.</p>
+          <p class="footer__tagline">Applications mobiles et sites web sur mesure pour les restaurateurs.</p>
         </div>
 
         <nav class="footer__col" aria-labelledby="footer-nav-title">
           <p class="footer__title" id="footer-nav-title">Navigation</p>
           <ul class="footer__links">
             <li><a href="#accueil" class="footer__link">Accueil</a></li>
-            <li><a href="#application" class="footer__link">L'application</a></li>
-            <li><a href="#contact" class="footer__link">Contact</a></li>
+            <li><a href="#contact" class="footer__link">Tarifs &amp; contact</a></li>
           </ul>
         </nav>
 
@@ -639,8 +380,7 @@
     </div>
   </footer>
 
-  <script src="js/script.js?v=33"></script>
-  <script src="js/showcase.js?v=33" defer></script>
-  <script src="js/pillars.js?v=33" defer></script>
+  <script src="js/script.js?v=53"></script>
+  <script src="js/showcase.js?v=53" defer></script>
 </body>
 </html>
