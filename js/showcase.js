@@ -166,70 +166,19 @@
   });
   video.addEventListener("pause", updateProgress);
 
-  // Fin de la présentation : le bouton « Commencer dès maintenant » apparaît exactement
-  // sur le bouton dessiné dans la dernière image, avec un halo qui pulse
-  var ctaLayer = root.querySelector(".showcase-cta");
-  // Position et largeur du bouton dessiné, en proportion de l'image (centre x, centre y, largeur)
-  var CTA_SPOT = { x: 0.4995, y: 0.6766, w: 0.336 };
-  var ctaTimer = 0;
-
-  function placeCta() {
-    if (!ctaLayer || ctaLayer.hidden) return;
-    var link = ctaLayer.firstElementChild;
-    var area = screen.getBoundingClientRect();
-    var base = root.getBoundingClientRect();
-    var scale = (area.width * CTA_SPOT.w) / link.offsetWidth;
-    ctaLayer.style.left = area.left - base.left + area.width * CTA_SPOT.x + "px";
-    ctaLayer.style.top = area.top - base.top + area.height * CTA_SPOT.y + "px";
-    ctaLayer.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
-  }
-
-  function showCta() {
-    if (!ctaLayer || !ctaLayer.hidden) return;
-    ctaLayer.hidden = false;
-    placeCta();
-    var pulse = function () { ctaLayer.classList.add("is-pulsing"); };
-    if (reduceMotion || !ctaLayer.animate) {
-      pulse();
-      return;
-    }
-    var end = ctaLayer.style.transform;
-    ctaLayer.animate(
-      [
-        { opacity: 0, transform: end + " scale(0.85)" },
-        { opacity: 1, transform: end + " scale(1.04)", offset: 0.6 },
-        { opacity: 1, transform: end }
-      ],
-      { duration: 500, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
-    );
-    ctaTimer = setTimeout(pulse, 500);
-  }
-
-  function hideCta() {
-    clearTimeout(ctaTimer);
-    if (!ctaLayer) return;
-    ctaLayer.hidden = true;
-    ctaLayer.classList.remove("is-pulsing");
-  }
-
-  window.addEventListener("resize", placeCta);
-
   video.addEventListener("ended", function () {
     userPaused = true;
     root.classList.add("showcase-is-ended");
     updateUI();
     updateProgress();
-    showCta();
   });
   video.addEventListener("play", function () {
     root.classList.remove("showcase-is-ended");
-    hideCta();
   });
   // Revenir en arrière dans la barre après la fin retire l'état « terminé »
   video.addEventListener("seeked", function () {
     if (!video.ended) {
       root.classList.remove("showcase-is-ended");
-      hideCta();
       updateUI();
     }
   });
@@ -281,9 +230,8 @@
     });
   }
 
-  // Mode focus (ordinateur) : la vidéo se centre, le reste du site est légèrement flouté.
+  // Mode focus (ordinateur et mobile) : la vidéo se centre, le reste du site est légèrement flouté.
   // Sortie : défilement, Échap, clic à côté, ou fin de la vidéo.
-  var desktop = window.matchMedia ? window.matchMedia("(min-width: 901px) and (hover: hover)") : null;
   var focusBackdrop = null;
   var focusActive = false;
   var focusAnchor = 0;
@@ -296,7 +244,7 @@
   }
 
   function openFocus() {
-    if (focusActive || !desktop || !desktop.matches) return;
+    if (focusActive) return;
     if (!focusBackdrop) {
       focusBackdrop = document.createElement("div");
       focusBackdrop.className = "video-focus-backdrop";
@@ -323,9 +271,6 @@
     if (event.key === "Escape") closeFocus();
   });
   video.addEventListener("ended", closeFocus);
-  if (desktop && desktop.addEventListener) {
-    desktop.addEventListener("change", function () { if (!desktop.matches) closeFocus(); });
-  }
 
   if (volumeRange) {
     volumeRange.addEventListener("input", function () {

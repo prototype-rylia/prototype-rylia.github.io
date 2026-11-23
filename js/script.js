@@ -125,7 +125,7 @@ function updateFullPhone() {
 }
 
 // Exemple de numéro affiché dans le champ vide, selon le pays choisi
-const PHONE_EXAMPLES = { "33": "06 12 34 56 78", "32": "470 12 34 56" };
+const PHONE_EXAMPLES = { "33": "∗∗ ∗∗ ∗∗ ∗∗ ∗∗", "32": "∗∗∗ ∗∗ ∗∗ ∗∗" };
 function updatePhoneWidth(prefix) {
   phoneInput.placeholder = PHONE_EXAMPLES[prefix] || "";
 }
@@ -714,8 +714,8 @@ if (plans && plansData) {
   else window.addEventListener("resize", layout);
 }
 
-// Mode focus du formulaire : sur ordinateur, il vient au centre de l'écran et la page se floute ;
-// sur mobile, il passe en plein écran. Sortie : bouton Quitter, Échap, clic à côté, ou défilement.
+// Mode focus du formulaire (ordinateur uniquement) : il vient au centre de l'écran et la page se floute.
+// Sur mobile, le formulaire reste à sa place dans la page. Sortie : bouton Quitter, Échap, clic à côté, ou défilement.
 const focusForm = document.getElementById("contact-form");
 if (focusForm) {
   const root = document.documentElement;
@@ -738,49 +738,30 @@ if (focusForm) {
   else focusForm.appendChild(quit);
 
   let active = false;
-  let placeholder = null;
-  let savedScroll = 0;
   let anchor = 0;
   let closest = Infinity;
 
   const open = () => {
-    if (active) return;
+    if (active || phone.matches) return;
     active = true;
-    if (phone.matches) {
-      // Plein écran : une cale garde la place du formulaire pour que la page ne saute pas
-      savedScroll = window.scrollY;
-      const style = getComputedStyle(focusForm);
-      placeholder = document.createElement("div");
-      placeholder.style.height = `${focusForm.offsetHeight}px`;
-      placeholder.style.order = style.order;
-      placeholder.style.marginTop = style.marginTop;
-      focusForm.after(placeholder);
-      root.classList.add("is-form-fullscreen");
-    } else {
-      // Le formulaire glisse jusqu'au centre de l'écran (hauteur et largeur), quelle que soit sa place dans la page
-      // (en bas de page, le défilement seul ne suffit pas à le centrer)
-      const rect = focusForm.getBoundingClientRect();
-      const margin = 20;
-      const top = rect.height > window.innerHeight - margin * 2 ? margin : (window.innerHeight - rect.height) / 2;
-      anchor = window.scrollY;
-      closest = Infinity;
-      focusForm.style.transition = prefersReducedMotion.matches ? "none" : "translate 480ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease";
-      const left = (document.documentElement.clientWidth - rect.width) / 2;
-      focusForm.style.translate = `${Math.round(left - rect.left)}px ${Math.round(top - rect.top)}px`;
-    }
+    // Le formulaire glisse jusqu'au centre de l'écran (hauteur et largeur), quelle que soit sa place dans la page
+    // (en bas de page, le défilement seul ne suffit pas à le centrer)
+    const rect = focusForm.getBoundingClientRect();
+    const margin = 20;
+    const top = rect.height > window.innerHeight - margin * 2 ? margin : (window.innerHeight - rect.height) / 2;
+    anchor = window.scrollY;
+    closest = Infinity;
+    focusForm.style.transition = prefersReducedMotion.matches ? "none" : "translate 480ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease";
+    const left = (document.documentElement.clientWidth - rect.width) / 2;
+    focusForm.style.translate = `${Math.round(left - rect.left)}px ${Math.round(top - rect.top)}px`;
     root.classList.add("is-form-focus");
   };
 
   const close = () => {
     if (!active) return;
     active = false;
-    root.classList.remove("is-form-focus", "is-form-fullscreen");
+    root.classList.remove("is-form-focus");
     focusForm.style.translate = "";
-    if (placeholder) {
-      placeholder.remove();
-      placeholder = null;
-      window.scrollTo(0, savedScroll);
-    }
   };
 
   // Le navigateur pose sa liste de saisie automatique (emails, noms déjà tapés) sous le champ
@@ -821,7 +802,11 @@ if (focusForm) {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
       event.preventDefault();
       if (active) { openFromButton(); return; }
-      if (phone.matches) { openFromButton(); return; }
+      // Mobile : simple défilement jusqu'au formulaire, sans mode focus
+      if (phone.matches) {
+        focusForm.scrollIntoView({ behavior: prefersReducedMotion.matches ? "auto" : "smooth", block: "start" });
+        return;
+      }
       // Ordinateur : défilement jusqu'au formulaire, puis ouverture une fois arrivé
       const rect = focusForm.getBoundingClientRect();
       const target = Math.max(0, window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2);
