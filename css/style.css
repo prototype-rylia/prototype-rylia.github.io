@@ -2006,27 +2006,6 @@ main > section:focus { outline: none; }
 /* Avec « Retour » affiché, c'est lui qui pousse les boutons à droite */
 .form-focus-quit:has(+ .form-nav__back:not([hidden])) { margin-right: 6px; }
 
-/* Mobile : le formulaire occupe tout l'écran, comme une application */
-.is-form-fullscreen body { overflow: hidden; }
-.is-form-fullscreen .form-focus-backdrop { display: none; }
-.is-form-fullscreen .contact-form {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  margin: 0;
-  padding: calc(32px + env(safe-area-inset-top, 0px)) 20px calc(24px + env(safe-area-inset-bottom, 0px));
-  border: 0;
-  border-radius: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  box-shadow: none;
-  transform: none;
-  animation: form-fullscreen-in 350ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.is-form-fullscreen .contact-form::before,
-.is-form-fullscreen .contact-form::after { top: env(safe-area-inset-top, 0px); }
-@keyframes form-fullscreen-in { from { opacity: 0; transform: translateY(24px); } }
-
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .grid--3 { grid-template-columns: 1fr 1fr; }
